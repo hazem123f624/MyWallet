@@ -47,7 +47,7 @@ class ExportApiJson extends Command
             'item' => $this->folders($sections),
             'variable' => [
                 ['key' => 'base_url', 'value' => rtrim((string) config('app.url'), '/')],
-                ['key' => 'api_prefix', 'value' => 'v1'],
+                ['key' => 'api_prefix', 'value' => (string) config('api.version', 'v1')],
                 ['key' => 'token', 'value' => ''],
                 ['key' => 'api_key', 'value' => ''],
             ],
@@ -168,11 +168,18 @@ class ExportApiJson extends Command
     {
         $path = parse_url($route, PHP_URL_PATH) ?: $route;
         $segments = array_values(array_filter(explode('/', $path), static fn ($segment) => $segment !== ''));
-
+        $versionIndex = null;
         foreach ($segments as $index => $segment) {
             if ($index > 0 && $segments[$index - 1] === 'api' && preg_match('/^v\d+$/', $segment) === 1) {
-                $segments[$index] = '{{api_prefix}}';
+                $versionIndex = $index;
+                break;
             }
+        }
+        if ($versionIndex === null) {
+            $versionIndex = array_search((string) config('api.version', 'v1'), $segments, true);
+        }
+        if ($versionIndex !== false && $versionIndex !== null) {
+            $segments[$versionIndex] = '{{api_prefix}}';
         }
 
         $queryItems = [];

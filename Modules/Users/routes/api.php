@@ -9,7 +9,7 @@ use Modules\Users\Http\Controllers\Mobile\UsersController;
 | Mobile API Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['security'])->prefix('v1/mobile/users')->group(function (): void {
+Route::middleware(['security'])->prefix(config('api.version').'/'.config('api.prefixes.mobile').'/users')->group(function (): void {
     // Auth Flow
     Route::post('register', [UsersController::class, 'register']);
     Route::post('login', [UsersController::class, 'login']);
@@ -37,7 +37,7 @@ Route::middleware(['security'])->prefix('v1/mobile/users')->group(function (): v
 | Admin Management Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['security', 'auth:sanctum', 'abilities:admins'])->prefix('v1/dashboard/users')->group(function (): void {
+Route::middleware(['security', 'auth:sanctum', 'abilities:admins'])->prefix(config('api.version').'/'.config('api.prefixes.dashboard').'/users')->group(function (): void {
     Route::get('trash', [ManageUsersController::class, 'trash']);
     Route::patch('{user}/restore', [ManageUsersController::class, 'restore'])->withTrashed();
     Route::delete('{user}/force-delete', [ManageUsersController::class, 'remove'])->withTrashed();

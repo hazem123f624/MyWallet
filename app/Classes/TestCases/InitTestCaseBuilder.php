@@ -18,14 +18,14 @@ class InitTestCaseBuilder
             $headers[config('security.timestamp.header_name')] = $timeStamp;
         }
         if (config('security.signature.enabled')){
-            $headers[config('security.signature.header_name')] = signatureKeyGenerator($type, $params, '/api/v1/'.$route, $timeStamp);
+            $headers[config('security.signature.header_name')] = signatureKeyGenerator($type, $params, '/api/'.config('api.version').'/'.$route, $timeStamp);
         }
         return $this->$type($name,$route,$params,$headers,$auth,$desc,$shortDesc,$expectStatus , $notes);
     }
     private function POST($name,$route,$params,$header,$auth,$desc,$shortDesc,$expectStatus , $notes)
     {
         $testCase = TestCaseBuilder::make($name);
-        $testCase = $testCase->post('/api/v1/'.$route);
+        $testCase = $testCase->post('/api/'.config('api.version').'/'.$route);
         $testCase = $testCase->params($params);
         $testCase = $testCase->expectStatus($expectStatus);
         $testCase = $testCase->headers($header);
@@ -54,7 +54,7 @@ class InitTestCaseBuilder
     private function GET($name,$route,$params,$header,$auth,$desc,$shortDesc,$expectStatus , $notes):array
     {
         $testCase = TestCaseBuilder::make($name);
-        $testCase = $testCase->get('/api/v1/'.$route);
+        $testCase = $testCase->get('/api/'.config('api.version').'/'.$route);
         $testCase = $testCase->expectStatus($expectStatus);
         $testCase = $testCase->headers($header);
         if($auth){
@@ -78,7 +78,7 @@ class InitTestCaseBuilder
     private function DELETE($name,$route,$params,$header,$auth,$desc,$shortDesc,$expectStatus , $notes):array
     {
         $testCase = TestCaseBuilder::make($name);
-        $testCase = $testCase->delete('/api/v1/'.$route);
+        $testCase = $testCase->delete('/api/'.config('api.version').'/'.$route);
         $testCase = $testCase->expectStatus($expectStatus);
         $testCase = $testCase->headers($header);
         if($auth){
@@ -94,7 +94,7 @@ class InitTestCaseBuilder
     private function PUT($name,$route,$params,$header,$auth,$desc,$shortDesc,$expectStatus , $notes):array
     {
         $testCase = TestCaseBuilder::make($name);
-        $testCase = $testCase->put('/api/v1/'.$route);
+        $testCase = $testCase->put('/api/'.config('api.version').'/'.$route);
         $testCase = $testCase->params($params);
         $testCase = $testCase->expectStatus($expectStatus);
         $testCase = $testCase->headers($header);
@@ -120,7 +120,7 @@ class InitTestCaseBuilder
     private function PATCH($name,$route,$params,$header,$auth,$desc,$shortDesc,$expectStatus, $notes):array
     {
         $testCase = TestCaseBuilder::make($name);
-        $testCase = $testCase->patch('/api/v1/'.$route);
+        $testCase = $testCase->patch('/api/'.config('api.version').'/'.$route);
         $testCase = $testCase->params($params);
         $testCase = $testCase->expectStatus($expectStatus);
         $testCase = $testCase->headers($header);

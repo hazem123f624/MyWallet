@@ -1,56 +1,64 @@
-@props(['type','title', 'data'])
+@props(['type', 'title', 'data'])
 
-@if($data)
-    <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--text-dim); margin-top: 2rem; margin-bottom: 1rem;">
-        {{ $title }}
-    </h4>
-    <div class="table-container">
-        <table>
-            <thead>
+@php
+    $rows = json_decode($data, true) ?: [];
 
-                <tr>
-                    <th>Field/Name</th>
-                    @if($type != 'notes')
-                        <th>Type</th>
-                    @endif
-                    <th>Examples</th>
-                </tr>
-            </thead>
-            <tbody>
+    $valueType = static function ($value): string {
+        return match (true) {
+            is_bool($value) => 'boolean',
+            is_int($value), is_float($value) => 'number',
+            is_array($value) => 'array',
+            is_null($value) => 'null',
+            default => 'string',
+        };
+    };
 
-                @foreach(json_decode($data, true) ?: [] as $key => $val)
+    $displayValue = static function ($value): string {
+        return match (true) {
+            is_array($value) => (string) json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+            is_bool($value) => $value ? 'true' : 'false',
+            is_null($value) => 'null',
+            default => (string) $value,
+        };
+    };
+@endphp
+
+@if(! empty($rows))
+    <div class="param-block">
+        <h5 class="param-title">{{ $title }}</h5>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
                     <tr>
-                        <td><span class="param-name">
-                                 @if($type == 'notes')
-                                    {{ $val['key'] }}
-                                @else
-                                    {{ $key }}
-                                @endif
-
-                            </span></td>
-                        @if($type != 'notes')
-                            <td><span class="type-label">{{ gettype($val) }}</span></td>
+                        <th>Field</th>
+                        @if($type !== 'notes')
+                            <th>Type</th>
                         @endif
-
-{{--                        //$title == 'Headers' &&--}}
-                    @if(in_array($key,['Authorization','X-API-Token','X-SIGNATURE' , 'X-TIMESTAMP','token']))
-                            <td style="color: var(--text-dim);">
-                                {{ $key }} Key
-                            </td>
-                        @else
-                            <td style="color: var(--text-dim);">
-                                @if($type == 'notes')
-                                    {{ $val['value'] }}
-                                @else
-                                    {{ is_array($val) ? json_encode($val) : $val }}
-                                @endif
-
-                            </td>
-                        @endif
-
+                        <th>{{ $type === 'notes' ? 'Rules' : 'Example' }}</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($rows as $key => $value)
+                        @php($name = (string) ($type === 'notes' ? ($value['key'] ?? $key) : $key))
+                        <tr>
+                            <td>
+                                <code class="param-name">{!! str_replace('_', '_<wbr>', e($name)) !!}</code>
+                            </td>
+
+                            @if($type !== 'notes')
+                                <td>
+                                    <span class="type-label">{{ $valueType($value) }}</span>
+                                </td>
+                            @endif
+
+                            <td class="param-example">
+                                {{ $type === 'notes' ? ($value['value'] ?? '') : $displayValue($value) }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 @endif

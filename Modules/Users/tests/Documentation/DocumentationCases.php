@@ -71,19 +71,19 @@ class DocumentationCases
         $descriptions = app(ApiDocumentationController::class)->returnDescription($model);
 
         $index = [
-            $testCasesObject->handle(type: 'GET', name: $descriptions['index']['name'], route: 'dashboard/'.$model, params: [], auth: $fakeLogin, desc: $descriptions['index']['description'], shortDesc: $descriptions['index']['short_description']),
+            $testCasesObject->handle(type: 'GET', name: $descriptions['index']['name'], route: config('api.prefixes.dashboard').'/'.$model, params: [], auth: $fakeLogin, desc: $descriptions['index']['description'], shortDesc: $descriptions['index']['short_description']),
         ];
 
         $show = [
-            $testCasesObject->handle(type: 'GET', name: $descriptions['show']['name'], route: 'dashboard/'.$model.'/'.$targetId, params: [], auth: $fakeLogin, desc: $descriptions['show']['description'], shortDesc: $descriptions['show']['short_description']),
-            $testCasesObject->handle(type: 'PATCH', name: $descriptions['active']['name'], route: 'dashboard/'.$model.'/'.$targetId.'/toggle-active', params: [], auth: $fakeLogin, desc: $descriptions['active']['description'], shortDesc: $descriptions['active']['short_description']),
-            $testCasesObject->handle(type: 'DELETE', name: $descriptions['delete']['name'], route: 'dashboard/'.$model.'/'.$targetId, params: [], auth: $fakeLogin, desc: $descriptions['delete']['description'], shortDesc: $descriptions['delete']['short_description']),
+            $testCasesObject->handle(type: 'GET', name: $descriptions['show']['name'], route: config('api.prefixes.dashboard').'/'.$model.'/'.$targetId, params: [], auth: $fakeLogin, desc: $descriptions['show']['description'], shortDesc: $descriptions['show']['short_description']),
+            $testCasesObject->handle(type: 'PATCH', name: $descriptions['active']['name'], route: config('api.prefixes.dashboard').'/'.$model.'/'.$targetId.'/toggle-active', params: [], auth: $fakeLogin, desc: $descriptions['active']['description'], shortDesc: $descriptions['active']['short_description']),
+            $testCasesObject->handle(type: 'DELETE', name: $descriptions['delete']['name'], route: config('api.prefixes.dashboard').'/'.$model.'/'.$targetId, params: [], auth: $fakeLogin, desc: $descriptions['delete']['description'], shortDesc: $descriptions['delete']['short_description']),
         ];
 
         $recycleBin = [
-            $testCasesObject->handle(type: 'GET', name: $descriptions['trash']['name'], route: 'dashboard/'.$model.'/trash', params: [], auth: $fakeLogin, desc: $descriptions['trash']['description'], shortDesc: $descriptions['trash']['short_description']),
-            $testCasesObject->handle(type: 'PATCH', name: $descriptions['restore']['name'], route: 'dashboard/'.$model.'/'.$trashedTargetId.'/restore', params: [], auth: $fakeLogin, desc: $descriptions['restore']['description'], shortDesc: $descriptions['restore']['short_description']),
-            $testCasesObject->handle(type: 'DELETE', name: $descriptions['force_delete']['name'], route: 'dashboard/'.$model.'/'.$trashedTargetId.'/force-delete', params: [], auth: $fakeLogin, desc: $descriptions['force_delete']['description'], shortDesc: $descriptions['force_delete']['short_description']),
+            $testCasesObject->handle(type: 'GET', name: $descriptions['trash']['name'], route: config('api.prefixes.dashboard').'/'.$model.'/trash', params: [], auth: $fakeLogin, desc: $descriptions['trash']['description'], shortDesc: $descriptions['trash']['short_description']),
+            $testCasesObject->handle(type: 'PATCH', name: $descriptions['restore']['name'], route: config('api.prefixes.dashboard').'/'.$model.'/'.$trashedTargetId.'/restore', params: [], auth: $fakeLogin, desc: $descriptions['restore']['description'], shortDesc: $descriptions['restore']['short_description']),
+            $testCasesObject->handle(type: 'DELETE', name: $descriptions['force_delete']['name'], route: config('api.prefixes.dashboard').'/'.$model.'/'.$trashedTargetId.'/force-delete', params: [], auth: $fakeLogin, desc: $descriptions['force_delete']['description'], shortDesc: $descriptions['force_delete']['short_description']),
         ];
 
         return [

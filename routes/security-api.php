@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 | valid API key + timestamp + signature to access.
 */
 
-Route::middleware(['security'])->prefix('v1/security')->group(function () {
+Route::middleware(['security'])->prefix(config('api.version').'/security')->group(function () {
     // Check key status & expiration
     Route::get('key-info', [ApiKeyController::class, 'keyInfo'])->name('security.key-info');
     // Renew (rotate) the key — returns new credentials

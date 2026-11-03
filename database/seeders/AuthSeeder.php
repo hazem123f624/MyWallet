@@ -89,7 +89,7 @@ class AuthSeeder extends Seeder
             // Admin Auth
             'Admin Login' => [
                 'module' => 'Admins',
-                'url' => '/api/v1/login',
+                'url' => '/api/'.config('api.version').'/login',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => ['step' => 1, 'email' => config('admins.base_admins.0.email'), 'password' => config('admins.base_admins.0.password')],
@@ -101,7 +101,7 @@ class AuthSeeder extends Seeder
             ],
             'Forget Password Request' => [
                 'module' => 'Admins',
-                'url' => '/api/v1/forget-password',
+                'url' => '/api/'.config('api.version').'/forget-password',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => ['email' => config('admins.base_admins.0.email')],
@@ -113,7 +113,7 @@ class AuthSeeder extends Seeder
             ],
             'Verify OTP' => [
                 'module' => 'Admins',
-                'url' => '/api/v1/verify-forget-password-otp',
+                'url' => '/api/'.config('api.version').'/verify-forget-password-otp',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => ['email' => config('admins.base_admins.0.email'), 'otp' => config('auth_guards.test.otp'), 'change_password_token' => config('auth_guards.test.token')],
@@ -125,7 +125,7 @@ class AuthSeeder extends Seeder
             ],
             'Reset Password' => [
                 'module' => 'Admins',
-                'url' => '/api/v1/reset-password',
+                'url' => '/api/'.config('api.version').'/reset-password',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -142,7 +142,7 @@ class AuthSeeder extends Seeder
             ],
             'Admin Logout' => [
                 'module' => 'Admins',
-                'url' => '/api/v1/logout',
+                'url' => '/api/'.config('api.version').'/logout',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [],
@@ -155,7 +155,7 @@ class AuthSeeder extends Seeder
             // User Auth (Mobile)
             'User Register' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/register',
+                'url' => '/api/'.config('api.version').'/mobile/users/register',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -174,7 +174,7 @@ class AuthSeeder extends Seeder
             ],
             'User Verify OTP' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/verify',
+                'url' => '/api/'.config('api.version').'/mobile/users/verify',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -190,7 +190,7 @@ class AuthSeeder extends Seeder
             ],
             'User Login' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/login',
+                'url' => '/api/'.config('api.version').'/mobile/users/login',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -206,7 +206,7 @@ class AuthSeeder extends Seeder
             ],
             'User Forget Password' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/forget-password',
+                'url' => '/api/'.config('api.version').'/mobile/users/forget-password',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => ['country_code' => '20', 'phone' => '01011112222'],
@@ -218,7 +218,7 @@ class AuthSeeder extends Seeder
             ],
             'User Verify Forgot Password OTP' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/verify-forget-password',
+                'url' => '/api/'.config('api.version').'/mobile/users/verify-forget-password',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -235,7 +235,7 @@ class AuthSeeder extends Seeder
             ],
             'User Reset Password' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/reset-password',
+                'url' => '/api/'.config('api.version').'/mobile/users/reset-password',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -253,7 +253,7 @@ class AuthSeeder extends Seeder
             ],
             'User Change Password' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/change-password',
+                'url' => '/api/'.config('api.version').'/mobile/users/change-password',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -270,7 +270,7 @@ class AuthSeeder extends Seeder
             ],
             'User Resend OTP' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/resend-otp',
+                'url' => '/api/'.config('api.version').'/mobile/users/resend-otp',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => ['country_code' => '20', 'phone' => '01011112222'],
@@ -282,7 +282,7 @@ class AuthSeeder extends Seeder
             ],
             'User Profile' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/profile',
+                'url' => '/api/'.config('api.version').'/mobile/users/profile',
                 'method' => 'GET',
                 'expect_status' => 200,
                 'params' => [],
@@ -294,7 +294,7 @@ class AuthSeeder extends Seeder
             ],
             'User Update Profile' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/profile',
+                'url' => '/api/'.config('api.version').'/mobile/users/profile',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -311,7 +311,7 @@ class AuthSeeder extends Seeder
             ],
             'User Change Password' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/change-password',
+                'url' => '/api/'.config('api.version').'/mobile/users/change-password',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [
@@ -328,7 +328,7 @@ class AuthSeeder extends Seeder
             ],
             'User Refresh Token' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/refresh-token',
+                'url' => '/api/'.config('api.version').'/mobile/users/refresh-token',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [],
@@ -340,7 +340,7 @@ class AuthSeeder extends Seeder
             ],
             'User Logout' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/logout',
+                'url' => '/api/'.config('api.version').'/mobile/users/logout',
                 'method' => 'POST',
                 'expect_status' => 200,
                 'params' => [],
@@ -353,7 +353,7 @@ class AuthSeeder extends Seeder
             // Must stay the last case: it revokes every token of the account it deletes.
             'User Delete Account' => [
                 'module' => 'Users',
-                'url' => '/api/v1/mobile/users/profile',
+                'url' => '/api/'.config('api.version').'/mobile/users/profile',
                 'method' => 'DELETE',
                 'expect_status' => 200,
                 'params' => [],

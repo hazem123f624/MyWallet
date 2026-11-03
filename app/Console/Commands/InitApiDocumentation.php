@@ -21,7 +21,7 @@ class InitApiDocumentation extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Run a module documentation case and store its real API response in the documentation database';
 
     private $files = [];
 

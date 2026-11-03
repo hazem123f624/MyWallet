@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Settings\Http\Controllers\SettingsController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function (): void {
+Route::middleware(['auth:sanctum'])->prefix(config('api.version'))->group(function (): void {
     Route::get('settings/{type}', [SettingsController::class, 'index']);
     Route::post('settings/{type}', [SettingsController::class, 'store']);
     Route::get('settings/{type}/{id}', [SettingsController::class, 'show']);

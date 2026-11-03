@@ -50,7 +50,7 @@ class DocumentationCases
             $headersForUpdate = $headers;
             // Create
             $createIndex[] = TestCaseBuilder::make('Create '.$title)
-                ->post('/api/v1/settings/'.$type)
+                ->post('/api/'.config('api.version').'/settings/'.$type)
                 ->headers($headers)
                 ->auth($fakeLogin)
                 ->params($params)
@@ -60,7 +60,7 @@ class DocumentationCases
 
             // Index
             $createIndex[] = TestCaseBuilder::make('Get '.$title.' List')
-                ->get('/api/v1/settings/'.$type)
+                ->get('/api/'.config('api.version').'/settings/'.$type)
                 ->query(['page' => 1, 'per_page' => 10])
                 ->headers($headers)
                 ->auth($fakeLogin)
@@ -71,7 +71,7 @@ class DocumentationCases
                 ->build();
             // Show
             $showUpdateDelete[] = TestCaseBuilder::make('Show Single '.$title)
-                ->get('/api/v1/settings/'.$type.'/'.$paramForUpdate['id'])
+                ->get('/api/'.config('api.version').'/settings/'.$type.'/'.$paramForUpdate['id'])
                 ->headers($headersForUpdate)
                 ->auth($fakeLogin)
                 ->expectStatus(200)
@@ -80,7 +80,7 @@ class DocumentationCases
                 ->build();
             // Update
             $showUpdateDelete[] = TestCaseBuilder::make('Update '.$title)
-                ->put('/api/v1/settings/'.$type.'/'.$paramForUpdate['id'])
+                ->put('/api/'.config('api.version').'/settings/'.$type.'/'.$paramForUpdate['id'])
                 ->headers($headersForUpdate)
                 ->auth($fakeLogin)
                 ->params($paramForUpdate)
@@ -90,7 +90,7 @@ class DocumentationCases
 
             // Switch Active
             $showUpdateDelete[] = TestCaseBuilder::make('Active Or InActive '.$title)
-                ->patch('/api/v1/settings/'.$type.'/'.$paramForUpdate['id'])
+                ->patch('/api/'.config('api.version').'/settings/'.$type.'/'.$paramForUpdate['id'])
                 ->headers($headersForUpdate)
                 ->auth($fakeLogin)
                 ->params([])
@@ -100,7 +100,7 @@ class DocumentationCases
 
             // Delete
             $showUpdateDelete[] = TestCaseBuilder::make('Delete '.$title)
-                ->delete('/api/v1/settings/'.$type.'/'.$paramForUpdate['id'])
+                ->delete('/api/'.config('api.version').'/settings/'.$type.'/'.$paramForUpdate['id'])
                 ->headers($headersForUpdate)
                 ->auth($fakeLogin)
                 ->expectStatus(200)
@@ -117,7 +117,7 @@ class DocumentationCases
         $locationCases = [];
 
         $locationCases[] = TestCaseBuilder::make('Get Countries List')
-            ->get('/api/v1/locations/country')
+            ->get('/api/'.config('api.version').'/locations/country')
             ->headers($headers)
             ->auth($fakeLogin)
             ->expectStatus(200)
@@ -126,7 +126,7 @@ class DocumentationCases
             ->build();
 
         $locationCases[] = TestCaseBuilder::make('Search Countries')
-            ->get('/api/v1/locations/country/search')
+            ->get('/api/'.config('api.version').'/locations/country/search')
             ->query(['keyword' => 'Egypt'])
             ->headers($headers)
             ->auth($fakeLogin)
@@ -136,7 +136,7 @@ class DocumentationCases
             ->build();
 
         $locationCases[] = TestCaseBuilder::make('Get Cities List')
-            ->get('/api/v1/locations/city')
+            ->get('/api/'.config('api.version').'/locations/city')
             ->headers($headers)
             ->auth($fakeLogin)
             ->expectStatus(200)
@@ -145,7 +145,7 @@ class DocumentationCases
             ->build();
 
         $locationCases[] = TestCaseBuilder::make('Search Cities')
-            ->get('/api/v1/locations/city/search')
+            ->get('/api/'.config('api.version').'/locations/city/search')
             ->query(['keyword' => 'Cairo'])
             ->headers($headers)
             ->auth($fakeLogin)
@@ -168,7 +168,7 @@ class DocumentationCases
         $country = Settings::whereRaw('LOWER(type) = ?', ['country'])->first();
         if ($country) {
             $locationCases[] = TestCaseBuilder::make('Get Cities By country')
-                ->get('/api/v1/locations/country/'.$country->id.'/cities')
+                ->get('/api/'.config('api.version').'/locations/country/'.$country->id.'/cities')
                 ->headers($headers)
                 ->auth($fakeLogin)
                 ->expectStatus(200)
@@ -178,7 +178,7 @@ class DocumentationCases
         }
 
         $locationCases[] = TestCaseBuilder::make('Get Nationalities List')
-            ->get('/api/v1/locations/nationality')
+            ->get('/api/'.config('api.version').'/locations/nationality')
             ->headers($headers)
             ->auth($fakeLogin)
             ->expectStatus(200)
@@ -194,7 +194,7 @@ class DocumentationCases
         ])->withToken($fakeLogin);
 
         foreach ($locationTypes as $locType) {
-            $response = $httpClient->get(config('app.url').'/api/v1/settings/'.$locType, [
+            $response = $httpClient->get(config('app.url').'/api/'.config('api.version').'/settings/'.$locType, [
                 'page' => 1,
                 'per_page' => 1,
             ]);
@@ -233,7 +233,7 @@ class DocumentationCases
             $existingLocationId = $locationTypeIds[$locType] ?? Settings::where('type', $locType)->value('id');
 
             $locationCases[] = TestCaseBuilder::make('Create '.$locType)
-                ->post('/api/v1/settings/'.$locType)
+                ->post('/api/'.config('api.version').'/settings/'.$locType)
                 ->headers($headers)
                 ->auth($fakeLogin)
                 ->params($locationParams)
@@ -243,7 +243,7 @@ class DocumentationCases
 
             if ($existingLocationId) {
                 $locationCases[] = TestCaseBuilder::make('Update '.$locType)
-                    ->put('/api/v1/settings/'.$locType.'/'.$existingLocationId)
+                    ->put('/api/'.config('api.version').'/settings/'.$locType.'/'.$existingLocationId)
                     ->headers($headers)
                     ->auth($fakeLogin)
                     ->params(array_merge($locationParams, ['id' => $existingLocationId]))
@@ -252,7 +252,7 @@ class DocumentationCases
                     ->build();
 
                 $locationCases[] = TestCaseBuilder::make('Toggle '.$locType)
-                    ->patch('/api/v1/settings/'.$locType.'/'.$existingLocationId.'/toggle-active')
+                    ->patch('/api/'.config('api.version').'/settings/'.$locType.'/'.$existingLocationId.'/toggle-active')
                     ->headers($headers)
                     ->auth($fakeLogin)
                     ->params([])
@@ -261,7 +261,7 @@ class DocumentationCases
                     ->build();
 
                 $locationCases[] = TestCaseBuilder::make('Delete '.$locType)
-                    ->delete('/api/v1/settings/'.$locType.'/'.$existingLocationId)
+                    ->delete('/api/'.config('api.version').'/settings/'.$locType.'/'.$existingLocationId)
                     ->headers($headers)
                     ->auth($fakeLogin)
                     ->expectStatus(200)
