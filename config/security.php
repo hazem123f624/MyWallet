@@ -1,5 +1,7 @@
 <?php
 
+$version = env('API_VERSION', 'v1');
+
 return [
 
     /*
@@ -225,18 +227,18 @@ return [
 
         // Path patterns that ALWAYS require nonce (even for GET if specified)
         'critical_routes' => [
-            'v1/security/renew-key',
-            'api/v1/payments/*',
-            'api/v1/orders/*',
-            'api/v1/transfers/*',
+            $version.'/security/renew-key',
+            'api/'.$version.'/payments/*',
+            'api/'.$version.'/orders/*',
+            'api/'.$version.'/transfers/*',
         ],
 
         // Path patterns to EXCLUDE from nonce protection
         'exclude_routes' => [
-            'api/v1/auth/*',
-            'api/v1/login',
-            'api/v1/register',
-            'api/v1/security/nonce', // Must exclude self
+            'api/'.$version.'/auth/*',
+            'api/'.$version.'/login',
+            'api/'.$version.'/register',
+            'api/'.$version.'/security/nonce', // Must exclude self
         ],
     ],
 ];

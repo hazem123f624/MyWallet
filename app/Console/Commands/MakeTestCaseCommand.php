@@ -9,7 +9,7 @@ class MakeTestCaseCommand  extends  Command
 {
     protected $signature = 'make:test-case {module}';
 
-    protected $description = 'Generate a new DTO class file';
+    protected $description = 'Create the documentation cases file for a module';
 
     public function handle()
     {

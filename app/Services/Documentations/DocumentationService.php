@@ -43,13 +43,15 @@ class DocumentationService
             'overViewWithIntroduction' => $overViewWithIntroduction,
             'commonErrors' => $commonErrors,
             'apiSections' => $apiSections,
+            'baseUrl' => rtrim((string) config('app.url'), '/').'/api/'.config('api.version'),
+            'totalEndpoints' => $allData->where('section', 1)->count(),
         ]);
     }
 
     /**
      * Normalise a route URL to the path that carries routing meaning: strip the
-     * leading 'api' and version ('v1') segments so both '/api/v1/mobile/...' and
-     * '/api/internal/...' reduce to their consumer-significant prefix.
+     * leading 'api' and configured version segments so '/api/v1/mobile/...'
+     * reduces to its consumer-significant prefix.
      */
     private function normalizePath(?string $route): array
     {
@@ -60,7 +62,10 @@ class DocumentationService
             static fn ($s) => $s !== '',
         ));
 
-        while (! empty($segments) && in_array($segments[0], ['api', 'v1'], true)) {
+        while (
+            ! empty($segments)
+            && ($segments[0] === 'api' || preg_match('/^v\d+$/', $segments[0]) === 1)
+        ) {
             array_shift($segments);
         }
 
@@ -134,7 +139,10 @@ class DocumentationService
      */
     private function moduleFor(?string $route): string
     {
-        $consumerPrefixes = ['mobile', 'dashboard', 'admin', 'web', 'internal', 'user'];
+        $consumerPrefixes = array_merge(
+            array_values((array) config('api.prefixes', [])),
+            ['mobile', 'dashboard', 'admin', 'web', 'internal', 'user'],
+        );
 
         $segments = array_values(array_filter(
             $this->normalizePath($route),

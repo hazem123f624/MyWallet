@@ -25,6 +25,7 @@ return [
     */
     'prefixes' => [
         'mobile' => env('API_MOBILE_PREFIX', 'mobile'),
+        'dashboard' => env('API_DASHBOARD_PREFIX', 'dashboard'),
     ],
 
 ];

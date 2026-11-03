@@ -70,7 +70,26 @@ php artisan app:init-test {ModuleName} {Type}
 ```bash
 php artisan app:export-api-json
 ```
-This writes `api.json` at the project root as a Postman collection. Set the `api_prefix` collection variable (`v1` by default) to change the API prefix across every request.
+This writes `api.json` at the project root as a Postman collection.
+
+### Change the API version and prefixes
+Set these keys in `.env`, then clear config and regenerate the collection:
+```bash
+API_VERSION=v2
+API_MOBILE_PREFIX=mobile
+API_DASHBOARD_PREFIX=dashboard
+```
+
+```bash
+php artisan config:clear
+php artisan app:export-api-json
+```
+
+- `API_VERSION` controls the version segment (`v1` by default).
+- `API_MOBILE_PREFIX` controls the user app segment (`mobile` by default).
+- `API_DASHBOARD_PREFIX` controls the dashboard segment (`dashboard` by default).
+
+Set the `api_prefix` collection variable to change the version segment across every request. After changing a path prefix, rerun the relevant documentation cases before exporting so stored URLs use the new segment.
 
 ### Run the app locally
 ```bash
@@ -79,6 +98,19 @@ php artisan serve
 ```
 
 The API documentation is available at `/docs`.
+
+---
+
+## Documentation
+
+Project documentation lives in [`docs/`](docs/README.md):
+
+- [`docs/business.md`](docs/business.md) — the complete business design, rules, and workflows.
+- [`docs/commands.md`](docs/commands.md) — every project, development, module, and security command.
+- [`docs/artisan-commands.md`](docs/artisan-commands.md) — the complete generated list of all Artisan commands.
+- [`docs/documentation-data-builders.md`](docs/documentation-data-builders.md) — documentation data standard.
+- [`docs/github-commit-structure.md`](docs/github-commit-structure.md) — commit and pull-request conventions.
+- [`docs/phase-1/`](docs/phase-1/README.md) — Phase 1 tasks and test cases.
 
 ---
 

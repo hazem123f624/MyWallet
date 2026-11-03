@@ -6,8 +6,8 @@ use Modules\Admins\Http\Controllers\AdminsController;
 use Modules\Admins\Http\Controllers\ModelsController;
 use Modules\Admins\Http\Controllers\RolesController;
 
-Route::middleware(['security'])->prefix('v1')->group(function (): void {
-    Route::middleware(['auth:sanctum', 'abilities:admins'])->prefix('dashboard')->group(function (): void {
+Route::middleware(['security'])->prefix(config('api.version'))->group(function (): void {
+    Route::middleware(['auth:sanctum', 'abilities:admins'])->prefix(config('api.prefixes.dashboard'))->group(function (): void {
 
         // ── Admins ──────────────────────────────────────────
         Route::get('admins/trash', [AdminsController::class, 'trash']);

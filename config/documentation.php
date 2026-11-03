@@ -12,8 +12,8 @@ return [
     */
     'default_consumer' => 'Dashboard',
     'consumers' => [
-        'User App' => ['mobile', 'user'],
-        'Dashboard' => ['dashboard'],
+        'User App' => array_values(array_unique(array_filter([env('API_MOBILE_PREFIX', 'mobile'), 'user']))),
+        'Dashboard' => array_values(array_unique(array_filter([env('API_DASHBOARD_PREFIX', 'dashboard'), 'dashboard']))),
     ],
 
     /*

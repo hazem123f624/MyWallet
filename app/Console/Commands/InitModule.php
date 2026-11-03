@@ -29,7 +29,7 @@ class InitModule extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Initialize a comprehensive module structure with boilerplate code following project patterns';
+    protected $description = 'Create a full module scaffold with model, repository, requests, resource, DTO, controller, policy, and documentation case';
 
     /**
      * Execute the console command.

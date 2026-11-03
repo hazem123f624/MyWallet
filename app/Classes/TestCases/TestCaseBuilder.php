@@ -12,7 +12,7 @@ namespace App\Classes\TestCases;
  *
  *   // 1. Simple GET request:
  *   TestCaseBuilder::make('List Admins')
- *       ->get('/api/v1/admins')
+ *       ->get('/api/{version}/admins')
  *       ->expectStatus(200)
  *       ->expectKeys(['id', 'email'])
  *       ->inDocs('Admins List', 'Retrieve all admins from the system')
@@ -20,7 +20,7 @@ namespace App\Classes\TestCases;
  *
  *   // 2. POST request with parameters and auth:
  *   TestCaseBuilder::make('Create Admin')
- *       ->post('/api/v1/admins')
+ *       ->post('/api/{version}/admins')
  *       ->auth('your-token-here')
  *       ->params(['name' => 'John Doe', 'email' => 'john@example.com', 'password' => 'secret123'])
  *       ->expectStatus(201)
@@ -29,7 +29,7 @@ namespace App\Classes\TestCases;
  *
  *   // 3. Request with custom headers:
  *   TestCaseBuilder::make('API with Custom Header')
- *       ->get('/api/v1/resource')
+ *       ->get('/api/{version}/resource')
  *       ->headers(['X-Custom-Header' => 'SpecialValue'])
  *       ->expectStatus(200)
  *       ->build();

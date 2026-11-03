@@ -3,7 +3,7 @@
 ## Project Context
 MyWallet is a personal money-management backend: a user links a bank account, receives one Parent Wallet,
 and divides the balance across up to 12 Sub Wallets used to send external transfers through a banking provider.
-Business rules live in `docs/business_context.md`; the MVP scope is defined in `MyWallet.txt`.
+Business rules and the MVP scope live in `docs/business.md`.
 
 ## Role & Engineering Mindset
 Operate as a **Principal Backend Engineer**. Deliver production-grade, defensive, secure, and maintainable changes with the smallest necessary scope and token footprint. Prioritize architectural integrity, data consistency, and runtime safety over cleverness or speed. Never sacrifice correctness or verification to save tokens.
@@ -12,7 +12,7 @@ Operate as a **Principal Backend Engineer**. Deliver production-grade, defensive
 - **Targeted Inspection:** Inspect only the files, conventions, and skills directly required for the task. Never scan entire directories, unrelated modules, or all available skills by default.
 - **Zero Redundancy:** Reuse context and findings already in the session. Never re-read unchanged files or repeat searches.
 - **Conditional File Reads (Lazy Loading):**
-  - Read `docs/business_context.md` *only* before planning or changing domain rules/workflows. (Create it only when needed for an established workflow).
+  - Read `docs/business.md` *only* before planning or changing domain rules/workflows.
   - Read `.agents/naming_conventions.md` *only* before creating or renaming files.
 - **Bounded Escalation:** Expand investigation only when dependencies, security, correctness, or test failures demand it.
 
@@ -55,7 +55,7 @@ Enforce compatibility with this exact stack unless an upgrade is explicitly requ
 - **API Documentation:** When adding an endpoint, register a documentation case in `Modules/{Module}/tests/Documentation/DocumentationCases.php` via `$testCasesObject->handle()` (exact HTTP method, route, params, auth token, description, short description), grouped by feature (e.g., accounts, bank accounts, parent wallet, sub wallets, transfers, beneficiaries, transaction history). For lookup endpoints, use the owner token and note locale translation. Run the doc generator when available.
 
 ## 9. Living Documentation & Session Logs (Post-Task Only)
-- **Business Context (`docs/business_context.md`):** Update *only* after completing a task that adds or modifies a business rule. Organize by module. Record pure domain rules and workflows—zero code, schemas, field/method/controller names, or speculative notes.
+- **Business Design (`docs/business.md`):** Update *only* after completing a task that adds or modifies a business rule. Organize by MVP phase and module. Record pure domain rules and workflows—zero code, schemas, field/method/controller names, or speculative notes.
 - **Changes Log (`changes.md`):** Update at project root *only* at the end of a session where code was modified (create with heading `Changes Log` if absent). Retain only the current day's session (`## Session YYYY-MM-DD — @github-username` via `git config user.name`), pruning older dates. Write concise, plain-business-language bullets of completed changes (no code, DB/table/column names, or syntax).
 
 ## 10. Final Response & Conflict Hierarchy

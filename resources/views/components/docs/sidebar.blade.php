@@ -1,59 +1,108 @@
 @props(['apiSections'])
-<aside class="sidebar">
-    <div class="logo-area">
-{{--        <div class="logo-icon">--}}
-{{--            --}}
-{{--        </div>--}}
-        <h1>{{  config('app.name') }}</h1>
-    </div>
 
-{{--    <div class="search-box">--}}
-{{--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">--}}
-{{--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />--}}
-{{--        </svg>--}}
-{{--        <input type="text" id="apiSearch" placeholder="Search endpoints...">--}}
-{{--    </div>--}}
+@php
+    $methodOrder = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+    $methods = collect($apiSections)
+        ->flatMap(fn ($modules) => collect($modules)->flatMap(fn ($items) => $items))
+        ->pluck('method')
+        ->map(fn ($method) => strtoupper($method))
+        ->unique()
+        ->sortBy(fn ($method) => array_search($method, $methodOrder, true) !== false ? array_search($method, $methodOrder, true) : 99)
+        ->values();
+@endphp
 
-    <div class="nav-section dropdown-section active">
-        <button class="nav-title dropdown-toggle" data-target="fundamentals-menu">
-            Fundamentals
-            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <a href="#introduction" class="brand">
+            <span class="brand-mark">M</span>
+            <span>
+                <strong>{{ config('app.name') }}</strong>
+                <small>API documentation</small>
+            </span>
+        </a>
+
+        <button
+            class="icon-button sidebar-close"
+            id="sidebarClose"
+            type="button"
+            aria-label="Close navigation"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
             </svg>
         </button>
-        <div class="dropdown-content show" id="fundamentals-menu">
-            <a href="#introduction" class="nav-item">Introduction</a>
-            <a href="#common-errors" class="nav-item">Common Errors</a>
-        </div>
     </div>
 
-    {{--
-        Navigation is derived automatically from the endpoint URLs at render time
-        (DocumentationService::homePage). Each consumer section is a header and
-        each module a collapsible group — no manual section_categories map.
-    --}}
-    <div class="nav-section">
-        @foreach($apiSections as $sectionName => $modules)
-            <button class="nav-group-title" style="" disabled>
-                {{ $sectionName }}
-            </button>
+    <div class="search-box">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" />
+        </svg>
+        <input
+            type="search"
+            id="apiSearch"
+            placeholder="Search endpoints..."
+            autocomplete="off"
+            aria-label="Search endpoints"
+        >
+    </div>
 
-            @foreach($modules as $moduleName => $items)
-                @php
-                    $menuId = \Illuminate\Support\Str::slug($sectionName.' '.$moduleName).'-menu';
-                @endphp
-                <button class="nav-title dropdown-toggle" style="" data-target="{{ $menuId }}">
-                    {{ $moduleName }}
-                    <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <div class="dropdown-content" id="{{ $menuId }}">
-                    @foreach($items as $item)
-                        <a href="#id-{{ $item->id }}" class="nav-item">{{ $item->name }}</a>
-                    @endforeach
-                </div>
-            @endforeach
+    <div class="method-filters" role="group" aria-label="Filter by method">
+        <button class="method-filter active" type="button" data-method-filter="all" aria-pressed="true">All</button>
+
+        @foreach($methods as $method)
+            <button
+                class="method-filter"
+                type="button"
+                data-method-filter="{{ strtolower($method) }}"
+                aria-pressed="false"
+            >
+                {{ $method }}
+            </button>
         @endforeach
     </div>
+
+    <nav class="sidebar-nav" aria-label="API navigation">
+        <div class="nav-group">
+            <p class="nav-label">Getting started</p>
+            <a href="#introduction" class="nav-link" data-search="introduction getting started">
+                Introduction
+            </a>
+            <a href="#common-errors" class="nav-link" data-search="common errors responses">
+                Common errors
+            </a>
+        </div>
+
+        @foreach($apiSections as $sectionName => $modules)
+            <div class="nav-group">
+                <p class="nav-label">{{ $sectionName }}</p>
+
+                @foreach($modules as $moduleName => $items)
+                    <details class="nav-module" open>
+                        <summary>
+                            <span>{{ $moduleName }}</span>
+                            <span class="nav-count">{{ count($items) }}</span>
+                        </summary>
+
+                        <div class="nav-links">
+                            @foreach($items as $item)
+                                <a
+                                    href="#id-{{ $item->id }}"
+                                     class="nav-link nav-endpoint"
+                                     data-search="{{ strtolower($item->name.' '.$item->method.' '.$item->route) }}"
+                                     data-method="{{ strtolower($item->method) }}"
+                                 >
+                                    <span class="nav-method nav-method-{{ strtolower($item->method) }}">
+                                        {{ strtoupper($item->method) }}
+                                    </span>
+                                    <span>{{ $item->name }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    </details>
+                @endforeach
+            </div>
+        @endforeach
+    </nav>
+
+    <p class="sidebar-empty" id="sidebarEmpty" hidden>No matching endpoints.</p>
 </aside>

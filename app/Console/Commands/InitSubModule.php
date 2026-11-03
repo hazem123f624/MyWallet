@@ -29,7 +29,7 @@ class InitSubModule extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Initialize a comprehensive module structure with boilerplate code following project patterns';
+    protected $description = 'Create a sub-resource scaffold inside an existing module';
 
     /**
      * Execute the console command.
