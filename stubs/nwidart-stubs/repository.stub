@@ -1,0 +1,95 @@
+<?php
+
+namespace $CLASS_NAMESPACE$;
+
+use App\Services\ForRepository\RepositoryService;
+use Illuminate\Support\Facades\DB;
+use Modules\{Module}\Interfaces\{InterfaceName};
+use Modules\{Module}\Models\{ModelName};
+
+class $CLASS$ implements {InterfaceName}
+{
+
+   public object $model;
+   public RepositoryService $serviceHelper;
+   public array $files = [];
+   public array $images = [];
+   public array $multiRecord = [];
+   public array $relatedTables = [];
+
+    public function __construct({ModelName} $model)
+   {
+       $this->model = $model;
+       $this->serviceHelper = new RepositoryService($this);
+   }
+
+   public function data($request, $id = "*", $fieldName = "", $collectionType = null)
+   {
+       return $this->serviceHelper->handelForGetData(request: $request, id: $id, fieldName: $fieldName,collectionType: $collectionType);
+   }
+
+   public function save($request, $id = null)
+   {
+       try {
+           DB::beginTransaction();
+           if ($id && $id != $request["id"])
+               throw new \Exception('your id is not match');
+
+           [$request , $requestAfterRemoveTranslatedAttributes] = $this->serviceHelper->handle(request: $request, id: $id);
+           $data    = $this->model->updateOrCreate(["id" => $id], $requestAfterRemoveTranslatedAttributes);
+           $this->serviceHelper->handelAfterCreated(request: $request, data: $data, id: $data->id);
+           DB::commit();
+           $dtoClass = $this->model->dto;
+           return $dtoClass::single($data,'Model');
+       } catch (\Exception $exception) {
+           DB::rollBack();
+           throw new \Exception($exception->getMessage());
+       }
+   }
+
+   public function switchActive($data){
+       try {
+           $data->is_active = !$data->is_active;
+           $data->save();
+           $dtoClass = $this->model->dto;
+           return $dtoClass::single($data,'Model');
+       }catch (\Exception $exception) {
+           DB::rollBack();
+           throw new \Exception($exception->getMessage());
+       }
+   }
+
+
+   public function delete($data):void
+   {
+       try {
+           $this->serviceHelper->handelBeforeDeleted($data->id);
+           $data->delete();
+       } catch (\Exception $exception) {
+          throw new \Exception($exception->getMessage());
+       }
+   }
+
+    public function forceDelete($id): void
+       {
+           try {
+               $data = $this->model->withTrashed()->findOrFail($id);
+               $data->forceDelete();
+           } catch (\Exception $exception) {
+               throw new \Exception($exception->getMessage());
+           }
+       }
+
+       public function restore($id)
+       {
+           try {
+               $data = $this->model->withTrashed()->findOrFail($id);
+               $data->deleted_at = null;
+               $data->save();
+               $dtoClass = $this->model->dto;
+               return $dtoClass::single($data,'Model');
+           } catch (\Exception $exception) {
+               throw new \Exception($exception->getMessage());
+           }
+       }
+}

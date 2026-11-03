@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media System - دليل الاستخدام الشامل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #818cf8;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --code-bg: #1e293b;
+            --sidebar-bg: #ffffff;
+            --accent-color: #10b981;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-left: 1px solid #e5e7eb;
+            position: fixed;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            transition: 0.2s;
+            display: block;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .sidebar a:hover {
+            background: #f3f4f6;
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-right: 280px;
+            padding: 40px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            margin-top: 10px;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2::before {
+            content: "";
+            width: 6px;
+            height: 24px;
+            background: var(--accent-color);
+            margin-left: 12px;
+            border-radius: 4px;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            direction: ltr;
+            /* Keeping code in LTR */
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        pre::after {
+            content: "PHP";
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
+        .label {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .label-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .label-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-right: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>الفهرس</h2>
+        <ul>
+            <li><a href="#intro">مقدمة</a></li>
+            <li><a href="#case1">1- رفع صورة (قاعدة بيانات)</a></li>
+            <li><a href="#case2">2- رفع ملف (قاعدة بيانات)</a></li>
+            <li><a href="#case3">3- رفع صورة (تخزين فقط)</a></li>
+            <li><a href="#case4">4- رفع ملف (تخزين فقط)</a></li>
+            <li><a href="#case5">5- رفع صور متعددة (قاعدة بيانات)</a></li>
+            <li><a href="#case6">6- رفع صور متعددة (تخزين فقط)</a></li>
+            <li><a href="#case7">7- رفع ملفات متعددة (قاعدة بيانات)</a></li>
+            <li><a href="#case8">8- رفع ملفات متعددة (تخزين فقط)</a></li>
+            <li><a href="#case9">9- قراءة الملفات والروابط</a></li>
+            <li><a href="#case10">10- الرفع على S3</a></li>
+            <li><a href="#case11">11- مسح الملفات والمجلدات</a></li>
+            <li><a href="#case12">12- قراءة جميع الفولدرات بالملفات</a></li>
+            <li><a href="#case13">13- إنشاء مجلد وإضافة ملفات بداخله</a></li>
+            <li><a href="#case14">14- جلب مجلد واحد مع ملفاته</a></li>
+            <li><a href="#case15">15- التمييز بين الميديا والمرفقات (Type System)</a></li>
+            <li><a href="#case16">16- مسح ملف واحد من المجلد</a></li>
+            <li><a href="#case17">17- البحث والفلترة مع الترقيم (Pagination & Filters)</a></li>
+
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>توثيق نظام الوسائط (Media System)</h1>
+            <p>النظام الشامل لإدارة الملفات والوسائط برمجياً بكافة الاحتمالات.</p>
+            <div style="background: #e7f3ff; border-left: 5px solid #2196F3; padding: 10px; margin-bottom: 20px;">
+                <strong>💡 ملاحظة هامة (Append Mode):</strong>
+                النظام يدعم الإضافة التلقائية؛ إذا قمت بالرفع باستخدام اسم مجلد موجود مسبقاً لنفس الموديل، فسيتم إضافة
+                الملفات الجديدة إليه بدلاً من إنشاء مجلد جديد.
+            </div>
+        </header>
+
+        <!-- Scenario 1 -->
+        <div class="section" id="case1">
+            <span class="label label-success">قاعدة بيانات</span>
+            <h2>1- رفع صورة مع الاحتفاظ بالداتا بيز</h2>
+            <p>يستخدم لربط صورة بموديل معين (مثل صورة مستخدم أو منتج).</p>
+            <pre><code>$media = app(MediaService::class);
+$user = User::find(1);
+
+$file = $media->withResize(['thumb' => [150, 150]]) // اختياري: تصغير الصورة
+              ->upload($request->file('photo'), relatable: $user, folderName: 'Avatars');
+
+// يمكنك الوصول للرابط مباشرة
+echo $file->url;</code></pre>
+        </div>
+
+        <!-- Scenario 2 -->
+        <div class="section" id="case2">
+            <span class="label label-success">قاعدة بيانات</span>
+            <h2>2- رفع ملف (PDF, ZIP, إلخ) مع الاحتفاظ بالداتا بيز</h2>
+            <pre><code>$file = app(MediaService::class)
+            ->upload($request->file('cv_file'), relatable: $employee, folderName: 'Documents');
+
+echo "اسم الملف الأصلي: " . $file->original_name;</code></pre>
+        </div>
+
+        <!-- Scenario 3 -->
+        <div class="section" id="case3">
+            <span class="label label-info">تخزين فقط</span>
+            <h2>3- رفع صورة مع عدم الاحتفاظ بالداتا بيز</h2>
+            <p>يستخدم للرفع السريع دون الحاجة لسجل في قاعدة البيانات (Legacy Mode).</p>
+            <pre><code>// تعيد هذه الدالة مسار الصورة كـ String أو مصفوفة في حال الـ Resize
+$path = app(MediaService::class)
+            ->withResize(['medium' => [500, 500]])
+            ->uploadToStorage($request->file('logo'), folder: 'branding');
+
+// النتيجة: uploads/branding/filename.jpg</code></pre>
+        </div>
+
+        <!-- Scenario 4 -->
+        <div class="section" id="case4">
+            <span class="label label-info">تخزين فقط</span>
+            <h2>4- رفع ملف مع عدم الاحتفاظ بالداتا بيز</h2>
+            <pre><code>$path = app(MediaService::class)
+            ->uploadToStorage($request->file('backup'), folder: 'system_backups');
+
+echo "تم الرفع في: " . $path;</code></pre>
+        </div>
+
+        <!-- Scenario 5 -->
+        <div class="section" id="case5">
+            <span class="label label-success">قاعدة بيانات</span>
+            <h2>5- رفع مجموعة صور مع الاحتفاظ بالداتا بيز</h2>
+            <pre><code>// تعيد Collection من أنواع MediaFile
+$files = app(MediaService::class)
+            ->withResize(['gallery' => [800, 600]])
+            ->uploadMany($request->file('photos'), relatable: $product, folderName: 'Showcase');
+
+foreach($files as $file) {
+    echo $file->url;
+}</code></pre>
+        </div>
+
+        <!-- Scenario 6 -->
+        <div class="section" id="case6">
+            <span class="label label-info">تخزين فقط</span>
+            <h2>6- رفع مجموعة صور مع عدم الاحتفاظ بالداتا بيز</h2>
+            <pre><code>$paths = app(MediaService::class)
+            ->uploadManyToStorage($request->file('temp_images'), folder: 'temporary');
+
+// تعيد مصفوفة من المسارات (Paths)</code></pre>
+        </div>
+
+        <!-- Scenario 9 -->
+        <div class="section" id="case9">
+            <h2>9- قراءة الصور والروابط</h2>
+            <p>يوفر النظام قراءة ذكية تتعامل مع (Object, Path, أو fallback).</p>
+            <pre><code>$media = app(MediaService::class);
+
+// قراءة من Object
+echo $media->url($mediaFile);
+
+// قراءة من مسار نصي (Path)
+echo $media->url('uploads/global/image.png');
+
+// قراءة صور مع Fallsback (إذا لم توجد الصورة ترجع صورة افتراضية)
+echo $media->readFile($path, size: 'thumb');</code></pre>
+        </div>
+
+        <!-- Scenario 10 -->
+        <div class="section" id="case10">
+            <span class="label label-info">Advanced</span>
+            <h2>10- الرفع على S3 (سواء صورة أو ملف)</h2>
+            <pre><code>$file = app(MediaService::class)
+            ->useDisk('s3')
+            ->withVisibility('private') // جعل الملف خاص (محمي)
+            ->upload($request->file('secure_doc'), relatable: $user);
+
+// سيقوم النظام تلقائياً بتوليد رابط مؤقت (Signed URL) صالح لمدة معينة
+echo $file->url; </code></pre>
+        </div>
+
+        <!-- Scenario 11 -->
+        <div class="section" id="case11">
+            <h2>11- مسح صورة أو ملف أو مجلد كامل</h2>
+            <pre><code>$media = app(MediaService::class);
+
+// مسح ملف واحد (من قاعدة البيانات والهارد ديسك)
+$media->delete($mediaFile); 
+
+// مسح نهائي (تجاوز الـ Soft Delete)
+$media->delete($mediaFile, force: true);
+
+// مسح مجلد كامل من الهارد ديسك
+$media->deleteFolder('uploads/old_data');</code></pre>
+        </div>
+
+        <!-- Scenario 12 -->
+        <div class="section" id="case12">
+            <h2>12- قراءة جميع الفولدرات بالملفات</h2>
+            <p>يستخدم لجلب كافة المجلدات المرتبطة بموديل معين (مثل مستخدم أو منتج) مع الملفات الموجودة بداخل كل مجلد.
+            </p>
+            <pre><code>$media = app(MediaService::class);
+$user = User::find(1);
+
+// جلب المجلدات مع الملفات (Eager Loading) - افتراضي النوع 'media'
+$folders = $media->getForRelatable($user, 'media');
+
+// لجلب المرفقات فقط
+$attachments = $media->getForRelatable($user, 'attachment');
+
+foreach($folders as $folder) {
+    echo "إسم المجلد: " . $folder->name;
+    foreach($folder->files as $file) {
+        echo " - داتا الملف: " . $file->url . " (ID: " . $file->id . ")";
+    }
+}</code></pre>
+        </div>
+
+        <!-- Scenario 13 -->
+        <div class="section" id="case13">
+            <h2>13- إنشاء مجلد وإضافة ملفات بداخله</h2>
+            <p>يقوم النظام بإنشاء المجلد تلقائياً عند تحديد اسم المجلد (folderName) أثناء عملية الرفع.</p>
+            <pre><code>$media = app(MediaService::class);
+
+// رفع ملف واحد في مجلد جديد
+$media->upload($request->file('avatar'), folderName: 'NewFolder');
+
+// رفع ملفات متعددة في مجلد جديد
+$media->uploadMany($request->file('gallery'), folderName: 'ProductGallery');
+
+// ملاحظة: إذا كان المجلد موجوداً مسبقاً، سيتم إضافة الملفات إليه تلقائياً (Append Mode)
+// دون الحاجة لأي إعدادات إضافية، فقط استخدم نفس اسم المجلد (name).
+</code></pre>
+        </div>
+
+        <!-- Scenario 14 -->
+        <div class="section" id="case14">
+            <h2>14- جلب مجلد واحد فقط مع ملفاته</h2>
+            <p>يستخدم للحصول على بيانات مجلد محدد (بالاسم) مع قائمة الملفات التي بداخله لموديل معين.</p>
+            <pre><code>$media = app(MediaService::class);
+$user = User::find(1);
+
+// جلب مجلد "الصور الشخصية" مع ملفاته (النوع الافتراضي media)
+$folder = $media->getFolder($user, 'Avatars', 'media');
+
+// جلب مجلد "العقود" من المرفقات
+$contractFolder = $media->getFolder($user, 'Contracts', 'attachment');
+
+if ($folder) {
+    echo "إسم المجلد: " . $folder->name;
+    foreach($folder->files as $file) {
+        echo " - رابط الملف: " . $file->url . " (ID: " . $file->id . ")";
+    }
+}</code></pre>
+        </div>
+        <!-- Scenario 15 -->
+        <div class="section" id="case15">
+            <span class="label label-success">Type System</span>
+            <h2>15- التمييز بين الميديا والمرفقات (Media vs Attachment)</h2>
+            <p>يمكنك الآن فصل الملفات برمجياً لكي لا تظهر المرفقات في معرض الصور والعكس، وذلك عبر استخدام الـ Type.</p>
+            <pre><code>$media = app(MediaService::class);
+
+// رفع صور في ميديا
+$media->withType('media')->upload($file, $animal, 'Gallery');
+
+// رفع ملف في مرفقات
+$media->withType('attachment')->upload($doc, $animal, 'Contracts');
+
+// عند القراءة، الخدمة تفلتر تلقائياً حسب النوع الممرر
+$allMedia = $media->getForRelatable($animal, 'media');
+$allDocs = $media->getForRelatable($animal, 'attachment');</code></pre>
+        </div>
+
+        <!-- Scenario 16 -->
+        <div class="section" id="case16">
+            <span class="label label-success">File Management</span>
+            <h2>16- مسح ملف واحد من المجلد</h2>
+            <p>يمكنك الآن مسح ملف محدد باستخدام الـ ID الخاص به دون التأثير على باقي ملفات المجلد.</p>
+            <pre><code>$media = app(MediaService::class);
+
+// مسح ملف واحد برمجياً
+$file = MediaFile::find(5);
+$media->deleteFile($file);
+
+// عبر الـ API (المسار الجديد)
+// DELETE /api/v1/animals/{type}/{animal}/media/{folder}/{file_id}
+// DELETE /api/v1/animals/{type}/{animal}/attach/{folder}/{file_id}</code></pre>
+        </div>
+
+        <!-- Scenario 17 -->
+        <div class="section" id="case17">
+            <span class="label label-success">Query & Optimization</span>
+            <h2>17- البحث والفلترة مع الترقيم (Pagination & Filters)</h2>
+            <p>يمكنك الآن البحث في الملفات والمرفقات بناءً على التصنيف أو التاريخ، مع دعم الترقيم (Pagination).</p>
+            <pre><code>// طلب GET مع بارامترات اختيارية
+// GET /api/v1/animals/falcon/1/media?category=medical&from_date=2024-01-01&per_page=10
+
+/* الاستجابة المتوقعة (Paginated JSON) */
+{
+    "success": true,
+    "data": {
+        "current_page": 1,
+        "data": [
+            {
+                "folder_name": "Checkup_2024",
+                "category": "medical",
+                "created_at": "2024-03-28 12:00:00",
+                "files": [...]
+            }
+        ],
+        "total": 50,
+        "per_page": 10
+    }
+}</code></pre>
+        </div>
+
+
+
+
+        <footer>
+            جميع الحقوق محفوظة &copy; نظام الوسائط المتكامل 2024
+        </footer>
+    </div>
+
+</body>
+
+</html>

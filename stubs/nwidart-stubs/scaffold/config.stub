@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'name' => '$STUDLY_NAME$',
+    /*
+     * this section is for test cases
+    */
+    'test_cases' => [
+        'case_1' => [
+            [
+                'Empty Data' => [
+                    'method'       => 'GET', // POST,PUT,DELETE
+                    'url'          => '', // URL LIKE api/v1/users
+                    'auth_token'   => false,
+                    'headers'      => [],
+                    'params'       => [],
+                    'return_keys'  => [],
+                    'appends'      => [],
+                    'success_code' => 200,
+                    'in_docs'      => [
+
+                    ] // Or false,
+                ],
+            ],
+        ]
+    ]
+];

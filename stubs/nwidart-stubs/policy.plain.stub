@@ -1,0 +1,38 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use Illuminate\Auth\Access\HandlesAuthorization;
+use Modules\Admins\Models\Admins;
+class $CLASS$
+{
+    use HandlesAuthorization;
+       private string $model;
+
+       /**
+        * Create a new policy instance.
+        */
+       public function __construct() {
+           $this->model = 'admins';
+       }
+
+       public function viewAny(Admins $admin) {
+           return $admin->hasPermission($this->model.'-fetch');
+       }
+
+       public function view(Admins $admin, Admins $model) {
+           return $admin->hasPermission($this->model.'-read');
+       }
+
+       public function create(Admins $admin) {
+           return $admin->hasPermission($this->model.'-create');
+       }
+
+       public function update(Admins $admin, Admins $model) {
+           return $admin->hasPermission($this->model.'-update');
+       }
+
+       public function delete(Admins $admin, Admins $model) {
+           return $admin->hasPermission($this->model.'-delete');
+       }
+}

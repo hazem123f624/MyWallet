@@ -1,0 +1,97 @@
+<?php
+
+namespace Modules\{Module}\Tests\Documentation;
+
+use App\Classes\TestCases\InitTestCaseBuilder;
+use App\Http\Controllers\ApiDocumentationController;
+use Modules\{Module}\Models\{Module};
+
+class DocumentationCases
+{
+     /**
+         * Define the documentation test cases for this module.
+         * Use the TestCaseBuilder for a fluent definition.
+         */
+        public static function cases(): array
+        {
+            $fakeLogin = fakeLogin();
+            $models = ['{module}'];
+            $cases = [];
+            $testCasesObject = new InitTestCaseBuilder();
+            foreach ($models as $model){
+                $methodName = $model.'Module';
+                $cases[$methodName] = self::$methodName($model,$testCasesObject, $fakeLogin);
+            }
+            return array_merge(...array_values($cases));
+        }
+        /*
+         * Example of fake data
+         * items' => [
+         * 'create' => [],
+         * 'update' => [],
+         * 'expected_keys' => []
+         * ]
+         * */
+        private static function fakeData($type):array{
+            $data = [
+            '{module}' => [
+                'create' => [],
+                'update' => [],
+                'expected_keys' => []
+            ]
+           ];
+            return $data[$type];
+        }
+       private static function fakeDataForTest($class,$where=[]){
+            $data = $class;
+            if (!empty($where)){
+                foreach ($where as $key => $value){
+                    $data = $data->where($key,$value);
+                }
+            }
+            $data->latest()->withTrashed()->first();
+           return $data;
+        }
+
+        private static function handelTestCaseData($model){
+            $fakeData = self::fakeData($model);
+            $params = $fakeData['create'];
+            $paramForUpdate  = $fakeData['update'];
+            $paramForUpdate['id'] = Items::latest()->withTrashed()->first()->id;
+            $expectedKeys  = $fakeData['expected_keys'];
+            $descriptions = app(ApiDocumentationController::class)->getDescriptions($model);
+            return [$params,$paramForUpdate,$expectedKeys,$descriptions];
+        }
+        private static function globalCases($model,$testCasesObject,$fakeLogin,$type):array{
+            [$params,$paramForUpdate,$expectedKeys,$descriptions] = self::handelTestCaseData($model);
+            $cases =  [
+                'create-index' => [
+                    $testCasesObject->handle(type: 'POST',name: $descriptions['create']['name'],route: '/api/v1/'.$model,params: $params,auth: $fakeLogin,desc: $descriptions['create']['description'],shortDesc: $descriptions['create']['short_description']),
+                    $testCasesObject->handle(type: 'GET',name: $descriptions['index']['name'],route: '/api/v1/'.$model,params: [],auth: $fakeLogin,desc: $descriptions['index']['description'],shortDesc: $descriptions['index']['short_description']),
+                ],
+                'show-update-delete' => [
+                    $testCasesObject->handle(type: 'GET',name: $descriptions['show']['show'],route: '/api/v1/'.$model.'/'.$paramForUpdate['id'],params: $expectedKeys,auth: $fakeLogin,desc: $descriptions['show']['description'],shortDesc: $descriptions['show']['short_description']),
+                    $testCasesObject->handle(type: 'PUT',name: $descriptions['update']['show'],route: '/api/v1/'.$model.'/'.$paramForUpdate['id'],params: $paramForUpdate,auth: $fakeLogin,desc: $descriptions['update']['description'],shortDesc: $descriptions['update']['short_description']),
+                    $testCasesObject->handle(type: 'PATCH',name: $descriptions['active']['show'],route: '/api/v1/'.$model.'/'.$paramForUpdate['id'].'/toggle-active',params: [],auth: $fakeLogin,desc: $descriptions['active']['description'],shortDesc: $descriptions['active']['short_description']),
+                    $testCasesObject->handle(type: 'DELETE',name: $descriptions['delete']['show'],route: '/api/v1/'.$model.'/'.$paramForUpdate['id'],params: [],auth: $fakeLogin,desc: $descriptions['delete']['description'],shortDesc: $descriptions['delete']['short_description'])
+                ],
+                'recycle-bin' => [
+                    $testCasesObject->handle(type: 'GET', name: $descriptions['trash']['name'], route: $model.'/trash', params: $expectedKeys, auth: $fakeLogin, desc: $descriptions['trash']['description'], shortDesc: $descriptions['trash']['short_description']),
+                    $testCasesObject->handle(type: 'PATCH', name: $descriptions['restore']['name'], route: $model.'/'.$paramForUpdate['id'].'/restore', params: [], auth: $fakeLogin, desc: $descriptions['restore']['description'], shortDesc: $descriptions['restore']['short_description']),
+                    $testCasesObject->handle(type: 'DELETE', name: $descriptions['force_delete']['name'], route: $model.'/'.$paramForUpdate['id'].'/force-delete', params: [], auth: $fakeLogin, desc: $descriptions['force_delete']['description'], shortDesc: $descriptions['force_delete']['short_description']),
+                ]
+            ];
+            return $cases[$type];
+        }
+
+        private static function {module}Module($model,$testCasesObject , $fakeLogin){
+            $createIndex = self::globalCases($model,$testCasesObject,$fakeLogin,'create-index');
+            $showUpdateDelete = self::globalCases($model,$testCasesObject,$fakeLogin,'show-update-delete');
+            $recycleBin = self::globalCases($model,$testCasesObject,$fakeLogin,'recycle-bin');
+            return [
+               $model.'-create-index' => $createIndex,
+               $model.'-show-update-delete' => $showUpdateDelete,
+               $model.'-recycle-bin' => $recycleBin,
+            ];
+        }
+}

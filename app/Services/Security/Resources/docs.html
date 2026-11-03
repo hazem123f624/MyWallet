@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الحماية — التوثيق الكامل</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Fira+Code:wght@400&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-block {
+            background: #020617;
+            color: #38bdf8;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            direction: ltr;
+            text-align: left;
+        }
+
+        .accent-gradient {
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge {
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #38bdf8;
+            transition: all 0.3s;
+        }
+
+        .shield {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            font-size: 24px;
+            margin-left: 12px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+
+        .layer-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .layer-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(56, 189, 248, 0.1);
+        }
+    </style>
+</head>
+
+<body class="flex">
+
+    <!-- Sidebar -->
+    <aside class="w-72 h-screen bg-slate-900 border-l border-slate-800 sticky top-0 hidden lg:block overflow-y-auto">
+        <div class="p-8">
+            <h2 class="text-2xl font-bold accent-gradient">🛡️ نظام الحماية</h2>
+            <p class="text-slate-500 text-xs mt-1 uppercase tracking-widest">Security Framework v2</p>
+        </div>
+        <nav class="mt-4 px-6 space-y-2">
+            <a href="#overview" class="block sidebar-link p-3 rounded-xl font-medium">نظرة عامة</a>
+            <a href="#layers" class="block sidebar-link p-3 rounded-xl font-medium">طبقات الحماية</a>
+            <a href="#threat" class="block sidebar-link p-3 rounded-xl font-medium">كشف التهديدات</a>
+            <a href="#nonce" class="block sidebar-link p-3 rounded-xl font-medium">حماية Nonce</a>
+            <a href="#context" class="block sidebar-link p-3 rounded-xl font-medium">سياق الأمان</a>
+            <a href="#logging" class="block sidebar-link p-3 rounded-xl font-medium">سجل الأحداث</a>
+            <a href="#config" class="block sidebar-link p-3 rounded-xl font-medium">الإعدادات</a>
+            <a href="#vue" class="block sidebar-link p-3 rounded-xl font-medium">تكامل Vue.js</a>
+            <a href="#flutter" class="block sidebar-link p-3 rounded-xl font-medium">تكامل Flutter</a>
+            <a href="#api" class="block sidebar-link p-3 rounded-xl font-medium">API Endpoints</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 md:p-16 max-w-5xl mx-auto">
+
+        <!-- Hero -->
+        <header class="mb-20">
+            <div class="flex items-center space-x-3 space-x-reverse mb-4">
+                <span class="badge">جاهز للإنتاج</span>
+                <span class="badge text-indigo-400 bg-indigo-400/10">11 طبقة حماية</span>
+                <span class="badge text-emerald-400 bg-emerald-400/10">كشف تهديدات ذكي</span>
+            </div>
+            <h1 class="text-5xl font-extrabold leading-tight mb-6">نظام الحماية<br><span
+                    class="accent-gradient">المتكامل للمشروع</span></h1>
+            <p class="text-lg text-slate-400 max-w-2xl leading-relaxed">نظام حماية متعدد الطبقات مبني على Laravel 12.
+                يوفر حماية من هجمات Replay، تسجيل ذكي، كشف تهديدات تكيّفي، وحماية Nonce — مع تكامل كامل مع Vue.js و
+                Flutter.</p>
+        </header>
+
+        <!-- Overview -->
+        <section id="overview" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-sky-500 ml-4 rounded-full"></span>نظرة عامة — كيف يحميك النظام؟</h2>
+            <p class="text-slate-400 mb-6 leading-relaxed">كل طلب (Request) يمر عبر <strong class="text-white">11 طبقة
+                    حماية متتالية</strong>. إذا فشل في أي طبقة يتم رفضه فوراً وتسجيله في قاعدة البيانات.</p>
+            <div class="glass rounded-3xl p-8">
+                <div class="code-block">
+                    <pre>Request → [1] IP Filter → [2] Rate Limit → [3] Force JSON → [4] Payload Size
+        → [5] Security Headers → [6] CORS → [7] API Key → [8] Timestamp
+        → [9] HMAC Signature → [10] Nonce → [11] Threat Detection → ✅ Controller</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Protection Layers -->
+        <section id="layers" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-sky-500 ml-4 rounded-full"></span>طبقات الحماية</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass p-6 rounded-2xl layer-card">
+                    <div class="flex items-center mb-3"><span class="shield bg-red-500/20 text-red-400">🚫</span>
+                        <h3 class="text-lg font-bold">فلتر IP</h3>
+                    </div>
+                    <p class="text-slate-400 text-sm">يمنع عناوين IP المشبوهة أو المحظورة من الوصول. يدعم القائمة
+                        البيضاء والسوداء.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl layer-card">
+                    <div class="flex items-center mb-3"><span class="shield bg-amber-500/20 text-amber-400">⏱️</span>
+                        <h3 class="text-lg font-bold">تحديد المعدل</h3>
+                    </div>
+                    <p class="text-slate-400 text-sm">يمنع الإساءة بتقييد عدد الطلبات لكل IP (افتراضي: 60 طلب/دقيقة).
+                    </p>
+                </div>
+                <div class="glass p-6 rounded-2xl layer-card">
+                    <div class="flex items-center mb-3"><span class="shield bg-sky-500/20 text-sky-400">🔑</span>
+                        <h3 class="text-lg font-bold">مفتاح API</h3>
+                    </div>
+                    <p class="text-slate-400 text-sm">كل عميل يحصل على مفتاح فريد. يُرسل في الهيدر <code
+                            class="text-sky-300">X-API-Token</code>. يدعم التشفير AES-256.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl layer-card">
+                    <div class="flex items-center mb-3"><span class="shield bg-purple-500/20 text-purple-400">✍️</span>
+                        <h3 class="text-lg font-bold">التوقيع HMAC</h3>
+                    </div>
+                    <p class="text-slate-400 text-sm">يضمن أن الطلب لم يتم تعديله. التوقيع = <code
+                            class="text-purple-300">HMAC-SHA256(METHOD|URL|TIMESTAMP|BODY, secret)</code></p>
+                </div>
+                <div class="glass p-6 rounded-2xl layer-card">
+                    <div class="flex items-center mb-3"><span
+                            class="shield bg-emerald-500/20 text-emerald-400">🔒</span>
+                        <h3 class="text-lg font-bold">حماية Nonce</h3><span class="badge mr-2">جديد</span>
+                    </div>
+                    <p class="text-slate-400 text-sm">رموز استخدام لمرة واحدة تمنع إعادة تشغيل الطلبات حتى لو تم
+                        اعتراضها.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl layer-card">
+                    <div class="flex items-center mb-3"><span class="shield bg-rose-500/20 text-rose-400">🧠</span>
+                        <h3 class="text-lg font-bold">كشف التهديدات</h3><span class="badge mr-2">جديد</span>
+                    </div>
+                    <p class="text-slate-400 text-sm">نظام تسجيل ذكي (0-100) يقيّم خطورة كل طلب ويحظر التهديدات العالية
+                        تلقائياً.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Threat Detection -->
+        <section id="threat" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-rose-500 ml-4 rounded-full"></span>كشف التهديدات التكيّفي</h2>
+            <p class="text-slate-400 mb-6">يحسب درجة خطورة (0-100) لكل طلب بناءً على عدة إشارات:</p>
+            <div class="glass rounded-3xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-800">
+                            <th class="p-5 text-right font-bold">الإشارة</th>
+                            <th class="p-5 text-right font-bold">النقاط</th>
+                            <th class="p-5 text-right font-bold">الوصف</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-400">
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5">أحداث أمنية سابقة</td>
+                            <td class="p-5 text-rose-400">+30</td>
+                            <td class="p-5">عدد الأحداث الأمنية لهذا الـ IP خلال ساعة</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5">User-Agent مشبوه</td>
+                            <td class="p-5 text-rose-400">+40</td>
+                            <td class="p-5">أدوات مثل sqlmap, nikto, nmap, burp</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5">قرب من حد المعدل</td>
+                            <td class="p-5 text-amber-400">+15</td>
+                            <td class="p-5">إذا استهلك أكثر من 70% من الحد المسموح</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5">هيدرات مفقودة</td>
+                            <td class="p-5 text-amber-400">+10</td>
+                            <td class="p-5">User-Agent مفقود أو قصير جداً</td>
+                        </tr>
+                        <tr>
+                            <td class="p-5">مسار مشبوه</td>
+                            <td class="p-5 text-yellow-400">+5</td>
+                            <td class="p-5">طلبات مثل .env, wp-admin, phpmyadmin</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mt-6">
+                <div class="glass p-5 rounded-2xl text-center">
+                    <p class="text-2xl font-bold text-emerald-400">&lt; 25</p>
+                    <p class="text-slate-500 text-sm">منخفض — بدون إجراء</p>
+                </div>
+                <div class="glass p-5 rounded-2xl text-center">
+                    <p class="text-2xl font-bold text-amber-400">25 – 79</p>
+                    <p class="text-slate-500 text-sm">متوسط — تسجيل تحذير</p>
+                </div>
+                <div class="glass p-5 rounded-2xl text-center">
+                    <p class="text-2xl font-bold text-rose-400">≥ 80</p>
+                    <p class="text-slate-500 text-sm">عالي — حظر تلقائي</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nonce -->
+        <section id="nonce" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-emerald-500 ml-4 rounded-full"></span>حماية Nonce (انتقائية)</h2>
+            <p class="text-slate-400 mb-6">رمز يُستخدم مرة واحدة فقط. يمنع إعادة تشغيل الطلبات (Replay Attack). <strong
+                    class="text-emerald-400">النظام الآن ذكي:</strong> يتم التحقق فقط في العمليات الحساسة (Critical).
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="glass p-6 rounded-2xl border-emerald-500/20">
+                    <h3 class="text-lg font-bold text-emerald-400 mb-2">✅ يُشترط Nonce لـ:</h3>
+                    <ul class="text-slate-400 text-sm list-disc list-inside space-y-1">
+                        <li>جميع عمليات الكتابة (POST, PUT, DELETE)</li>
+                        <li>مسارات الدفع (api/v1/payments/*)</li>
+                        <li>مسارات الطلبات (api/v1/orders/*)</li>
+                        <li>أو أي مسار يتم تعريفه يدوياً كـ "حساس"</li>
+                    </ul>
+                </div>
+                <div class="glass p-6 rounded-2xl border-slate-700">
+                    <h3 class="text-lg font-bold text-slate-300 mb-2">⏭️ يتم التجاوز لـ:</h3>
+                    <ul class="text-slate-500 text-sm list-disc list-inside space-y-1">
+                        <li>عمليات القراءة (GET)</li>
+                        <li>مسارات الهوية (Login, Register, Auth)</li>
+                        <li>مسارات المعلومات العامة</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="glass rounded-3xl p-8 space-y-4">
+                <h3 class="text-lg font-bold text-emerald-400">سير العمل (Workflow):</h3>
+                <ol class="text-slate-400 space-y-3 list-decimal list-inside">
+                    <li>العميل يطلب nonce في العمليات الحساسة فقط عبر <code
+                            class="text-emerald-300">GET /security/nonce</code>.</li>
+                    <li>يتم إرسال الـ nonce في هيدر <code class="text-emerald-300">X-NONCE</code>.</li>
+                    <li>إذا كان المسار غير حساس (مثل جلب قائمة المنتجات عبر GET)، يتم التجاوز لتسريع الاستجابة.</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Security Context -->
+        <section id="context" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-indigo-500 ml-4 rounded-full"></span>سياق الأمان (SecurityContext)</h2>
+            <p class="text-slate-400 mb-6">كائن يُجمع فيه كل بيانات الأمان خلال مرور الطلب عبر الطبقات. يُستخدم للتسجيل
+                المُثرى.</p>
+            <div class="code-block">
+                <pre>// البيانات المُجمّعة في SecurityContext
+{
+    "ip": "192.168.1.10",
+    "user_agent": "Mozilla/5.0 ...",
+    "fingerprint": "sha256(ip|ua|accept-lang)",
+    "api_client_id": 3,
+    "api_client_name": "Flutter App",
+    "risk_score": 15,
+    "nonce": "a1b2c3d4...",
+    "request_method": "POST",
+    "request_path": "api/v1/orders",
+    "flags": { "threat_level": "low" }
+}</pre>
+            </div>
+        </section>
+
+        <!-- Logging -->
+        <section id="logging" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-amber-500 ml-4 rounded-full"></span>سجل الأحداث الأمنية</h2>
+            <p class="text-slate-400 mb-6">جدول <code class="text-white">security_logs</code> الموجود تم تمديده بأعمدة
+                جديدة (اختيارية):</p>
+            <div class="glass rounded-3xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-800">
+                            <th class="p-4 text-right font-bold">العمود</th>
+                            <th class="p-4 text-right font-bold">النوع</th>
+                            <th class="p-4 text-right font-bold">الوصف</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-400">
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-4">ip, event_type, details, created_at</td>
+                            <td class="p-4 text-emerald-400">موجود ✅</td>
+                            <td class="p-4">الأعمدة الأصلية — لم تتغير</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-4">risk_score</td>
+                            <td class="p-4 text-sky-400">TINYINT NULL</td>
+                            <td class="p-4">درجة الخطورة 0-100</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-4">fingerprint</td>
+                            <td class="p-4 text-sky-400">VARCHAR(64) NULL</td>
+                            <td class="p-4">بصمة الجهاز</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-4">nonce</td>
+                            <td class="p-4 text-sky-400">VARCHAR(64) NULL</td>
+                            <td class="p-4">الرمز المستخدم</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-4">flags</td>
+                            <td class="p-4 text-sky-400">JSON NULL</td>
+                            <td class="p-4">بيانات إضافية مرنة</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-4">user_agent</td>
+                            <td class="p-4 text-sky-400">VARCHAR(512) NULL</td>
+                            <td class="p-4">متصفح/تطبيق العميل</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-4">request_method / request_path</td>
+                            <td class="p-4 text-sky-400">VARCHAR NULL</td>
+                            <td class="p-4">تفاصيل الطلب</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4">api_client_id</td>
+                            <td class="p-4 text-sky-400">FK NULL</td>
+                            <td class="p-4">ربط بجدول api_clients</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Config -->
+        <section id="config" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-purple-500 ml-4 rounded-full"></span>الإعدادات (.env)</h2>
+            <div class="code-block">
+                <pre># ─── الحماية الأساسية ───
+SECURITY_ENABLED=true
+SECURITY_API_KEY=true
+SECURITY_RATE_LIMIT=true
+SECURITY_RATE_MAX=60
+SECURITY_TIMESTAMP=false
+SECURITY_SIGNATURE=false
+
+# ─── كشف التهديدات (جديد) ───
+SECURITY_THREAT_DETECTION=true
+SECURITY_THREAT_LOW=25
+SECURITY_THREAT_MEDIUM=50
+SECURITY_THREAT_HIGH=80
+SECURITY_THREAT_BLOCK_MIN=60
+
+# ─── حماية Nonce (جديد) ───
+SECURITY_NONCE=false          # فعّلها عند الحاجة
+SECURITY_NONCE_TTL=300        # مدة صلاحية الرمز بالثواني</pre>
+            </div>
+        </section>
+
+        <!-- Vue.js Integration -->
+        <section id="vue" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center">
+                <span class="w-8 h-1 bg-emerald-500 ml-4 rounded-full"></span>
+                <img src="https://v2.vuejs.org/images/logo.png" class="w-7 h-7 ml-3"> تكامل Vue.js
+            </h2>
+
+            <h3 class="text-xl font-bold text-emerald-400 mb-4">1. إنشاء Security Service</h3>
+            <div class="code-block mb-8">
+                <pre>// src/services/SecurityService.js
+import axios from 'axios';
+
+const API_BASE = import.meta.env.VITE_API_URL;
+
+class SecurityService {
+  constructor() {
+    this.apiKey = import.meta.env.VITE_API_KEY;
+    this.secret = import.meta.env.VITE_API_SECRET;
+  }
+
+  // ─── إنشاء الهيدرات الأمنية ───
+  getSecurityHeaders(method, url, body = '') {
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const payload = `${method.toUpperCase()}|${url}|${timestamp}|${body}`;
+
+    // HMAC-SHA256 signature
+    const signature = CryptoJS.HmacSHA256(payload, this.secret).toString();
+
+    return {
+      'X-API-Token': this.apiKey,
+      'X-TIMESTAMP': timestamp,
+      'X-SIGNATURE': signature,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+  }
+
+  // ─── جلب Nonce (إن كانت مفعّلة) ───
+  async getNonce() {
+    const url = `${API_BASE}/api/v1/security/nonce`;
+    const headers = this.getSecurityHeaders('GET', url);
+    const { data } = await axios.get(url, { headers });
+    return data.data.nonce;
+  }
+
+  // ─── طلب آمن مع Nonce ───
+  async secureRequest(method, path, body = null) {
+    const url = `${API_BASE}${path}`;
+    const bodyStr = body ? JSON.stringify(body) : '';
+    const headers = this.getSecurityHeaders(method, url, bodyStr);
+
+    // إضافة Nonce إن كانت مفعّلة
+    try {
+      const nonce = await this.getNonce();
+      headers['X-NONCE'] = nonce;
+    } catch (e) { /* Nonce غير مفعّلة */ }
+
+    return axios({ method, url, headers, data: body });
+  }
+}
+
+export default new SecurityService();</pre>
+            </div>
+
+            <h3 class="text-xl font-bold text-emerald-400 mb-4">2. استخدام في Vue Component</h3>
+            <div class="code-block">
+                <pre>&lt;script setup&gt;
+import security from '@/services/SecurityService';
+import { ref } from 'vue';
+
+const orders = ref([]);
+
+async function loadOrders() {
+  const { data } = await security.secureRequest('GET', '/api/v1/orders');
+  orders.value = data.data;
+}
+
+async function createOrder(orderData) {
+  const { data } = await security.secureRequest('POST', '/api/v1/orders', orderData);
+  orders.value.push(data.data);
+}
+&lt;/script&gt;</pre>
+            </div>
+        </section>
+
+        <!-- Flutter Integration -->
+        <section id="flutter" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center">
+                <span class="w-8 h-1 bg-indigo-500 ml-4 rounded-full"></span>
+                <img src="https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf10282.png"
+                    class="w-7 h-7 ml-3"> تكامل Flutter
+            </h2>
+
+            <h3 class="text-xl font-bold text-indigo-400 mb-4">1. إضافة التبعيات</h3>
+            <div class="code-block mb-6">
+                <pre># pubspec.yaml
+dependencies:
+  http: ^1.1.0
+  crypto: ^3.0.3</pre>
+            </div>
+
+            <h3 class="text-xl font-bold text-indigo-400 mb-4">2. Security Service</h3>
+            <div class="code-block mb-8">
+                <pre>// lib/services/security_service.dart
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
+
+class SecurityService {
+  final String apiKey;
+  final String secret;
+  final String baseUrl;
+
+  SecurityService({
+    required this.apiKey,
+    required this.secret,
+    required this.baseUrl,
+  });
+
+  // ─── HMAC-SHA256 Signature ───
+  String _generateSignature(String method, String url, String ts, String body) {
+    final payload = '${method.toUpperCase()}|$url|$ts|$body';
+    final hmac = Hmac(sha256, utf8.encode(secret));
+    return hmac.convert(utf8.encode(payload)).toString();
+  }
+
+  // ─── بناء الهيدرات الأمنية ───
+  Map&lt;String, String&gt; _buildHeaders(String method, String url, {String body = ''}) {
+    final ts = (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString();
+    final sig = _generateSignature(method, url, ts, body);
+    return {
+      'X-API-Token': apiKey,
+      'X-TIMESTAMP': ts,
+      'X-SIGNATURE': sig,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+  }
+
+  // ─── جلب Nonce ───
+  Future&lt;String?&gt; _getNonce() async {
+    try {
+      final url = '$baseUrl/api/v1/security/nonce';
+      final headers = _buildHeaders('GET', url);
+      final res = await http.get(Uri.parse(url), headers: headers);
+      if (res.statusCode == 200) {
+        return jsonDecode(res.body)['data']['nonce'];
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  // ─── GET آمن ───
+  Future&lt;http.Response&gt; secureGet(String path) async {
+    final url = '$baseUrl$path';
+    final headers = _buildHeaders('GET', url);
+    final nonce = await _getNonce();
+    if (nonce != null) headers['X-NONCE'] = nonce;
+    return http.get(Uri.parse(url), headers: headers);
+  }
+
+  // ─── POST آمن ───
+  Future&lt;http.Response&gt; securePost(String path, Map&lt;String, dynamic&gt; body) async {
+    final url = '$baseUrl$path';
+    final bodyStr = jsonEncode(body);
+    final headers = _buildHeaders('POST', url, body: bodyStr);
+    final nonce = await _getNonce();
+    if (nonce != null) headers['X-NONCE'] = nonce;
+    return http.post(Uri.parse(url), headers: headers, body: bodyStr);
+  }
+}</pre>
+            </div>
+
+            <h3 class="text-xl font-bold text-indigo-400 mb-4">3. استخدام في التطبيق</h3>
+            <div class="code-block">
+                <pre>final security = SecurityService(
+  apiKey: 'your_api_key_here',
+  secret: 'your_secret_here',
+  baseUrl: 'https://api.yourapp.com',
+);
+
+// جلب الطلبات
+final response = await security.secureGet('/api/v1/orders');
+
+// إنشاء طلب جديد
+final response = await security.securePost('/api/v1/orders', {
+  'product_id': 1,
+  'quantity': 3,
+});</pre>
+            </div>
+        </section>
+
+        <!-- API Endpoints -->
+        <section id="api" class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-sky-500 ml-4 rounded-full"></span>نقاط API الأمنية</h2>
+            <div class="glass rounded-3xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-800">
+                            <th class="p-5 text-right">الطريقة</th>
+                            <th class="p-5 text-right">المسار</th>
+                            <th class="p-5 text-right">الوصف</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-400">
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5"><span class="text-emerald-400 font-mono">GET</span></td>
+                            <td class="p-5 font-mono text-slate-200">/api/v1/security/key-info</td>
+                            <td class="p-5">حالة المفتاح ومعلومات الانتهاء</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5"><span class="text-amber-400 font-mono">POST</span></td>
+                            <td class="p-5 font-mono text-slate-200">/api/v1/security/renew-key</td>
+                            <td class="p-5">تجديد المفتاح (يُلغي القديم فوراً)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-5"><span class="text-emerald-400 font-mono">GET</span></td>
+                            <td class="p-5 font-mono text-slate-200">/api/v1/security/nonce</td>
+                            <td class="p-5">توليد رمز Nonce جديد</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Required Headers -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-purple-500 ml-4 rounded-full"></span>الهيدرات المطلوبة في كل طلب</h2>
+            <div class="glass rounded-3xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-800">
+                            <th class="p-5 text-right">الهيدر</th>
+                            <th class="p-5 text-right">مطلوب؟</th>
+                            <th class="p-5 text-right">مثال</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-400">
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5 font-mono text-sky-300">X-API-Token</td>
+                            <td class="p-5 text-emerald-400">✅ دائماً</td>
+                            <td class="p-5 font-mono text-xs">a1b2c3d4e5f6...</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5 font-mono text-sky-300">X-TIMESTAMP</td>
+                            <td class="p-5 text-amber-400">⚡ إذا مفعّل</td>
+                            <td class="p-5 font-mono text-xs">1712995200</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5 font-mono text-sky-300">X-SIGNATURE</td>
+                            <td class="p-5 text-amber-400">⚡ إذا مفعّل</td>
+                            <td class="p-5 font-mono text-xs">HMAC-SHA256 hash</td>
+                        </tr>
+                        <tr class="border-b border-slate-800/50">
+                            <td class="p-5 font-mono text-sky-300">X-NONCE</td>
+                            <td class="p-5 text-amber-400">⚡ إذا مفعّل</td>
+                            <td class="p-5 font-mono text-xs">من /security/nonce</td>
+                        </tr>
+                        <tr>
+                            <td class="p-5 font-mono text-sky-300">Content-Type</td>
+                            <td class="p-5 text-emerald-400">✅ POST/PUT</td>
+                            <td class="p-5 font-mono text-xs">application/json</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Artisan Commands -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 flex items-center"><span
+                    class="w-8 h-1 bg-emerald-500 ml-4 rounded-full"></span>أوامر Artisan</h2>
+            <div class="code-block">
+                <pre># إنشاء عميل جديد
+php artisan security:api-key create "Flutter App"
+php artisan security:api-key create "Web Dashboard" --days=90
+php artisan security:api-key create "Server" --no-expiry
+
+# تدوير المفاتيح (القديم يلغى فوراً)
+php artisan security:api-key rotate 3
+
+# تجديد مدة الصلاحية
+php artisan security:api-key renew 3 --days=60
+
+# عرض جميع العملاء
+php artisan security:api-key list
+
+# إلغاء عميل
+php artisan security:api-key revoke 3</pre>
+            </div>
+        </section>
+
+        <footer class="mt-20 pb-12 border-t border-slate-800 pt-8 text-center text-slate-500 text-sm">
+            &copy; 2026 Security Framework v2 — حماية متعددة الطبقات لمشروعك
+        </footer>
+
+    </main>
+</body>
+
+</html>

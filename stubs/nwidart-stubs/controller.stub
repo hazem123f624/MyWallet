@@ -1,0 +1,92 @@
+<?php
+
+namespace $CLASS_NAMESPACE$;
+
+use App\Http\Controllers\Controller;
+use App\Http\Traits\HttpResponsesTrait;
+use Modules\{Module}\Interfaces\{InterfaceName};
+use Modules\{Module}\Http\Requests\{CreateRequestName};
+use Modules\{Module}\Http\Requests\{UpdateRequestName};
+use Modules\{Module}\Models\{ModelName};
+use Modules\{Module}\Resources\{ResourceName};
+use Illuminate\Http\Request;
+
+class $CLASS$ extends Controller
+{
+    use HttpResponsesTrait;
+    private $repository;
+    public function __construct({InterfaceName} $repository)
+    {
+        $this->repository = $repository;
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $request      = $this->handelRequests(requests:request()->all());
+        $data         = $this->repository->data(request:$request);
+        $data['data'] = {ResourceName}::collection($data['data']);
+        return $this->success('Data retrieved successfully.',data: $data);
+    }
+ /**
+     * Store a newly created resource in storage.
+     */
+    public function store({CreateRequestName} $request)
+    {
+        $data = $this->repository->save($request->validated());
+        return $this->success('Data inserted successfully.',data: $data);
+    }
+
+    /**
+     * Show the specified resource.
+     */
+    public function show({ModelName} $id)
+    {
+         $data = $this->repository->data([], $id);
+          $data = new {ResourceName}($data);
+         return $this->success('Data retrieved successfully.',data: $data);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({UpdateRequestName} $request, $id)
+    {
+       $data = $this->repository->save($request->validated(),$id);
+       return $this->success('Data updated successfully.',data: $data);
+    }
+
+    public function switchActive(Request $request, $data){
+        $data = $this->repository->switchActive($data);
+        return $this->success('Data updated successfully.', data: $data);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({ModelName} $data)
+    {
+        $return = $this->repository->delete($data);
+        return $this->success('Data deleted successfully.',data: []);
+    }
+
+    //////////////////////////////////////////// For Recycle Bin
+    public function trash(){
+        $allRequested = request()->all();
+        $allRequested['only_trashed'] = true;
+        $request = $this->handelRequests(requests: $allRequested);
+        $data = $this->repository->data(request: $request);
+        $data['data'] = {ResourceName}::collection($data['data']);
+        return $this->success('Data retrieved successfully.',data: $data);
+    }
+    public function restore($id){
+        $data = $this->repository->restore($id);
+        return $this->success('Data updated successfully.', data: $data);
+    }
+    public function remove($id)
+    {
+        $this->repository->forceDelete($id);
+        return $this->success('Data deleted successfully.', data: []);
+    }
+}

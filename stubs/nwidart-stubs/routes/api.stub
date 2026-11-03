@@ -1,0 +1,18 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use $MODULE_NAMESPACE$\$STUDLY_NAME$\$CONTROLLER_NAMESPACE$\$STUDLY_NAME$Controller;
+
+Route::middleware(['security', 'auth:sanctum'])->prefix('v1')->group(function () {
+
+    Route::get('$PLURAL_LOWER_NAME$/trash', [$STUDLY_NAME$Controller::class, 'trash']);
+    Route::patch('$PLURAL_LOWER_NAME$/{id}/restore', [$STUDLY_NAME$Controller::class, 'restore']);
+    Route::delete('$PLURAL_LOWER_NAME$/{id}/force-delete', [$STUDLY_NAME$Controller::class, 'remove']);
+    Route::patch('$PLURAL_LOWER_NAME$/{data}/toggle-active', [$STUDLY_NAME$Controller::class, 'switchActive']);
+
+    Route::get('$PLURAL_LOWER_NAME$', [$STUDLY_NAME$Controller::class, 'index']);
+    Route::post('$PLURAL_LOWER_NAME$', [$STUDLY_NAME$Controller::class, 'store']);
+    Route::get('$PLURAL_LOWER_NAME$/{id}', [$STUDLY_NAME$Controller::class, 'show']);
+    Route::put('$PLURAL_LOWER_NAME$/{id}', [$STUDLY_NAME$Controller::class, 'update']);
+    Route::delete('$PLURAL_LOWER_NAME$/{data}', [$STUDLY_NAME$Controller::class, 'destroy']);
+});

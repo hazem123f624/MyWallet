@@ -1,0 +1,12 @@
+<?php
+
+namespace $CLASS_NAMESPACE$;
+
+interface $CLASS$ {
+    public function data($request, $id = "*");
+    public function save($request, $id = "");
+    public function switchActive($id)
+    public function delete($id);
+    public function restore($id);
+    public function forceDelete($id);
+}

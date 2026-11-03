@@ -1,0 +1,284 @@
+MVP BUSINESS DESIGN - PHASES
+
+======================================================================
+Phase 1: User Registration & Account Management
+======================================================================
+Goal: The user can create an account and start using the app.
+
+Business Requirements:
+- Create a new account.
+- Log in and log out.
+- Verify phone number via OTP.
+- Manage user data.
+- Change password.
+- Transaction PIN to confirm transfers.
+- Manage account status (Active / Suspended).
+
+Result: The user now has an account ready to use the app.
+
+
+======================================================================
+Phase 2: Bank Account Linking
+======================================================================
+Goal: Link the user's own bank account to the app.
+
+Business Requirements:
+- Display supported banks.
+- Select a bank.
+- Link the bank account.
+- Verify account ownership.
+- Display linked accounts.
+- Set the primary account.
+- Unlink a bank account.
+
+Result: The user can link their bank account as the source of funds.
+
+Note: This phase depends on the availability of a bank or Banking
+Aggregator that allows the required integration.
+
+
+======================================================================
+Phase 3: Parent Wallet Management
+======================================================================
+Goal: Create and manage the user's main wallet.
+
+Business Requirements:
+- Create the Parent Wallet automatically.
+- Link it to the bank account.
+- Display the total allocated balance.
+- Display the available balance.
+- Display the balance reserved for pending operations.
+- Display the wallet status.
+
+Result: The user now has a main wallet through which they manage their money.
+
+
+======================================================================
+Phase 4: Sub Wallet Management
+======================================================================
+Goal: Allow the user to divide their money across virtual wallets.
+
+Business Requirements:
+- Create a Sub Wallet.
+- Rename a wallet.
+- Delete a wallet.
+- Choose a color and icon.
+- Maximum of 12 Sub Wallets.
+- Allocate an amount to each wallet.
+- Redistribute funds between wallets.
+- Display each wallet's balance.
+- Prevent spending more than the available balance.
+
+Example:
+
+  Wallet            Balance
+  ----------------  -----------
+  Parent Wallet     20,000 EGP
+  Electricity        3,000 EGP
+  Rent               7,000 EGP
+  Food               5,000 EGP
+  Personal           5,000 EGP
+
+Result: The user can divide their balance according to their needs.
+
+
+======================================================================
+Phase 5: Money Transfer
+======================================================================
+Goal: Allow the user to send money from a specific Sub Wallet.
+
+Business Requirements:
+- Select the Parent Wallet.
+- Select the Sub Wallet.
+- Enter beneficiary details.
+- Enter the transfer amount.
+- Validate the balance.
+- Validate transfer limits.
+- Confirm the operation using the Transaction PIN.
+- Create the transfer request.
+- Execute the transfer through the Banking Provider.
+- Update the transaction status.
+
+Example:
+The user wants to transfer 2,000 EGP from Electricity.
+
+  Parent Wallet
+        |
+        v
+  Electricity Wallet
+        |
+        v
+  Available Balance: 3,000 EGP
+        |
+        v
+  Transfer: 2,000 EGP
+        |
+        v
+  Validate Balance
+        |
+        v
+  Execute Transfer
+
+If the balance is insufficient, the operation is rejected before the
+transfer request is sent.
+
+Result: The user can transfer money from a specific Sub Wallet.
+
+
+======================================================================
+Phase 6: Transaction Lifecycle & Refund Management
+======================================================================
+Goal: Manage the full lifecycle of a transfer and handle failure cases.
+
+This is a critical phase and must not be treated as just an extra feature.
+
+Transaction Statuses:
+
+  Status       Description
+  -----------  ------------------------------------------
+  Pending      The transfer request has been created
+  Processing   The bank has started processing the transfer
+  Successful   The transfer succeeded
+  Failed       The transfer failed
+  Reversed     The bank reversed the operation
+  Refunded     The amount was returned to the wallet
+
+Business Scenarios:
+
+Scenario 1: Successful Transfer
+- Reserve the amount from the Sub Wallet.
+- Send the transfer request.
+- The bank confirms success.
+- Permanently deduct the amount from the budget.
+- Record the transaction as Successful.
+
+Scenario 2: Failed Transfer
+- Reserve the amount.
+- Send the transfer request.
+- The bank returns Failed.
+- Cancel the reservation.
+- Return the amount to the Sub Wallet's available balance.
+- Record the transaction as Failed.
+
+Scenario 3: Pending Transfer
+- Reserve the amount.
+- The bank has not yet determined the result.
+- Keep the amount reserved.
+- Query the transfer status later.
+
+Scenario 4: Successful Then Reversed
+- The transfer succeeded.
+- The bank sends a notification reversing the operation.
+- Create a reversal ledger entry.
+- Return the amount to the original wallet.
+- Record the transaction as Reversed.
+
+Result: No money is lost due to failed transfers or duplicate requests.
+
+
+======================================================================
+Phase 7: Transaction History
+======================================================================
+Goal: The user can view the transfers they have made.
+
+Business Requirements:
+- Display the transfer history.
+- Show details of each transfer.
+- Search by Reference Number.
+- Filter by date.
+- Filter by status.
+- Display the amount and beneficiary.
+- Display the source of funds.
+
+Very important for your concept:
+
+Internal operations:
+  Parent Wallet -> Electricity
+These appear in the wallet details as Private, and do NOT appear in the
+External Transfer History.
+
+External transfers:
+  Electricity -> Beneficiary
+These appear in the transaction history.
+
+Result: A clear transaction history, without showing internal operations
+as if they were bank transfers.
+
+
+======================================================================
+Final MVP Structure
+======================================================================
+
+                 USER
+                   |
+                   v
+             User Account
+                   |
+                   v
+              Parent Wallet
+                   |
+        +----------+----------+
+        |          |          |
+        v          v          v
+    Electricity   Rent      Personal
+        |          |          |
+        +----------+----------+
+                   |
+                   v
+             Money Transfer
+                   |
+                   v
+             Banking Provider
+                   |
+          +--------+--------+
+          |        |        |
+          v        v        v
+       Success   Failed   Pending
+          |        |        |
+          v        v        v
+       Complete  Release   Verify
+                 Reserve   Status
+
+
+======================================================================
+Final MVP Scope
+======================================================================
+
+  Phase  Business Feature                Priority
+  -----  ------------------------------  ---------
+  1      User Account                    Essential
+  2      Bank Account Linking            Essential
+  3      Parent Wallet                   Essential
+  4      Sub Wallets                     Essential
+  5      Money Transfer                  Essential
+  6      Refund & Reversal Management    Essential
+  7      Transaction History             Essential
+
+
+======================================================================
+Out of Scope for Now
+======================================================================
+- Bill Payments.
+- Electricity & Gas Services.
+- Mobile Recharge.
+- Savings Goals.
+- Financial Reports.
+- Budget Recommendations.
+- Recurring Payments.
+- Cashback.
+- Loyalty Points.
+
+All of these can come later if the product succeeds.
+
+
+======================================================================
+Final Business Design Point
+======================================================================
+Every Sub Wallet is treated as just an internal allocation of the Parent
+Wallet's balance, not as an independent bank account. Any external
+transfer must go through a reserve, confirm, and financial settlement
+cycle, with an actual funding source and the authority to execute the
+transfer through a licensed banking partner or service provider.
+
+This gives you a clear, limited MVP, and you won't waste time on features
+that are not essential to the product at the start.

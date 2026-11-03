@@ -1,0 +1,34 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\{Module}\Models\{ModelName};
+
+/**
+ * @mixin {ModelName}
+ */
+class $CLASS$ extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     */
+    public function toArray(Request $request): array
+    {
+       return [
+               'id' => $this->id,
+               'is_active' => (bool)$this->is_active,
+               'created_at' => $this->created_at
+           ];
+    }
+
+    protected function getTranslateByKey($key, $object){
+        $value = '';
+        $object = $object->where('lang', app()->getLocale())->first();
+        if($object){
+            $value = $object->$key;
+        }
+        return $value;
+    }
+}

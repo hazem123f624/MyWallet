@@ -1,0 +1,28 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Traits\TranslateTrait;
+use Modules\{Module}\DTOs\{DtoName};
+
+
+class $CLASS$ extends Model
+{
+    use SoftDeletes;
+    use TranslateTrait;
+    protected $table = "";
+    public $dto = {DtoName}::class;
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable                = $FILLABLE$;
+    protected $hidden                  = [];
+    protected $casts                   = [];
+    public $timestamps                 = true;
+    public $attributes                 = [];
+    public string $foreignKey          = '{singular-module}_id';
+    public array $translatedAttributes = [];
+    public array $relatedModules       = [];
+}

@@ -1,0 +1,15 @@
+<?php
+
+namespace {{ namespace }};
+use App\DTOs\BaseDto;
+
+class {{ class }} extends BaseDto
+{
+    public function __construct($item) {
+
+    }
+    public static function fromModel($model)
+    {
+        return new self();
+    }
+}

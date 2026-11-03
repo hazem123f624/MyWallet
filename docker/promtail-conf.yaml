@@ -1,0 +1,25 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://92.205.185.63:3100/loki/api/v1/push
+    basic_auth:
+      username: admin1
+      password: yhFhUdQZrsmLFh4J6vE0
+
+scrape_configs:
+  # Laravel Application Logs Only
+  - job_name: laravel_app
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: maqsafy_store_dashboard
+          server: beta-server
+          environment: beta
+          app: maqsafy
+          __path__: /var/www/storage/logs/*.log
