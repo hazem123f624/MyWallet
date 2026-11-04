@@ -72,6 +72,33 @@ class CountryService
     }
 
     /**
+     * Get country by a full international phone number.
+     */
+    public function getCountryByFullPhone(string $fullPhone): ?object
+    {
+        $fullPhone = preg_replace('/[^0-9]/', '', $fullPhone);
+
+        if ($fullPhone === '') {
+            return null;
+        }
+
+        return Settings::countries()
+            ->where('is_active', true)
+            ->get()
+            ->sortByDesc(fn ($country) => strlen((string) data_get($country->data, 'phone_code', '')))
+            ->first(function ($country) use ($fullPhone): bool {
+                $phoneCode = (string) data_get($country->data, 'phone_code', '');
+                $phoneLength = (int) data_get($country->data, 'phone_length', 9);
+
+                if ($phoneCode === '' || ! str_starts_with($fullPhone, $phoneCode)) {
+                    return false;
+                }
+
+                return strlen(substr($fullPhone, strlen($phoneCode))) === $phoneLength;
+            });
+    }
+
+    /**
      * Get country ID from phone code
      */
     public function getCountryIdByPhoneCode(string $phoneCode): ?int

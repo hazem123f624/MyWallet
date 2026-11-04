@@ -3,10 +3,12 @@
 namespace Modules\Admins\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Modules\Admins\Interfaces\AdminsInterface;
 use Modules\Admins\Interfaces\ModelsInterface;
 use Modules\Admins\Interfaces\RolesInterface;
+use Modules\Admins\Models\Admins;
 use Modules\Admins\Repositories\AdminsRepository;
 use Modules\Admins\Repositories\ModelsRepository;
 use Modules\Admins\Repositories\RolesRepository;
@@ -27,6 +29,8 @@ class AdminsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::define('change-user-status', fn ($user): bool => $user instanceof Admins && $user->isSuperAdmin());
+
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();

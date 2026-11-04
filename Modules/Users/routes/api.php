@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Users\Http\Controllers\ManageUsersController;
+use Modules\Users\Http\Controllers\Mobile\TransactionPinController;
 use Modules\Users\Http\Controllers\Mobile\UsersController;
+use Modules\Users\Http\Middleware\EnsureUserIsActive;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,11 +24,16 @@ Route::middleware(['security'])->prefix(config('api.version').'/'.config('api.pr
     Route::post('reset-password', [UsersController::class, 'resetPassword']);
 
     // Protected Routes
-    Route::middleware(['auth:sanctum', 'abilities:users'])->group(function (): void {
+    Route::middleware(['auth:sanctum', 'abilities:users', EnsureUserIsActive::class])->group(function (): void {
         Route::get('profile', [UsersController::class, 'profile']);
         Route::post('profile', [UsersController::class, 'updateProfile']);
         Route::delete('profile', [UsersController::class, 'destroy']);
         Route::post('change-password', [UsersController::class, 'changePassword']);
+        Route::post('transaction-pin', [TransactionPinController::class, 'set']);
+        Route::post('transaction-pin/change', [TransactionPinController::class, 'change']);
+        Route::post('transaction-pin/forget', [TransactionPinController::class, 'sendResetOtp']);
+        Route::post('transaction-pin/reset', [TransactionPinController::class, 'reset']);
+        Route::post('transaction-pin/verify', [TransactionPinController::class, 'verify']);
         Route::post('logout', [UsersController::class, 'logout']);
         Route::post('refresh-token', [UsersController::class, 'refreshToken']);
     });

@@ -38,6 +38,14 @@ class DocumentationService
             }
         }
 
+        foreach ($apiSections as $section => $modules) {
+            foreach ($modules as $module => $items) {
+                $apiSections[$section][$module] = $this->groupModule($module, $items);
+            }
+
+            $apiSections[$section] = $this->sortModules($section, $apiSections[$section]);
+        }
+
         return view('docs-api', [
             'data' => $allData,
             'overViewWithIntroduction' => $overViewWithIntroduction,
@@ -46,6 +54,166 @@ class DocumentationService
             'baseUrl' => rtrim((string) config('app.url'), '/').'/api/'.config('api.version'),
             'totalEndpoints' => $allData->where('section', 1)->count(),
         ]);
+    }
+
+    /**
+     * Split a large module into feature groups while leaving small modules flat.
+     */
+    private function groupModule(string $module, array $items): array
+    {
+        $threshold = (int) config('documentation.group_threshold', 5);
+        $useGroups = count($items) > $threshold;
+        $grouped = [];
+
+        foreach ($items as $item) {
+            $label = $useGroups ? $this->groupFor($item->route, $module) : null;
+            $key = $label ? \Illuminate\Support\Str::slug($label) : 'all';
+
+            if (! isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'key' => $key,
+                    'name' => $label,
+                    'items' => [],
+                ];
+            }
+
+            $grouped[$key]['items'][] = $item;
+        }
+
+        if (count($grouped) <= 1) {
+            return [
+                'total' => count($items),
+                'groups' => [[
+                    'key' => 'all',
+                    'name' => null,
+                    'items' => $items,
+                ]],
+            ];
+        }
+
+        $groups = array_values($grouped);
+        $order = config('documentation.group_order', []);
+
+        usort($groups, static function (array $a, array $b) use ($order): int {
+            $aOrder = $order[$a['name']] ?? PHP_INT_MAX;
+            $bOrder = $order[$b['name']] ?? PHP_INT_MAX;
+
+            return $aOrder <=> $bOrder ?: strcmp((string) $a['name'], (string) $b['name']);
+        });
+
+        return [
+            'total' => count($items),
+            'groups' => $groups,
+        ];
+    }
+
+    /**
+     * Sort a section's modules using the configured display order.
+     */
+    private function sortModules(string $section, array $modules): array
+    {
+        $order = config('documentation.module_order', [])[$section] ?? [];
+        $position = array_flip($order);
+
+        uksort($modules, static function ($a, $b) use ($position): int {
+            $aOrder = $position[$a] ?? PHP_INT_MAX;
+            $bOrder = $position[$b] ?? PHP_INT_MAX;
+
+            return $aOrder <=> $bOrder ?: strcmp((string) $a, (string) $b);
+        });
+
+        return $modules;
+    }
+
+    /**
+     * Resolve a human-readable feature group from the endpoint route.
+     */
+    private function groupFor(?string $route, string $module): string
+    {
+        $segments = $this->normalizePath($route);
+        $consumerPrefixes = array_merge(
+            array_values((array) config('api.prefixes', [])),
+            ['mobile', 'dashboard', 'admin', 'web', 'internal', 'user'],
+        );
+
+        if (! empty($segments) && in_array($segments[0], $consumerPrefixes, true)) {
+            array_shift($segments);
+        }
+
+        $segments = array_values(array_filter(
+            $segments,
+            static fn ($segment) => ! str_starts_with($segment, '{'),
+        ));
+
+        $resource = $segments[0] ?? 'general';
+        $actions = array_slice($segments, 1);
+        $action = $actions !== [] ? (string) end($actions) : $resource;
+        $actionPath = $actions !== [] ? implode('/', $actions) : $resource;
+
+        if ($module === 'Authentication') {
+            if (in_array($action, ['register', 'verify', 'resend-otp', 'resend-forgot-password-otp'], true)) {
+                return 'Registration & Verification';
+            }
+
+            if (in_array($action, ['login', 'logout', 'refresh-token'], true)) {
+                return 'Login & Session';
+            }
+
+            if (str_contains($action, 'password') || str_contains($actionPath, 'password')) {
+                return 'Password Reset';
+            }
+
+            return 'Session & Security';
+        }
+
+        if ($module === 'Account') {
+            if (str_contains($actionPath, 'transaction-pin')) {
+                return 'Transaction PIN';
+            }
+
+            if (str_contains($action, 'password')) {
+                return 'Password';
+            }
+
+            return 'Profile';
+        }
+
+        if ($module === 'Administration') {
+            if (
+                in_array('trash', $actions, true)
+                || in_array('restore', $actions, true)
+                || in_array('force-delete', $actions, true)
+            ) {
+                return \Illuminate\Support\Str::singular(\Illuminate\Support\Str::headline($resource)).' Recycle Bin';
+            }
+
+            if (
+                $resource === 'roles'
+                && (
+                    in_array('admins', $actions, true)
+                    || in_array('available-admins', $actions, true)
+                    || in_array('permissions', $actions, true)
+                )
+            ) {
+                return 'Role Assignments';
+            }
+
+            return \Illuminate\Support\Str::headline($resource);
+        }
+
+        if ($module === 'Users') {
+            if (
+                in_array('trash', $actions, true)
+                || in_array('restore', $actions, true)
+                || in_array('force-delete', $actions, true)
+            ) {
+                return 'Recycle Bin';
+            }
+
+            return 'User Management';
+        }
+
+        return 'General';
     }
 
     /**

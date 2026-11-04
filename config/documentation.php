@@ -11,6 +11,47 @@ return [
     | prefix below. New modules are placed automatically from their URL.
     */
     'default_consumer' => 'Dashboard',
+
+    /*
+    |--------------------------------------------------------------------------
+    | API grouping
+    |--------------------------------------------------------------------------
+    | Modules with more than this many endpoints are split into feature
+    | subgroups in the documentation navigation and content.
+    */
+    'group_threshold' => (int) env('API_DOCS_GROUP_THRESHOLD', 5),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Display order
+    |--------------------------------------------------------------------------
+    | Keep common modules and feature groups in a predictable reading order.
+    | Unknown items fall to the end.
+    */
+    'module_order' => [
+        'User App' => ['Authentication', 'Account'],
+        'Dashboard' => ['Authentication', 'Administration', 'Users', 'Account', 'Activity Logs'],
+    ],
+
+    'group_order' => [
+        'Registration & Verification' => 10,
+        'Login & Session' => 20,
+        'Password Reset' => 30,
+        'Profile' => 40,
+        'Password' => 50,
+        'Transaction PIN' => 60,
+        'User Management' => 70,
+        'Recycle Bin' => 80,
+        'Session & Security' => 90,
+        'Admins' => 110,
+        'Admin Recycle Bin' => 120,
+        'Roles' => 130,
+        'Role Assignments' => 140,
+        'Role Recycle Bin' => 150,
+        'Models' => 160,
+        'Counts' => 170,
+        'General' => 999,
+    ],
     'consumers' => [
         'User App' => array_values(array_unique(array_filter([env('API_MOBILE_PREFIX', 'mobile'), 'user']))),
         'Dashboard' => array_values(array_unique(array_filter([env('API_DASHBOARD_PREFIX', 'dashboard'), 'dashboard']))),
@@ -45,6 +86,11 @@ return [
         'users.logout' => 'Authentication',
         'users.profile' => 'Account',
         'users.change-password' => 'Account',
+        'users.transaction-pin' => 'Account',
+        'users.transaction-pin.change' => 'Account',
+        'users.transaction-pin.forget' => 'Account',
+        'users.transaction-pin.reset' => 'Account',
+        'users.transaction-pin.verify' => 'Account',
         'profile' => 'Account',
         'change-password' => 'Account',
         'admins' => 'Administration',

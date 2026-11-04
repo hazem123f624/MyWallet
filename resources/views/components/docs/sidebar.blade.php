@@ -3,7 +3,9 @@
 @php
     $methodOrder = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
     $methods = collect($apiSections)
-        ->flatMap(fn ($modules) => collect($modules)->flatMap(fn ($items) => $items))
+        ->flatMap(fn ($modules) => collect($modules)->flatMap(
+            fn ($module) => collect($module['groups'])->flatMap(fn ($group) => $group['items'])
+        ))
         ->pluck('method')
         ->map(fn ($method) => strtoupper($method))
         ->unique()
@@ -73,36 +75,62 @@
         </div>
 
         @foreach($apiSections as $sectionName => $modules)
-            <div class="nav-group">
-                <p class="nav-label">{{ $sectionName }}</p>
+            <details class="nav-section" open>
+                <summary>
+                    <span>{{ $sectionName }}</span>
+                    <span class="nav-count">{{ collect($modules)->sum('total') }}</span>
+                </summary>
 
-                @foreach($modules as $moduleName => $items)
+                <div class="nav-section-body">
+                @foreach($modules as $moduleName => $module)
                     <details class="nav-module" open>
                         <summary>
                             <span>{{ $moduleName }}</span>
-                            <span class="nav-count">{{ count($items) }}</span>
+                            <span class="nav-count">{{ $module['total'] }}</span>
                         </summary>
 
                         <div class="nav-links">
-                            @foreach($items as $item)
-                                <a
-                                    href="#id-{{ $item->id }}"
-                                     class="nav-link nav-endpoint"
-                                     data-search="{{ strtolower($item->name.' '.$item->method.' '.$item->route) }}"
-                                     data-method="{{ strtolower($item->method) }}"
-                                 >
-                                    <span class="nav-method nav-method-{{ strtolower($item->method) }}">
-                                        {{ strtoupper($item->method) }}
-                                    </span>
-                                    <span>{{ $item->name }}</span>
-                                </a>
+                            @foreach($module['groups'] as $group)
+                                @if($group['name'])
+                                    <details class="nav-submodule">
+                                        <summary>
+                                            <span>{{ $group['name'] }}</span>
+                                            <span class="nav-count">{{ count($group['items']) }}</span>
+                                        </summary>
+
+                                        <div class="nav-links nav-sub-links">
+                                            @foreach($group['items'] as $item)
+                                                <x-docs.nav-endpoint :item="$item" :group="$group['name']" />
+                                            @endforeach
+                                        </div>
+                                    </details>
+                                @else
+                                    <div class="nav-links nav-sub-links">
+                                        @foreach($group['items'] as $item)
+                                            <x-docs.nav-endpoint :item="$item" :group="$group['name']" />
+                                        @endforeach
+                                    </div>
+                                @endif
                             @endforeach
                         </div>
                     </details>
                 @endforeach
-            </div>
+                </div>
+            </details>
         @endforeach
     </nav>
 
     <p class="sidebar-empty" id="sidebarEmpty" hidden>No matching endpoints.</p>
+
+    <div
+        class="sidebar-resizer"
+        id="sidebarResizer"
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Resize navigation"
+        aria-valuemin="220"
+        aria-valuemax="560"
+        tabindex="0"
+        title="Drag to resize"
+    ></div>
 </aside>

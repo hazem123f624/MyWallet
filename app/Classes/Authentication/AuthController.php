@@ -80,6 +80,9 @@ class AuthController extends Controller
         $request = app($this->loginRequest);
         $request->validateResolved();
         $credentials = $request->only($this->loginType, 'password');
+        if ($this->loginType === 'phone' && $request->filled('full_phone')) {
+            $credentials['phone'] = $request->input('full_phone');
+        }
         $authData = $this->authFactory->login(request: $credentials, createToken: $this->singleFactorAuth);
 
         $resource = new $this->resource($authData['user']);
@@ -165,6 +168,9 @@ class AuthController extends Controller
         $request = app($this->verifyForgotPasswordRequest);
         $request->validateResolved();
         $request = $request->validated();
+        if ($this->forgetPasswordType === 'phone' && ! empty($request['full_phone'])) {
+            $request['phone'] = $request['full_phone'];
+        }
 
         $user = ($this->model)::where($this->forgetPasswordType, $request[$this->forgetPasswordType])->firstOrFail();
         if ($user->change_password_token != $request['change_password_token'] || $user->change_password_expired_at->isPast()) {
@@ -183,6 +189,9 @@ class AuthController extends Controller
         $request = app($this->resetPasswordRequest);
         $request->validateResolved();
         $request = $request->validated();
+        if ($this->forgetPasswordType === 'phone' && ! empty($request['full_phone'])) {
+            $request['phone'] = $request['full_phone'];
+        }
 
         $this->authFactory->resetPassword(request: $request, type: $this->forgetPasswordType);
         return $this->success('Password reset successfully.', data: []);

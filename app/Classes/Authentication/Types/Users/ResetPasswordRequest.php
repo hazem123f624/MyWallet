@@ -53,12 +53,17 @@ class ResetPasswordRequest extends FormRequest
                 },
             ],
 
+            'full_phone' => [
+                'nullable',
+                'string',
+            ],
+
             'password' => [
                 'required',
                 'confirmed',
                 new StrongPassword,
                 function ($attribute, $value, $fail) {
-                    $phone = $this->input('phone');
+                    $phone = $this->input('full_phone') ?? $this->input('phone');
                     $user = User::where('phone', $phone)->first();
                     if ($user && Hash::check($value, $user->password)) {
                         $fail('The new password must be different from the old password.');
@@ -70,7 +75,7 @@ class ResetPasswordRequest extends FormRequest
                 'required',
                 'string',
                 function ($attribute, $value, $fail) {
-                    $phone = $this->input('phone');
+                    $phone = $this->input('full_phone') ?? $this->input('phone');
                     $user = \Modules\Users\Models\User::where('phone', $phone)->first();
                     if (!$user || $user->change_password_token !== $value) {
                         $fail('Invalid or expired token.');

@@ -16,7 +16,7 @@ Test specification for user registration, account management, and administrator 
 - Header for protected routes: `X-API-Token: {{api_key}}`
 - Header for authenticated routes: `Authorization: Bearer {{token}}`
 
-> This is a test-case specification. Phase 1 does not yet have automated feature tests.
+> Automated feature tests now cover the registration, OTP, login, session, profile, password, and account-suspension flows.
 
 ---
 
@@ -51,7 +51,7 @@ Test specification for user registration, account management, and administrator 
 | LOG-01 | Login with valid credentials | User is verified and active | `200`; bearer token is returned; `last_login_at` is updated; failed-attempt counters reset | Ready |
 | LOG-02 | Login with a wrong password | User exists and is active | `422`; invalid credentials; failed-attempt counter increases | Ready |
 | LOG-03 | Login with an unverified account | User exists but `phone_verified_at` is null | `403`; message asks the user to verify the account first | Ready |
-| LOG-04 | Login with a suspended account | User exists but `is_active` is false | `422`; no token is issued; message is currently the generic invalid-credentials message | Gap |
+| LOG-04 | Login with a suspended account | User exists but `is_active` is false | `403`; no token is issued; response uses the suspended-account message | Ready |
 | LOG-05 | Login with an unknown phone | No user exists with the phone | `422`; phone does not exist | Ready |
 | LOG-06 | Lock after five failed attempts | User exists; five wrong passwords were submitted | `422`; account is locked for 15 minutes; correct password is also rejected until expiry | Ready |
 | LOG-07 | Lock after ten failed attempts | User exists; ten wrong passwords were submitted | `422`; account is locked for 1 hour | Ready |
@@ -60,7 +60,7 @@ Test specification for user registration, account management, and administrator 
 | LOG-10 | Logout | User has a valid token | `200`; current token is revoked; the same token cannot access protected routes | Ready |
 | LOG-11 | Refresh token | User has a valid token | `200`; new token is returned; old token is revoked | Ready |
 | LOG-12 | Access a protected route without a token | No authorization header | `401` | Ready |
-| LOG-13 | Access a protected route with a suspended user's existing token | User was suspended after receiving a token | `401` or `403`; token must not be accepted | Gap |
+| LOG-13 | Access a protected route with a suspended user's existing token | User was suspended after receiving a token | `401` or `403`; the token is revoked or rejected and cannot be reused | Ready |
 
 ---
 
@@ -105,7 +105,7 @@ Test specification for user registration, account management, and administrator 
 | PRO-12 | Delete the account | User is authenticated | `200`; account is soft deleted; all tokens are revoked; user cannot sign in | Ready |
 | PRO-13 | Restore a deleted account from the dashboard | Admin restores the soft-deleted user | `200`; user is restored and can sign in again | Ready |
 | PRO-14 | Access the profile after deletion | Account was soft deleted | `401`; token is no longer valid | Ready |
-| PRO-15 | Change phone and confirm stored country | Phone change uses a different country code | `200`; phone and country data remain consistent | Gap |
+| PRO-15 | Change phone and confirm stored country | Phone change uses a different country code | `200`; phone and country data remain consistent | Ready |
 
 ---
 
@@ -117,7 +117,7 @@ Test specification for user registration, account management, and administrator 
 | ADM-02 | View a user | Authenticated admin; user exists | `200`; user details | Ready |
 | ADM-03 | Suspend a user | Authenticated admin; user is active | `200`; `is_active` becomes false; user cannot log in | Ready |
 | ADM-04 | Activate a user | Authenticated admin; user is suspended | `200`; `is_active` becomes true; user can log in | Ready |
-| ADM-05 | Change status as a non-Super-Admin | Authenticated admin without Super Admin role | `403`; only a Super Admin may change status | Gap |
+| ADM-05 | Change status as a non-Super-Admin | Authenticated admin without Super Admin role | `403`; only a Super Admin may change status | Ready |
 | ADM-06 | Soft delete a user | Authenticated admin; user exists | `200`; user appears in the recycle bin and cannot sign in | Ready |
 | ADM-07 | Restore a soft-deleted user | Authenticated admin; user is trashed | `200`; user is restored | Ready |
 | ADM-08 | Force delete a user | Authenticated admin; user is trashed | `200`; user is permanently removed | Ready |
@@ -133,16 +133,18 @@ Required by Phase 1 and consumed by transfers in Phase 5.
 
 | ID | Test case | Preconditions | Expected result | Status |
 |---|---|---|---|---|
-| PIN-01 | Set the first transaction PIN | Authenticated user; no PIN exists | `200`; PIN is stored hashed and never returned | Planned |
-| PIN-02 | Set a PIN with mismatched confirmation | Confirmation differs | `422`; confirmation error | Planned |
-| PIN-03 | Set an invalid PIN format | PIN is too short, too long, or non-numeric | `422`; PIN format error | Planned |
-| PIN-04 | Change the PIN with the correct current PIN | Authenticated user; PIN exists | `200`; new PIN works; old PIN is rejected | Planned |
-| PIN-05 | Change the PIN with a wrong current PIN | Authenticated user; PIN exists | `422`; current PIN is incorrect | Planned |
-| PIN-06 | Reset the PIN using an OTP | Authenticated user; OTP is verified | `200`; PIN is replaced | Planned |
-| PIN-07 | Verify the correct PIN | Authenticated user; PIN exists | `200`; verification succeeds | Planned |
-| PIN-08 | Verify a wrong PIN | Authenticated user; PIN exists | `422`; verification fails; attempt counter increases | Planned |
-| PIN-09 | Lock PIN verification after repeated failures | Several wrong PIN attempts were made | `422` or `423`; further attempts are blocked until reset | Planned |
+| PIN-01 | Set the first transaction PIN | Authenticated user; no PIN exists | `200`; PIN is stored hashed and never returned | Ready |
+| PIN-02 | Set a PIN with mismatched confirmation | Confirmation differs | `422`; confirmation error | Ready |
+| PIN-03 | Set an invalid PIN format | PIN is too short, too long, or non-numeric | `422`; PIN format error | Ready |
+| PIN-04 | Change the PIN with the correct current PIN | Authenticated user; PIN exists | `200`; new PIN works; old PIN is rejected | Ready |
+| PIN-05 | Change the PIN with a wrong current PIN | Authenticated user; PIN exists | `422`; current PIN is incorrect | Ready |
+| PIN-06 | Reset the PIN using an OTP | Authenticated user; OTP is verified | `200`; PIN is replaced | Ready |
+| PIN-07 | Verify the correct PIN | Authenticated user; PIN exists | `200`; verification succeeds | Ready |
+| PIN-08 | Verify a wrong PIN | Authenticated user; PIN exists | `422`; verification fails; attempt counter increases | Ready |
+| PIN-09 | Lock PIN verification after repeated failures | Several wrong PIN attempts were made | `422` or `423`; further attempts are blocked until reset | Ready |
 | PIN-10 | Require the PIN for a transfer | User attempts a transfer without a PIN or with a wrong PIN | Transfer is rejected before the banking provider is called | Planned |
+
+> PIN-10 will be exercised with the transfer endpoint in Phase 5; the PIN verification service is already implemented.
 
 ---
 

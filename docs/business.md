@@ -4,6 +4,8 @@ MyWallet is a personal money-management app built around one funding source and 
 
 This document combines the original MVP business design with the confirmed business rules and workflows. It is a living document, updated only when a task is fully completed and a new or changed rule is confirmed. It contains no technical implementation details, code, or database schemas.
 
+Product user stories and acceptance criteria for every phase are in [`user-stories.md`](user-stories.md).
+
 ---
 
 ## Platform Overview
@@ -29,6 +31,7 @@ This document combines the original MVP business design with the confirmed busin
 - Verify the phone number with an OTP before using the app.
 - Manage user data and change the password.
 - Set a transaction PIN to confirm transfers.
+- Transaction PIN verification is locked after repeated incorrect attempts and can be reset using a verified phone OTP.
 - An account is either Active or Suspended; a Suspended account cannot use the app.
 - Only a Super Admin can change an account's status.
 
