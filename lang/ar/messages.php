@@ -5,6 +5,7 @@ return [
     'welcome'=> 'مرحبا',
     'identifier_is_required' => '.',
     'otp_resent_successfully' => '.',
+    'otp_already_sent' => 'تم إرسال الرمز بالفعل. يرجى الانتظار :seconds قبل طلب رمز آخر.',
     'resource_not_found' => 'السجل غير موجود',
     'unauthorized' => 'غير مصرح',
     'account_not_in_workspace' => 'هذا الحساب لا ينتمي إلى مساحة العمل هذه.',

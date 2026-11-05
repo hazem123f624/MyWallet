@@ -69,7 +69,8 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 ## Test Data
 
 - Country code: `20` (Egypt)
-- Phone: `01011112222`
+- Phone input: `01011112222`
+- Stored phone format: E.164, for example `+201011112222`
 - OTP in local/testing: `1234`
 - Password: `P@ssw0rd123`
 - Required security header: `X-API-Token`
@@ -77,4 +78,4 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 
 ## Known Gaps
 
-1. Transfer execution is not implemented yet, so transaction PIN enforcement will be connected in Phase 5.
+1. Transfer execution and its PIN enforcement test (PIN-10) are tracked under Phase 5.

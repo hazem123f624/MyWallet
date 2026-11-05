@@ -12,6 +12,7 @@ use App\Classes\Authentication\Types\Users\VerifyForgotPassword;
 use App\Classes\TestCases\TestCaseBuilder;
 use App\Services\Documentations\DocumentationService;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use Modules\Admins\Models\Admins;
 
@@ -25,7 +26,7 @@ class AuthSeeder extends Seeder
     public function run(): void
     {
         // Ensure base admin exists for documentation tests
-        Admins::firstOrCreate(
+        $baseAdmin = Admins::firstOrCreate(
             ['email' => config('admins.base_admins.0.email')],
             [
                 'name' => 'Super Admin',
@@ -35,12 +36,16 @@ class AuthSeeder extends Seeder
             ]
         );
 
+        foreach (DB::table('roles')->whereNull('deleted_at')->pluck('id') as $roleId) {
+            $baseAdmin->roles()->firstOrCreate(['role_id' => $roleId]);
+        }
+
         // Clean up registration test user to allow "User Register" documentation case to succeed
-        \Modules\Users\Models\User::where('phone', '01011112222')->forceDelete();
+        \Modules\Users\Models\User::whereIn('phone', ['+201011112222', '2001011112222', '01011112222'])->forceDelete();
 
         // Ensure standalone verification test user exists
         $user2 = \Modules\Users\Models\User::firstOrCreate(
-            ['phone' => '01011113333'],
+            ['phone' => '+201011113333'],
             [
                 'name' => 'Demo User 2',
                 'email' => 'user2@example.com',
@@ -56,11 +61,11 @@ class AuthSeeder extends Seeder
         // fixture the other cases rely on. It is purged through withTrashed() first,
         // because a plain forceDelete() still respects the soft delete scope and would
         // leave the previous run's row holding the unique phone.
-        \Modules\Users\Models\User::withTrashed()->where('phone', '01011119999')->forceDelete();
+        \Modules\Users\Models\User::withTrashed()->whereIn('phone', ['+201011119999', '2001011119999', '01011119999'])->forceDelete();
         $deleteUser = \Modules\Users\Models\User::create([
             'name' => 'Delete User',
             'email' => 'delete_user@example.com',
-            'phone' => '01011119999',
+            'phone' => '+201011119999',
             'password' => 'P@ssw0rd123',
             'is_active' => \App\Enums\ActiveStatus::Active,
         ]);

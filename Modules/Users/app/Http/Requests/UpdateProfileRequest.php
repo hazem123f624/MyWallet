@@ -12,6 +12,10 @@ class UpdateProfileRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        if (! array_key_exists('delete_avatar', $this->all())) {
+            $this->merge(['delete_avatar' => 0]);
+        }
+
         if ($this->filled('country_code') && $this->filled('phone')) {
             $countryId = $this->getCountryIdFromCode($this->country_code);
 
@@ -48,7 +52,7 @@ class UpdateProfileRequest extends FormRequest
 
 
             'country_id'   => 'sometimes|exists:settings,id',
-            'phone'        => ['sometimes', 'nullable', 'regex:'.RegexPatterns::PHONE_DIGITS, 'max:20',
+            'phone'        => ['sometimes', 'nullable', 'regex:'.RegexPatterns::PHONE_DIGITS, 'max:11',
 
 
                 function ($attribute, $value, $fail): void {

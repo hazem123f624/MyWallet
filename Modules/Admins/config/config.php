@@ -6,7 +6,7 @@ if (! defined('BASE_ADMIN')) {
     define('BASE_ADMIN', 1);
 }
 if (! defined('PASSWORD')) {
-    define('PASSWORD', 'P@ssw0rd');
+    define('PASSWORD', 'P@ssw0rd123');
 }
 if (! defined('FETCH')) {
     define('FETCH', 'fetch');

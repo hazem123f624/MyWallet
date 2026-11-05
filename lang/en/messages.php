@@ -5,6 +5,7 @@ return [
     'welcome' => 'welcome',
     'identifier_is_required' => 'Identifier is required.',
     'otp_resent_successfully' => 'OTP resent successfully.',
+    'otp_already_sent' => 'OTP already sent. Please wait :seconds before requesting again.',
     'resource_not_found' => 'Resource not found',
     'unauthorized' => 'Unauthorized',
     'account_not_in_workspace' => 'This account does not belong to this workspace.',

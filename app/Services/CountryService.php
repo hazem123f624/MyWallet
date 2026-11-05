@@ -68,7 +68,13 @@ class CountryService
     public function getFullPhone(string $phone, string $phoneCode): string
     {
         $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
-        return $phoneCode . $cleanPhone;
+        $cleanCode = preg_replace('/[^0-9]/', '', $phoneCode);
+
+        if (str_starts_with($cleanPhone, '0')) {
+            $cleanPhone = substr($cleanPhone, 1);
+        }
+
+        return '+'.$cleanCode.$cleanPhone;
     }
 
     /**
@@ -94,7 +100,9 @@ class CountryService
                     return false;
                 }
 
-                return strlen(substr($fullPhone, strlen($phoneCode))) === $phoneLength;
+                $nationalLength = strlen(substr($fullPhone, strlen($phoneCode)));
+
+                return in_array($nationalLength, [$phoneLength, max(0, $phoneLength - 1)], true);
             });
     }
 

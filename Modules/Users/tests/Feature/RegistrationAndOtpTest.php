@@ -17,8 +17,8 @@ class RegistrationAndOtpTest extends UsersApiTestCase
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.otp', 1234);
 
-        $this->assertDatabaseMissing('users', ['phone' => '2001011112222']);
-        $this->assertTrue(Cache::has('otp:cache:registration:2001011112222'));
+        $this->assertDatabaseMissing('users', ['phone' => '+201011112222']);
+        $this->assertTrue(Cache::has('otp:cache:registration:+201011112222'));
     }
 
     public function test_registration_rejects_an_already_registered_phone(): void
@@ -46,7 +46,7 @@ class RegistrationAndOtpTest extends UsersApiTestCase
             ->assertJsonPath('success', true)
             ->assertJsonStructure(['data' => ['id', 'phone', 'token']]);
 
-        $user = User::where('phone', '2001011112222')->firstOrFail();
+        $user = User::where('phone', '+201011112222')->firstOrFail();
 
         $this->assertNotNull($user->phone_verified_at);
         $this->assertSame(1, $user->tokens()->count());
@@ -64,7 +64,7 @@ class RegistrationAndOtpTest extends UsersApiTestCase
             'otp' => '9999',
         ])->assertUnprocessable();
 
-        $this->assertDatabaseMissing('users', ['phone' => '2001011112222']);
+        $this->assertDatabaseMissing('users', ['phone' => '+201011112222']);
     }
 
     public function test_registration_otp_expires(): void
@@ -99,7 +99,33 @@ class RegistrationAndOtpTest extends UsersApiTestCase
             'country_code' => '20',
             'phone' => $payload['phone'],
             'otp' => '1234',
-        ])->assertUnprocessable();
+        ])
+            ->assertUnprocessable()
+            ->assertJsonPath('message', 'Too many failed attempts. Please request a new OTP.');
+
+        $cooldown = $this->postJson('/api/v1/mobile/users/resend-otp', [
+            'country_code' => '20',
+            'phone' => $payload['phone'],
+        ]);
+
+        $cooldown->assertUnprocessable();
+        $this->assertMatchesRegularExpression(
+            '/^OTP already sent\. Please wait \d+ seconds? before requesting again\.$/',
+            $cooldown->json('message')
+        );
+
+        $this->travel(61)->seconds();
+
+        $this->postJson('/api/v1/mobile/users/resend-otp', [
+            'country_code' => '20',
+            'phone' => $payload['phone'],
+        ])->assertOk();
+
+        $this->postJson('/api/v1/mobile/users/verify', [
+            'country_code' => '20',
+            'phone' => $payload['phone'],
+            'otp' => '1234',
+        ])->assertOk();
     }
 
     public function test_registration_otp_resend_enforces_cooldown(): void
@@ -108,12 +134,22 @@ class RegistrationAndOtpTest extends UsersApiTestCase
 
         $this->postJson('/api/v1/mobile/users/register', $payload)->assertOk();
 
-        $this->postJson('/api/v1/mobile/users/register', $payload)->assertUnprocessable();
+        $registerCooldown = $this->postJson('/api/v1/mobile/users/register', $payload);
+        $registerCooldown->assertUnprocessable();
+        $this->assertMatchesRegularExpression(
+            '/^OTP already sent\. Please wait \d+ seconds? before requesting again\.$/',
+            $registerCooldown->json('message')
+        );
 
-        $this->postJson('/api/v1/mobile/users/resend-otp', [
+        $resendCooldown = $this->postJson('/api/v1/mobile/users/resend-otp', [
             'country_code' => '20',
             'phone' => $payload['phone'],
-        ])->assertUnprocessable();
+        ]);
+        $resendCooldown->assertUnprocessable();
+        $this->assertMatchesRegularExpression(
+            '/^OTP already sent\. Please wait \d+ seconds? before requesting again\.$/',
+            $resendCooldown->json('message')
+        );
 
         $this->travel(61)->seconds();
 

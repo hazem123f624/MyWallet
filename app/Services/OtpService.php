@@ -95,19 +95,11 @@ class OtpService
 
         // Has a valid, non-expired OTP?
         if ($existingOtp && $existingOtp->expires_at->isFuture()) {
-            // If locked due to too many failed attempts, allow regeneration on resend
-            if ($existingOtp->attempts >= $this->maxAttempts) {
-                return $this->updateOtp($existingOtp, $identifier);
+            if ($existingOtp->last_sent_at && $existingOtp->last_sent_at->copy()->addSeconds($this->resendCooldownSeconds)->isFuture()) {
+                $this->throwOtpCooldownException($existingOtp->last_sent_at);
             }
 
-            // Cooldown check — prevent spam
-            if ($existingOtp->last_sent_at && $existingOtp->last_sent_at->addSeconds($this->resendCooldownSeconds)->isFuture()) {
-                throw ValidationException::withMessages([
-                    'otp' => [__('OTP already sent. Please wait before requesting again.')],
-                ]);
-            }
-
-            // Cooldown passed — regenerate the code
+            // Cooldown passed — regenerate the code and reset attempts
             return $this->updateOtp($existingOtp, $identifier);
         }
 
@@ -163,6 +155,20 @@ class OtpService
         return $code;
     }
 
+    /**
+     * Throw a cooldown error that includes the remaining wait time.
+     */
+    private function throwOtpCooldownException(Carbon $lastSentAt): never
+    {
+        $retryAt = $lastSentAt->copy()->addSeconds($this->resendCooldownSeconds);
+        $remainingSeconds = max(1, $retryAt->getTimestamp() - Carbon::now()->getTimestamp());
+        $remainingTime = $remainingSeconds === 1 ? '1 second' : $remainingSeconds.' seconds';
+
+        throw ValidationException::withMessages([
+            'otp' => [__('messages.otp_already_sent', ['seconds' => $remainingTime])],
+        ]);
+    }
+
     // ─── Generate (Cache Based) ──────────────────────────
 
     /**
@@ -180,16 +186,11 @@ class OtpService
         $existing = Cache::get($cacheKey);
 
         $cachedData = $extraData !== [] ? $extraData : ($existing['data'] ?? []);
-        // A code locked by too many failed attempts is replaced straight away
-        // (attempts reset); otherwise a cooldown applies before resending.
-        $locked = $existing && ($existing['attempts'] ?? 0) >= $this->maxAttempts;
 
-        if (! $locked && $existing && isset($existing['last_sent_at'])) {
+        if ($existing && isset($existing['last_sent_at'])) {
             $lastSentAt = Carbon::parse($existing['last_sent_at']);
-            if ($lastSentAt->addSeconds($this->resendCooldownSeconds)->isFuture()) {
-                throw ValidationException::withMessages([
-                    'otp' => [__('OTP already sent. Please wait before requesting again.')],
-                ]);
+            if ($lastSentAt->copy()->addSeconds($this->resendCooldownSeconds)->isFuture()) {
+                $this->throwOtpCooldownException($lastSentAt);
             }
         }
 

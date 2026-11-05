@@ -148,9 +148,9 @@ class DocumentationCases
                     'delete_avatar' => false,
                 ],
                 'change_password' => [
-                    'old_password' => 'P@ssw0rd',
-                    'new_password' => 'NewP@ss0rd1',
-                    'password_confirmation' => 'NewP@ss0rd1',
+                    'old_password' => 'P@ssw0rd123',
+                    'new_password' => 'NewP@ssw0rd123',
+                    'password_confirmation' => 'NewP@ssw0rd123',
                 ],
                 'expected_keys' => [],
             ],
@@ -209,7 +209,8 @@ class DocumentationCases
         // so the update/toggle/remove-role/delete cases cannot invalidate the
         // token used by the remaining authenticated cases in this section.
         $baseAdminEmail = config('admins.base_admins.0.email', 'admin@base.com');
-        $latestRecord = Admins::where('email', '!=', $baseAdminEmail)->latest()->first();
+        $changePasswordEmail = 'doc-change-password@base.com';
+        $latestRecord = Admins::whereNotIn('email', [$baseAdminEmail, $changePasswordEmail])->latest()->first();
         if (! $latestRecord) {
             $latestRecord = Admins::create([
                 'name' => 'Documentation Target Admin',
@@ -241,6 +242,31 @@ class DocumentationCases
         $paramForProfile['phone'] = '0155'.rand(1000000, 9999999);
 
         $paramForChangePassword = $fakeData['change_password'];
+        $changePasswordAdmin = Admins::withTrashed()->where('email', $changePasswordEmail)->first();
+
+        if (! $changePasswordAdmin) {
+            $changePasswordAdmin = Admins::create([
+                'name' => 'Documentation Password Admin',
+                'email' => $changePasswordEmail,
+                'phone' => '01690000001',
+                'password' => $paramForChangePassword['old_password'],
+                'job_title' => 'Administrator',
+                'contract_type' => 'full_time',
+                'is_active' => true,
+            ]);
+        } else {
+            if ($changePasswordAdmin->trashed()) {
+                $changePasswordAdmin->restore();
+            }
+
+            $changePasswordAdmin->update([
+                'password' => $paramForChangePassword['old_password'],
+                'is_active' => true,
+            ]);
+        }
+
+        $changePasswordAdmin->tokens()->delete();
+        $changePasswordToken = $changePasswordAdmin->createToken('admins-docs-password', ['admins'])->plainTextToken;
 
         // Pre-create a real export file through the running app (executes as the
         // web server user, which owns the exports directory) so the download case
@@ -283,7 +309,7 @@ class DocumentationCases
             $testCasesObject->handle(type: 'DELETE', name: $descriptions['delete']['name'], route: config('api.prefixes.dashboard').'/'.$model.'/'.$paramForUpdate['id'], params: [], auth: $fakeLogin, desc: $descriptions['delete']['description'], shortDesc: $descriptions['delete']['short_description']),
             $testCasesObject->handle(type: 'GET', name: 'Get Admin Profile', route: config('api.prefixes.dashboard').'/profile', params: [], auth: $fakeLogin, desc: 'Retrieves the profile information of the currently authenticated admin (identified via the auth token, not a URL id). Returns the same profile structure as the update-profile endpoint.', shortDesc: 'Get authenticated admin profile.'),
             $testCasesObject->handle(type: 'PUT', name: 'Update Admin Profile', route: config('api.prefixes.dashboard').'/profile', params: $paramForProfile, auth: $fakeLogin, desc: "Updates the profile of the currently authenticated admin. Only editable fields (name, email, phone, avatar) are accepted; password, permissions, and roles are excluded and must be changed via their own endpoints. Send 'delete_avatar' as true to remove the current avatar. Since file uploads cannot be sent over a literal PUT/PATCH request, send this as POST with an 'X-HTTP-Method-Override: PUT' header when uploading an avatar.", shortDesc: 'Update authenticated admin profile.', notes: UpdateProfileRequest::class),
-            $testCasesObject->handle(type: 'POST', name: 'Change Admin Password', route: config('api.prefixes.dashboard').'/change-password', params: $paramForChangePassword, auth: $fakeLogin, desc: 'Changes the password of the currently authenticated admin. Requires the correct old_password; the new password must satisfy the project password policy and be confirmed via password_confirmation. The old/new password values are never returned in the response.', shortDesc: 'Change authenticated admin password.', notes: ChangePasswordRequest::class),
+            $testCasesObject->handle(type: 'POST', name: 'Change Admin Password', route: config('api.prefixes.dashboard').'/change-password', params: $paramForChangePassword, auth: $changePasswordToken, desc: 'Changes the password of the currently authenticated admin. Requires the correct old_password; the new password must satisfy the project password policy and be confirmed via password_confirmation. The old/new password values are never returned in the response.', shortDesc: 'Change authenticated admin password.', notes: ChangePasswordRequest::class),
         ];
         $recycleBin = [
             $testCasesObject->handle(type: 'GET', name: $descriptions['trash']['name'], route: config('api.prefixes.dashboard').'/'.$model.'/trash', params: $expectedKeys, auth: $fakeLogin, desc: $descriptions['trash']['description'], shortDesc: $descriptions['trash']['short_description']),

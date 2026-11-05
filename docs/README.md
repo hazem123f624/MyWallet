@@ -11,6 +11,7 @@ This folder holds the product and engineering documentation for the MyWallet bac
 | [`documentation-data-builders.md`](documentation-data-builders.md) | The standard for seeding realistic data before generating API documentation. |
 | [`github-commit-structure.md`](github-commit-structure.md) | Commit message and pull-request conventions. |
 | [`phase-1/`](phase-1/README.md) | Phase 1 implementation tasks, test-case specification, and execution report. |
+| [`phase-5/`](phase-5/test-cases.md) | Phase 5 money transfer test cases, including transfer PIN confirmation. |
 
 ## Quick Links
 

@@ -46,7 +46,7 @@ class DocumentationCases
             } else {
                 $latestRecord = User::create([
                     'name' => 'Test User',
-                    'phone' => '0501112223',
+                    'phone' => '+966501112223',
                     'email' => 'test_doc@example.com',
                     'password' => 'P@ssw0rd123',
                     'is_active' => ActiveStatus::Active,
@@ -60,7 +60,7 @@ class DocumentationCases
         if (! $trashedRecord) {
             $trashedRecord = User::create([
                 'name' => 'Trashed User',
-                'phone' => '0509998887',
+                'phone' => '+966509998887',
                 'email' => 'trashed_doc@example.com',
                 'password' => 'P@ssw0rd123',
                 'is_active' => ActiveStatus::Active,

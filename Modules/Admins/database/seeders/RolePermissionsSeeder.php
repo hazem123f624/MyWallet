@@ -4,23 +4,39 @@ namespace Modules\Admins\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Modules\Admins\Interfaces\RolesInterface;
 
 class RolePermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-        $defaultRoles = config('admins.base_roles.default_role');
-        $superAdminRole = config('admins.base_roles.super_role');
-
+        $roleIds = DB::table('roles')->whereNull('deleted_at')->pluck('id');
         $modulePermissions = DB::table('model_permissions')->get();
-        $insertedData = [];
-        $repository = app(RolesInterface::class);
-        foreach ($modulePermissions as $permission) {
-            $repository->save($defaultRoles, $defaultRoles['id']);
 
+        if ($roleIds->isEmpty() || $modulePermissions->isEmpty()) {
+            return;
         }
 
-        // DB::table('model_permissions')->upsert($modulePermissions,['name'],['model_id','permission_id','name','created_at']);
+        $timestamp = now();
+        $rows = [];
+
+        foreach ($roleIds as $roleId) {
+            foreach ($modulePermissions as $permission) {
+                $rows[] = [
+                    'role_id' => $roleId,
+                    'model_id' => $permission->model_id,
+                    'permission_id' => $permission->permission_id,
+                    'name' => $permission->name,
+                    'deleted_at' => null,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ];
+            }
+        }
+
+        DB::table('role_permissions')->upsert(
+            $rows,
+            ['role_id', 'model_id', 'permission_id'],
+            ['name', 'deleted_at', 'updated_at']
+        );
     }
 }

@@ -77,6 +77,15 @@ class ProfileTest extends UsersApiTestCase
         Storage::disk('public')->assertExists($secondPath);
 
         $this->withHeaders($this->bearer($token))
+            ->postJson('/api/v1/mobile/users/profile', ['name' => 'Avatar Kept'])
+            ->assertOk();
+
+        $user->refresh();
+
+        $this->assertSame($secondPath, $user->avatar);
+        Storage::disk('public')->assertExists($secondPath);
+
+        $this->withHeaders($this->bearer($token))
             ->postJson('/api/v1/mobile/users/profile', ['delete_avatar' => true])
             ->assertOk();
 
@@ -99,12 +108,12 @@ class ProfileTest extends UsersApiTestCase
             ])
             ->assertOk()
             ->assertJsonPath('data.needs_phone_verification', true)
-            ->assertJsonPath('data.pending_phone', '966501234567')
+            ->assertJsonPath('data.pending_phone', '+966501234567')
             ->assertJsonPath('data.otp_code', 1234);
 
         $user->refresh();
 
-        $this->assertSame('2001011112222', $user->phone);
+        $this->assertSame('+201011112222', $user->phone);
         $this->assertNotSame($saudi->id, $user->country_id);
 
         $this->postJson('/api/v1/mobile/users/verify', [
@@ -113,7 +122,7 @@ class ProfileTest extends UsersApiTestCase
             'otp' => '9999',
         ])->assertUnprocessable();
 
-        $this->assertSame('2001011112222', $user->fresh()->phone);
+        $this->assertSame('+201011112222', $user->fresh()->phone);
 
         $this->postJson('/api/v1/mobile/users/verify', [
             'country_code' => '966',
@@ -125,7 +134,7 @@ class ProfileTest extends UsersApiTestCase
 
         $user->refresh();
 
-        $this->assertSame('966501234567', $user->phone);
+        $this->assertSame('+966501234567', $user->phone);
         $this->assertSame($saudi->id, $user->country_id);
     }
 
@@ -160,7 +169,7 @@ class ProfileTest extends UsersApiTestCase
 
         $this->createUser([
             'email' => 'other@example.com',
-            'phone' => '2001011113333',
+            'phone' => '+201011113333',
         ]);
 
         $this->withHeaders($this->bearer($token))
@@ -194,7 +203,7 @@ class ProfileTest extends UsersApiTestCase
         $user = $this->createUser();
         $other = $this->createUser([
             'email' => 'other@example.com',
-            'phone' => '2001011113333',
+            'phone' => '+201011113333',
         ]);
         $token = $this->tokenFor($user);
 

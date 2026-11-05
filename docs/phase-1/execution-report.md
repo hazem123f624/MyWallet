@@ -9,7 +9,7 @@
 | Command | Result |
 |---|---|
 | `php artisan migrate:fresh --seed` | Passed |
-| `php artisan test` | 70 passed, 285 assertions |
+| `php artisan test` | 70 passed, 295 assertions |
 | `php artisan app:export-api-json` | Passed; 68 documented endpoints |
 | `/docs` smoke check | Passed; transaction PIN endpoints present |
 
@@ -22,11 +22,11 @@
 | Password management | 16 | Passed |
 | Profile management | 15 | Passed |
 | Administrator controls | 11 | Passed |
-| Transaction PIN | 10 | 9 passed; PIN-10 planned |
+| Transaction PIN | 9 | Passed |
 | Security and validation | 7 | Passed |
-| **Total** | **89** | **88 passed; 1 planned** |
+| **Total** | **88** | **88 passed** |
 
-All Ready cases were executed through the automated feature suite. PIN-10 remains planned because the transfer endpoint is part of Phase 5.
+All Ready cases were executed through the automated feature suite.
 
 ## Automated Coverage
 
@@ -38,7 +38,6 @@ All Ready cases were executed through the automated feature suite. PIN-10 remain
 | PRO-01 to PRO-15 | `ProfileTest`, `AdminUserManagementTest` |
 | ADM-01 to ADM-11 | `AdminUserManagementTest`, `AccountSuspensionTest` |
 | PIN-01 to PIN-09 | `TransactionPinTest` |
-| PIN-10 | Deferred to the Phase 5 transfer flow |
 | SEC-01 to SEC-07 | `SecurityTest`, `RegistrationAndOtpTest`, `AdminUserManagementTest`, `ProfileTest` |
 
 ## Defects Found and Fixed
@@ -50,6 +49,6 @@ All Ready cases were executed through the automated feature suite. PIN-10 remain
 - Phone changes could leave the stored country inconsistent; country resolution now follows the verified full phone.
 - Suspended users retained usable tokens; suspension now revokes tokens and protected requests enforce active status.
 
-## Residual Gap
+## Phase 5 Follow-Up
 
-- PIN-10 will be executed when the transfer endpoint is implemented in Phase 5. The PIN verification service is ready for that integration.
+- PIN-10 has moved to the Phase 5 test-case specification because it exercises the transfer endpoint. The PIN verification service is ready for that integration.

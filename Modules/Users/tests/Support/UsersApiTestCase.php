@@ -106,7 +106,7 @@ abstract class UsersApiTestCase extends TestCase
         return User::create(array_merge([
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'phone' => '2001011112222',
+            'phone' => '+201011112222',
             'country_id' => $country->id,
             'password' => 'P@ssw0rd123',
             'is_active' => ActiveStatus::Active,

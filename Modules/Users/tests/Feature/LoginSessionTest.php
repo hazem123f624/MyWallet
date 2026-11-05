@@ -90,7 +90,7 @@ class LoginSessionTest extends UsersApiTestCase
             $digits = '010111122'.str_pad((string) $failedAttempts, 2, '0', STR_PAD_LEFT);
             $user = $this->createUser([
                 'email' => 'lock-'.$failedAttempts.'@example.com',
-                'phone' => '20'.$digits,
+                'phone' => '+20'.substr($digits, 1),
                 'failed_login_attempts' => $failedAttempts,
                 'locked_until' => null,
             ]);
