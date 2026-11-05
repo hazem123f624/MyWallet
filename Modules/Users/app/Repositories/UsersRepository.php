@@ -47,6 +47,11 @@ class UsersRepository implements UsersInterface
                     Storage::disk('public')->delete($existing->avatar);
                 }
                 $requestAfterRemoveTranslatedAttributes['avatar'] = $request['avatar']->store('users/avatars', 'public');
+            } elseif (! empty($request['avatar']) && is_string($request['avatar'])) {
+                if ($existing?->avatar && $existing->avatar !== $request['avatar']) {
+                    Storage::disk('public')->delete($existing->avatar);
+                }
+                $requestAfterRemoveTranslatedAttributes['avatar'] = $request['avatar'];
             } elseif (filter_var($request['delete_avatar'] ?? false)) {
                 if ($existing?->avatar) {
                     Storage::disk('public')->delete($existing->avatar);
@@ -69,10 +74,16 @@ class UsersRepository implements UsersInterface
     public function switchActive($data)
     {
         try {
-            $data->is_active = ! $data->is_active;
-            $data->save();
+            return DB::transaction(function () use ($data) {
+                $data->is_active = ! $data->is_active;
+                $data->save();
 
-            return $data;
+                if (! $data->is_active) {
+                    $data->tokens()->delete();
+                }
+
+                return $data;
+            });
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage());
         }

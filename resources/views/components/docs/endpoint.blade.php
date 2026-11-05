@@ -1,4 +1,4 @@
-@props(['item'])
+@props(['item', 'group' => null])
 
 @php
     $headers = $item->headers ? json_decode($item->headers, true) : [];
@@ -9,6 +9,7 @@
     $hasRequestData = ! empty($headers) || ! empty($queryParams) || ! empty($body) || ! empty($notes);
     $hasResponses = ! empty($item->success_response) || ! empty($item->error_response);
     $searchText = strtolower(implode(' ', array_filter([
+        $group,
         $item->name,
         $item->method,
         $item->route,

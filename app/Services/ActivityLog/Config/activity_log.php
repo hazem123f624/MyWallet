@@ -29,5 +29,6 @@ return [
         'deleted_at',
         'otp_pin',
         'otp_token',
+        'transaction_pin',
     ],
 ];

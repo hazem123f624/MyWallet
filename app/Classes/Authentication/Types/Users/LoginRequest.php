@@ -44,7 +44,6 @@ class LoginRequest extends FormRequest
                 'required',
                 'regex:'.RegexPatterns::PHONE_DIGITS,
                 'max:20',
-                'exists:users,phone',
                 function ($attribute, $value, $fail) {
                     if (!$this->country_code) {
                         return; // country_code's own 'required' rule will catch this

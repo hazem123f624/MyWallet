@@ -16,4 +16,9 @@ return [
     'role_permanently_deleted' => 'تم حذف الدور نهائيًا.',
     'role_removed_from_admin' => 'تم إزالة الدور من المسؤول بنجاح.',
     'admin_role_not_found' => 'المسؤول لا يمتلك هذا الدور.',
+    'admins_assigned_to_role' => 'تم تعيين المسؤولين للدور بنجاح.',
+    'profile_retrieved' => 'تم استرجاع الملف الشخصي بنجاح.',
+    'profile_updated' => 'تم تحديث الملف الشخصي بنجاح.',
+    'password_incorrect' => 'كلمة المرور الحالية غير صحيحة.',
+    'password_changed' => 'تم تغيير كلمة المرور بنجاح.',
 ];

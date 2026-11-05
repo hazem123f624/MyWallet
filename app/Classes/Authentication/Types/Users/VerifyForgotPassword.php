@@ -61,7 +61,7 @@ class VerifyForgotPassword extends FormRequest
                 'required',
                 'string',
                 function ($attribute, $value, $fail) {
-                    $phone = $this->input('phone');
+                    $phone = $this->input('full_phone') ?? $this->input('phone');
                     $user = \Modules\Users\Models\User::where('phone', $phone)->first();
                     
                     if (!$user || $user->change_password_token !== $value) {

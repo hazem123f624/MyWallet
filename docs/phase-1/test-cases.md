@@ -13,10 +13,11 @@ Test specification for user registration, account management, and administrator 
 - Base URL: `http://127.0.0.1:8000/api/v1`
 - Local/testing OTP: `1234`
 - Password used in examples: `P@ssw0rd123`
+- Stored phone format: E.164, for example `+201011112222`
 - Header for protected routes: `X-API-Token: {{api_key}}`
 - Header for authenticated routes: `Authorization: Bearer {{token}}`
 
-> This is a test-case specification. Phase 1 does not yet have automated feature tests.
+> Automated feature tests now cover the registration, OTP, login, session, profile, password, and account-suspension flows.
 
 ---
 
@@ -32,10 +33,10 @@ Test specification for user registration, account management, and administrator 
 | REG-06 | Register with a weak password | Password does not satisfy the strong-password rule | `422`; password validation error | Ready |
 | REG-07 | Register with mismatched password confirmation | `password_confirmation` differs from `password` | `422`; confirmation error | Ready |
 | REG-08 | Register with missing required fields | Name, country code, phone, or password is absent | `422`; required-field errors | Ready |
-| REG-09 | Request registration OTP twice within the cooldown | First registration request succeeded less than 60 seconds ago | `422`; message says an OTP was already sent and to wait | Ready |
+| REG-09 | Request registration OTP twice within the cooldown | First registration request succeeded less than 60 seconds ago | `422`; `message` is `OTP already sent. Please wait before requesting again.` | Ready |
 | REG-10 | Verify registration with the correct OTP | A pending registration exists; OTP is `1234` | `200`; user is persisted; `phone_verified_at` is set; bearer token is returned | Ready |
 | REG-11 | Verify registration with a wrong OTP | A pending registration exists | `422`; invalid OTP; attempt counter increases | Ready |
-| REG-12 | Verify after the maximum wrong attempts | Three wrong OTP attempts were made | `422`; OTP is locked; a resend is required | Ready |
+| REG-12 | Verify after the maximum wrong attempts | Three wrong OTP attempts were made | `422`; OTP is locked; an immediate resend is blocked by the cooldown, and a new OTP is required after it expires | Ready |
 | REG-13 | Verify with an expired OTP | The OTP expiry window has passed | `422`; expired OTP error | Ready |
 | REG-14 | Reuse an already verified registration OTP | Registration was already verified | `422`; OTP cannot be reused | Ready |
 | REG-15 | Verify an unknown phone | No pending registration exists for the phone | `422`; invalid or expired OTP | Ready |
@@ -51,7 +52,7 @@ Test specification for user registration, account management, and administrator 
 | LOG-01 | Login with valid credentials | User is verified and active | `200`; bearer token is returned; `last_login_at` is updated; failed-attempt counters reset | Ready |
 | LOG-02 | Login with a wrong password | User exists and is active | `422`; invalid credentials; failed-attempt counter increases | Ready |
 | LOG-03 | Login with an unverified account | User exists but `phone_verified_at` is null | `403`; message asks the user to verify the account first | Ready |
-| LOG-04 | Login with a suspended account | User exists but `is_active` is false | `422`; no token is issued; message is currently the generic invalid-credentials message | Gap |
+| LOG-04 | Login with a suspended account | User exists but `is_active` is false | `403`; no token is issued; response uses the suspended-account message | Ready |
 | LOG-05 | Login with an unknown phone | No user exists with the phone | `422`; phone does not exist | Ready |
 | LOG-06 | Lock after five failed attempts | User exists; five wrong passwords were submitted | `422`; account is locked for 15 minutes; correct password is also rejected until expiry | Ready |
 | LOG-07 | Lock after ten failed attempts | User exists; ten wrong passwords were submitted | `422`; account is locked for 1 hour | Ready |
@@ -60,7 +61,7 @@ Test specification for user registration, account management, and administrator 
 | LOG-10 | Logout | User has a valid token | `200`; current token is revoked; the same token cannot access protected routes | Ready |
 | LOG-11 | Refresh token | User has a valid token | `200`; new token is returned; old token is revoked | Ready |
 | LOG-12 | Access a protected route without a token | No authorization header | `401` | Ready |
-| LOG-13 | Access a protected route with a suspended user's existing token | User was suspended after receiving a token | `401` or `403`; token must not be accepted | Gap |
+| LOG-13 | Access a protected route with a suspended user's existing token | User was suspended after receiving a token | `401` or `403`; the token is revoked or rejected and cannot be reused | Ready |
 
 ---
 
@@ -105,7 +106,7 @@ Test specification for user registration, account management, and administrator 
 | PRO-12 | Delete the account | User is authenticated | `200`; account is soft deleted; all tokens are revoked; user cannot sign in | Ready |
 | PRO-13 | Restore a deleted account from the dashboard | Admin restores the soft-deleted user | `200`; user is restored and can sign in again | Ready |
 | PRO-14 | Access the profile after deletion | Account was soft deleted | `401`; token is no longer valid | Ready |
-| PRO-15 | Change phone and confirm stored country | Phone change uses a different country code | `200`; phone and country data remain consistent | Gap |
+| PRO-15 | Change phone and confirm stored country | Phone change uses a different country code | `200`; phone and country data remain consistent | Ready |
 
 ---
 
@@ -117,7 +118,7 @@ Test specification for user registration, account management, and administrator 
 | ADM-02 | View a user | Authenticated admin; user exists | `200`; user details | Ready |
 | ADM-03 | Suspend a user | Authenticated admin; user is active | `200`; `is_active` becomes false; user cannot log in | Ready |
 | ADM-04 | Activate a user | Authenticated admin; user is suspended | `200`; `is_active` becomes true; user can log in | Ready |
-| ADM-05 | Change status as a non-Super-Admin | Authenticated admin without Super Admin role | `403`; only a Super Admin may change status | Gap |
+| ADM-05 | Change status as a non-Super-Admin | Authenticated admin without Super Admin role | `403`; only a Super Admin may change status | Ready |
 | ADM-06 | Soft delete a user | Authenticated admin; user exists | `200`; user appears in the recycle bin and cannot sign in | Ready |
 | ADM-07 | Restore a soft-deleted user | Authenticated admin; user is trashed | `200`; user is restored | Ready |
 | ADM-08 | Force delete a user | Authenticated admin; user is trashed | `200`; user is permanently removed | Ready |
@@ -133,16 +134,15 @@ Required by Phase 1 and consumed by transfers in Phase 5.
 
 | ID | Test case | Preconditions | Expected result | Status |
 |---|---|---|---|---|
-| PIN-01 | Set the first transaction PIN | Authenticated user; no PIN exists | `200`; PIN is stored hashed and never returned | Planned |
-| PIN-02 | Set a PIN with mismatched confirmation | Confirmation differs | `422`; confirmation error | Planned |
-| PIN-03 | Set an invalid PIN format | PIN is too short, too long, or non-numeric | `422`; PIN format error | Planned |
-| PIN-04 | Change the PIN with the correct current PIN | Authenticated user; PIN exists | `200`; new PIN works; old PIN is rejected | Planned |
-| PIN-05 | Change the PIN with a wrong current PIN | Authenticated user; PIN exists | `422`; current PIN is incorrect | Planned |
-| PIN-06 | Reset the PIN using an OTP | Authenticated user; OTP is verified | `200`; PIN is replaced | Planned |
-| PIN-07 | Verify the correct PIN | Authenticated user; PIN exists | `200`; verification succeeds | Planned |
-| PIN-08 | Verify a wrong PIN | Authenticated user; PIN exists | `422`; verification fails; attempt counter increases | Planned |
-| PIN-09 | Lock PIN verification after repeated failures | Several wrong PIN attempts were made | `422` or `423`; further attempts are blocked until reset | Planned |
-| PIN-10 | Require the PIN for a transfer | User attempts a transfer without a PIN or with a wrong PIN | Transfer is rejected before the banking provider is called | Planned |
+| PIN-01 | Set the first transaction PIN | Authenticated user; no PIN exists | `200`; PIN is stored hashed and never returned | Ready |
+| PIN-02 | Set a PIN with mismatched confirmation | Confirmation differs | `422`; confirmation error | Ready |
+| PIN-03 | Set an invalid PIN format | PIN is too short, too long, or non-numeric | `422`; PIN format error | Ready |
+| PIN-04 | Change the PIN with the correct current PIN | Authenticated user; PIN exists | `200`; new PIN works; old PIN is rejected | Ready |
+| PIN-05 | Change the PIN with a wrong current PIN | Authenticated user; PIN exists | `422`; current PIN is incorrect | Ready |
+| PIN-06 | Reset the PIN using an OTP | Authenticated user; OTP is verified | `200`; PIN is replaced | Ready |
+| PIN-07 | Verify the correct PIN | Authenticated user; PIN exists | `200`; verification succeeds | Ready |
+| PIN-08 | Verify a wrong PIN | Authenticated user; PIN exists | `422`; verification fails; attempt counter increases | Ready |
+| PIN-09 | Lock PIN verification after repeated failures | Several wrong PIN attempts were made | `422` or `423`; further attempts are blocked until reset | Ready |
 
 ---
 
@@ -157,6 +157,112 @@ Required by Phase 1 and consumed by transfers in Phase 5.
 | SEC-05 | Confirm OTPs are never returned in production | `APP_ENV=production` | OTP fields are null or absent | Ready |
 | SEC-06 | Confirm soft-deleted users cannot authenticate | User was soft deleted | Login fails; existing tokens are revoked | Ready |
 | SEC-07 | Confirm a user cannot access another user's profile | Authenticated as user A; request uses user B's id | The API ignores client ids and returns only user A's data, or rejects the request | Ready |
+
+## Execution Checklist
+
+> Check each case after executing it locally.
+
+### 1. Registration and Phone Verification
+- [X] **REG-01** — Register with valid name, country code, phone, email, and confirmed strong password
+- [X] **REG-02** — Register with an already registered phone
+- [X] **REG-03** — Register with an already registered email
+- [X] **REG-04** — Register with an invalid country code
+- [X] **REG-05** — Register with an invalid phone length or format
+- [X] **REG-06** — Register with a weak password
+- [X] **REG-07** — Register with mismatched password confirmation
+- [X] **REG-08** — Register with missing required fields
+- [x] **REG-09** — Request registration OTP twice within the cooldown
+- [x] **REG-10** — Verify registration with the correct OTP
+- [x] **REG-11** — Verify registration with a wrong OTP
+- [x] **REG-12** — Verify after the maximum wrong attempts
+- [x] **REG-13** — Verify with an expired OTP
+- [x] **REG-14** — Reuse an already verified registration OTP
+- [x] **REG-15** — Verify an unknown phone
+- [x] **REG-16** — Resend the registration OTP after the cooldown
+- [x] **REG-17** — Confirm OTP is hidden in production
+
+### 2. Login, Logout, and Session
+- [x] **LOG-01** — Login with valid credentials
+- [x] **LOG-02** — Login with a wrong password
+- [x] **LOG-03** — Login with an unverified account
+- [x] **LOG-04** — Login with a suspended account
+- [x] **LOG-05** — Login with an unknown phone
+- [x] **LOG-06** — Lock after five failed attempts
+- [x] **LOG-07** — Lock after ten failed attempts
+- [x] **LOG-08** — Lock after fifteen failed attempts
+- [x] **LOG-09** — Login while locked
+- [x] **LOG-10** — Logout
+- [x] **LOG-11** — Refresh token
+- [x] **LOG-12** — Access a protected route without a token
+- [x] **LOG-13** — Access a protected route with a suspended user's existing token
+
+### 3. Password Management
+- [x] **PWD-01** — Change password with the correct current password
+- [x] **PWD-02** — Change password with an incorrect current password
+- [x] **PWD-03** — Change to the same password
+- [x] **PWD-04** — Change to a weak password
+- [x] **PWD-05** — Change with mismatched confirmation
+- [x] **PWD-06** — Request a password reset for an existing phone
+- [x] **PWD-07** — Request a password reset for an unknown phone
+- [x] **PWD-08** — Verify the reset OTP with the correct token
+- [x] **PWD-09** — Verify the reset OTP with a wrong OTP
+- [x] **PWD-10** — Verify with an expired or invalid reset token
+- [x] **PWD-11** — Reset the password with valid token and OTP
+- [x] **PWD-12** — Reuse a reset token
+- [x] **PWD-13** — Reset to a weak password
+- [x] **PWD-14** — Reset to the same password
+- [x] **PWD-15** — Reset with mismatched confirmation
+- [x] **PWD-16** — Request reset OTP repeatedly
+
+### 4. Profile Management
+- [x] **PRO-01** — Get the current profile
+- [x] **PRO-02** — Get the profile without a token
+- [x] **PRO-03** — Update name, email, postal code, and address
+- [x] **PRO-04** — Update to an email owned by another user
+- [x] **PRO-05** — Update to a phone owned by another user
+- [x] **PRO-06** — Change the phone number
+- [x] **PRO-07** — Verify the new phone with the correct OTP
+- [x] **PRO-08** — Verify the new phone with a wrong OTP
+- [x] **PRO-09** — Upload a valid avatar
+- [x] **PRO-10** — Upload an invalid avatar
+- [x] **PRO-11** — Delete the avatar
+- [x] **PRO-12** — Delete the account
+- [x] **PRO-13** — Restore a deleted account from the dashboard
+- [x] **PRO-14** — Access the profile after deletion
+- [x] **PRO-15** — Change phone and confirm stored country
+
+### 5. Administrator Controls
+- [ ] **ADM-01** — List users
+- [ ] **ADM-02** — View a user
+- [ ] **ADM-03** — Suspend a user
+- [ ] **ADM-04** — Activate a user
+- [ ] **ADM-05** — Change status as a non-Super-Admin
+- [ ] **ADM-06** — Soft delete a user
+- [ ] **ADM-07** — Restore a soft-deleted user
+- [ ] **ADM-08** — Force delete a user
+- [ ] **ADM-09** — Access dashboard user routes with a user token
+- [ ] **ADM-10** — Access mobile user routes with an admin token
+- [ ] **ADM-11** — Record a status-change activity log
+
+### 6. Transaction PIN
+- [ ] **PIN-01** — Set the first transaction PIN
+- [ ] **PIN-02** — Set a PIN with mismatched confirmation
+- [ ] **PIN-03** — Set an invalid PIN format
+- [ ] **PIN-04** — Change the PIN with the correct current PIN
+- [ ] **PIN-05** — Change the PIN with a wrong current PIN
+- [ ] **PIN-06** — Reset the PIN using an OTP
+- [ ] **PIN-07** — Verify the correct PIN
+- [ ] **PIN-08** — Verify a wrong PIN
+- [ ] **PIN-09** — Lock PIN verification after repeated failures
+
+### 7. Security and Validation
+- [ ] **SEC-01** — Request without the API key header
+- [ ] **SEC-02** — Exceed the global rate limit
+- [ ] **SEC-03** — Submit an oversized payload
+- [ ] **SEC-04** — Confirm passwords are never returned
+- [ ] **SEC-05** — Confirm OTPs are never returned in production
+- [ ] **SEC-06** — Confirm soft-deleted users cannot authenticate
+- [ ] **SEC-07** — Confirm a user cannot access another user's profile
 
 ---
 

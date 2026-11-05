@@ -12,6 +12,10 @@ class UpdateProfileRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        if (! array_key_exists('delete_avatar', $this->all())) {
+            $this->merge(['delete_avatar' => 0]);
+        }
+
         if ($this->filled('country_code') && $this->filled('phone')) {
             $countryId = $this->getCountryIdFromCode($this->country_code);
 
@@ -34,7 +38,7 @@ class UpdateProfileRequest extends FormRequest
         return [
             'name'         => 'sometimes|string|max:255',
             'email'        => 'sometimes|email|unique:users,email,'.$userId,
-            'country_code' => ['sometimes', 'nullable', 'string',
+            'country_code' => ['required_with:phone', 'nullable', 'string',
 
                 function ($attribute, $value, $fail): void {
                     if (is_null($value) || $value === '') {
@@ -48,7 +52,7 @@ class UpdateProfileRequest extends FormRequest
 
 
             'country_id'   => 'sometimes|exists:settings,id',
-            'phone'        => ['sometimes', 'nullable', 'regex:'.RegexPatterns::PHONE_DIGITS, 'max:20', 'unique:users,phone,'.$userId,
+            'phone'        => ['sometimes', 'nullable', 'regex:'.RegexPatterns::PHONE_DIGITS, 'max:11',
 
 
                 function ($attribute, $value, $fail): void {
@@ -66,6 +70,7 @@ class UpdateProfileRequest extends FormRequest
                 },],
 
 
+            'full_phone'   => ['sometimes', 'nullable', 'string', 'unique:users,phone,'.$userId],
             'avatar'        => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'delete_avatar' => 'sometimes|boolean',
             'postal_code'   => 'sometimes|string|max:20',

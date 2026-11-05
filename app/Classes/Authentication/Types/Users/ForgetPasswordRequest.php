@@ -53,7 +53,10 @@ class ForgetPasswordRequest extends FormRequest
                         $fail($e->getMessage());
                     }
                 },
-               
+            ],
+            'full_phone' => [
+                'nullable',
+                'string',
             ],
         ];
     }

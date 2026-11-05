@@ -128,6 +128,16 @@ class Admins extends Authenticatable
         return $this->morphMany(Otp::class, 'otpable');
     }
 
+    public function isSuperAdmin(): bool
+    {
+        $superRoleId = (int) data_get(config('admins.base_roles.super_role'), 'id', 2);
+
+        return $this->roles()
+            ->where('role_id', $superRoleId)
+            ->whereHas('role', fn ($query) => $query->where('is_active', true))
+            ->exists();
+    }
+
     public function hasPermission($permission)
     {
         return $this->roles()

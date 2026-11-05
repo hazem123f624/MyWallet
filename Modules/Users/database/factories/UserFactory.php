@@ -20,7 +20,7 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->unique()->phoneNumber(),
+            'phone' => '+20'.$this->faker->unique()->numerify('1#########'),
             'password' => 'password', // hashed by model cast
             'is_active' => true,
         ];

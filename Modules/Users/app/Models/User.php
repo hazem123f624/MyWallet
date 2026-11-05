@@ -19,6 +19,9 @@ use Modules\Users\DTOs\UsersDTO;
  * @property string $email
  * @property string|null $phone
  * @property string $password
+ * @property string|null $transaction_pin
+ * @property int $transaction_pin_failed_attempts
+ * @property Carbon|null $transaction_pin_locked_until
  * @property string|null $avatar
  * @property int|null $country_id
  * @property string|null $postal_code
@@ -52,6 +55,9 @@ class User extends Authenticatable
         'country_id',
         'phone',
         'password',
+        'transaction_pin',
+        'transaction_pin_failed_attempts',
+        'transaction_pin_locked_until',
         'avatar',
         'postal_code',
         'main_address',
@@ -67,12 +73,16 @@ class User extends Authenticatable
 
     protected $hidden = [
         'password',
+        'transaction_pin',
         'remember_token',
     ];
 
     protected $casts = [
         'id' => 'integer',
         'password' => 'hashed',
+        'transaction_pin' => 'hashed',
+        'transaction_pin_failed_attempts' => 'integer',
+        'transaction_pin_locked_until' => 'datetime',
         'is_active' => 'boolean',
         'last_login_at' => 'datetime',
         'phone_verified_at' => 'datetime',

@@ -31,6 +31,7 @@ class DocumentationCases
             'recycle-bin' => $managementCases['users-recycle-bin'] ?? [],
             'mobile-auth' => $mobileCases['mobile-auth'] ?? [],
             'mobile-profile' => $mobileCases['mobile-profile'] ?? [],
+            'mobile-transaction-pin' => $mobileCases['mobile-transaction-pin'] ?? [],
         ];
     }
 
@@ -45,7 +46,7 @@ class DocumentationCases
             } else {
                 $latestRecord = User::create([
                     'name' => 'Test User',
-                    'phone' => '0501112223',
+                    'phone' => '+966501112223',
                     'email' => 'test_doc@example.com',
                     'password' => 'P@ssw0rd123',
                     'is_active' => ActiveStatus::Active,
@@ -59,7 +60,7 @@ class DocumentationCases
         if (! $trashedRecord) {
             $trashedRecord = User::create([
                 'name' => 'Trashed User',
-                'phone' => '0509998887',
+                'phone' => '+966509998887',
                 'email' => 'trashed_doc@example.com',
                 'password' => 'P@ssw0rd123',
                 'is_active' => ActiveStatus::Active,
@@ -114,9 +115,25 @@ class DocumentationCases
             $testCasesObject->handle(type: 'DELETE', name: $descriptions['mobile_delete_account']['name'], route: $prefix.'/profile', params: [], auth: fakeUserLogin(), desc: $descriptions['mobile_delete_account']['description'], shortDesc: $descriptions['mobile_delete_account']['short_description']),
         ];
 
+        $transactionPinAuth = fakeUserLogin();
+        User::where('email', 'user2@demo.com')->update([
+            'transaction_pin' => null,
+            'transaction_pin_failed_attempts' => 0,
+            'transaction_pin_locked_until' => null,
+        ]);
+
+        $transactionPin = [
+            $testCasesObject->handle(type: 'POST', name: $descriptions['mobile_set_transaction_pin']['name'], route: $prefix.'/transaction-pin', params: ['transaction_pin' => '2468', 'transaction_pin_confirmation' => '2468'], auth: $transactionPinAuth, desc: $descriptions['mobile_set_transaction_pin']['description'], shortDesc: $descriptions['mobile_set_transaction_pin']['short_description']),
+            $testCasesObject->handle(type: 'POST', name: $descriptions['mobile_change_transaction_pin']['name'], route: $prefix.'/transaction-pin/change', params: ['current_transaction_pin' => '2468', 'transaction_pin' => '1357', 'transaction_pin_confirmation' => '1357'], auth: $transactionPinAuth, desc: $descriptions['mobile_change_transaction_pin']['description'], shortDesc: $descriptions['mobile_change_transaction_pin']['short_description']),
+            $testCasesObject->handle(type: 'POST', name: $descriptions['mobile_forget_transaction_pin']['name'], route: $prefix.'/transaction-pin/forget', params: [], auth: $transactionPinAuth, desc: $descriptions['mobile_forget_transaction_pin']['description'], shortDesc: $descriptions['mobile_forget_transaction_pin']['short_description']),
+            $testCasesObject->handle(type: 'POST', name: $descriptions['mobile_reset_transaction_pin']['name'], route: $prefix.'/transaction-pin/reset', params: ['otp' => '1234', 'transaction_pin' => '2468', 'transaction_pin_confirmation' => '2468'], auth: $transactionPinAuth, desc: $descriptions['mobile_reset_transaction_pin']['description'], shortDesc: $descriptions['mobile_reset_transaction_pin']['short_description']),
+            $testCasesObject->handle(type: 'POST', name: $descriptions['mobile_verify_transaction_pin']['name'], route: $prefix.'/transaction-pin/verify', params: ['transaction_pin' => '2468'], auth: $transactionPinAuth, desc: $descriptions['mobile_verify_transaction_pin']['description'], shortDesc: $descriptions['mobile_verify_transaction_pin']['short_description']),
+        ];
+
         return [
             'mobile-auth' => $auth,
             'mobile-profile' => $profile,
+            'mobile-transaction-pin' => $transactionPin,
         ];
     }
 }

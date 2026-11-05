@@ -16,4 +16,9 @@ return [
     'role_permanently_deleted' => 'Role permanently deleted.',
     'role_removed_from_admin' => 'Role removed from admin successfully.',
     'admin_role_not_found' => 'The admin does not have this role.',
+    'admins_assigned_to_role' => 'Admins assigned to the role successfully.',
+    'profile_retrieved' => 'Profile retrieved successfully.',
+    'profile_updated' => 'Profile updated successfully.',
+    'password_incorrect' => 'Current password incorrect.',
+    'password_changed' => 'Password changed successfully.',
 ];

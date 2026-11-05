@@ -31,9 +31,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:2|max:100|regex:'.RegexPatterns::HUMAN_NAME,
-            'country_code' => [
-                'required',
-                'string',
+            'country_code' => ['required', 'string',
                 function ($attribute, $value, $fail) {
                     if (!$this->isValidCountryCode($value)) {
                         $fail('Invalid country code selected.');
@@ -41,11 +39,7 @@ class RegisterRequest extends FormRequest
                 },
             ],
             'country_id' => 'required|exists:settings,id',
-            'phone' => [
-                'required',
-                'regex:'.RegexPatterns::PHONE_DIGITS,
-                'max:20',
-                'unique:users,phone',
+            'phone' => ['required', 'regex:'.RegexPatterns::PHONE_DIGITS, 'max:11', 'unique:users,phone',
                 function ($attribute, $value, $fail) {
                     if (!$this->country_code) {
                         return; // country_code's own 'required' rule will catch this
@@ -58,11 +52,7 @@ class RegisterRequest extends FormRequest
                 },
             ],
 
-            'full_phone' => [
-                'nullable',
-                'string',
-                'unique:users,phone',
-            ],
+            'full_phone' => ['nullable', 'string', 'unique:users,phone',],
             'email' => 'nullable|email|unique:users,email',
             'password' => ['required', 'confirmed', new StrongPassword],
         ];
@@ -87,9 +77,7 @@ class RegisterRequest extends FormRequest
             return;
         }
 
-        $country = \Modules\Settings\Models\Settings::countries()
-            ->where('data->phone_code', $countryCode)
-            ->first();
+        $country = \Modules\Settings\Models\Settings::countries()->where('data->phone_code', $countryCode)->first();
 
         if (!$country) {
             $fail('Invalid country selected.');

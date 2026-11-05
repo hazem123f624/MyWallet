@@ -38,6 +38,8 @@ class ManageUsersController extends Controller
 
     public function switchActive(User $user)
     {
+        $this->authorize('change-user-status');
+
         $data = $this->repository->switchActive($user);
 
         return $this->success('User status updated successfully.', data: new UserResource($data));

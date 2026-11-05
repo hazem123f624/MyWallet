@@ -112,6 +112,31 @@ class ApiDocumentationController extends Controller
                 'description' => 'Update the password for the currently authenticated user. Requires the current (old) password for security.',
                 'short_description' => 'Update current password.'
             ],
+            'mobile_set_transaction_pin' => [
+                'name' => 'Set Transaction PIN',
+                'description' => 'Set the first transaction PIN for the authenticated user. The PIN is stored as a secure hash and is never returned in API responses.',
+                'short_description' => 'Create the transaction PIN.'
+            ],
+            'mobile_change_transaction_pin' => [
+                'name' => 'Change Transaction PIN',
+                'description' => 'Replace the transaction PIN after confirming the current PIN. Incorrect attempts count towards the PIN lockout policy.',
+                'short_description' => 'Update the transaction PIN.'
+            ],
+            'mobile_forget_transaction_pin' => [
+                'name' => 'Request Transaction PIN Reset',
+                'description' => 'Send an OTP to the registered phone number so the authenticated user can reset the transaction PIN.',
+                'short_description' => 'Request a PIN reset OTP.'
+            ],
+            'mobile_reset_transaction_pin' => [
+                'name' => 'Reset Transaction PIN',
+                'description' => 'Reset the transaction PIN using the OTP sent to the registered phone number. A successful reset clears any active PIN lock.',
+                'short_description' => 'Reset the transaction PIN.'
+            ],
+            'mobile_verify_transaction_pin' => [
+                'name' => 'Verify Transaction PIN',
+                'description' => 'Verify the transaction PIN before a sensitive operation. Repeated incorrect attempts lock further verification until the PIN is reset.',
+                'short_description' => 'Confirm the transaction PIN.'
+            ],
             'mobile_profile' => [
                 'name' => 'Get Profile',
                 'description' => 'Retrieve the details of the currently authenticated user.',

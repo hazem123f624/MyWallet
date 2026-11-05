@@ -32,6 +32,10 @@ class DocumentSeeder extends Seeder
 
         $this->call([AuthSeeder::class]);
 
+        $this->flushRateLimit();
+        $this->command?->info('Running test case on Users Module: mobile-transaction-pin');
+        Artisan::call('app:init-test Users mobile-transaction-pin');
+
         $createIndex = [
             'Admins' => ['authentication', 'index'],
             'Users' => ['index'],

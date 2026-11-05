@@ -12,6 +12,7 @@ This folder tracks the implementation and verification work for Phase 1 of the M
 |---|---|
 | [`tasks.md`](tasks.md) | Implementation checklist with current status and remaining gaps. |
 | [`test-cases.md`](test-cases.md) | QA and automation test-case specification for Phase 1. |
+| [`execution-report.md`](execution-report.md) | Latest local execution results, coverage, and defects. |
 
 ## Current Status
 
@@ -22,9 +23,9 @@ This folder tracks the implementation and verification work for Phase 1 of the M
 | Profile management | Implemented | Includes avatar upload and phone-change verification. |
 | Password change and reset | Implemented | Forgot-password flow uses OTP plus a temporary token. |
 | Account deletion and admin controls | Implemented | Soft delete, recycle bin, restore, force delete, and status toggle. |
-| Transaction PIN | Missing | Required by the Phase 1 business scope; not implemented yet. |
-| Super Admin-only status control | Partial | The dashboard route is admin-only, but not restricted to a Super Admin role. |
-| Suspended-account enforcement | Partial | Login is blocked, but existing tokens are not explicitly revoked or checked per request. |
+| Transaction PIN | Implemented | Hashed PIN with first-time setup, change, OTP reset, verification, and lockout after repeated failures. |
+| Super Admin-only status control | Implemented | User status changes require the Super Admin role. |
+| Suspended-account enforcement | Implemented | Login is blocked, tokens are revoked on suspension, and active status is checked on every protected request. |
 
 ## Phase 1 Endpoints
 
@@ -44,6 +45,11 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 | `POST` | `/mobile/users/profile` | Update the authenticated user's profile. |
 | `DELETE` | `/mobile/users/profile` | Delete the authenticated user's account. |
 | `POST` | `/mobile/users/change-password` | Change the password using the current password. |
+| `POST` | `/mobile/users/transaction-pin` | Set the first transaction PIN. |
+| `POST` | `/mobile/users/transaction-pin/change` | Change the transaction PIN using the current PIN. |
+| `POST` | `/mobile/users/transaction-pin/forget` | Send an OTP to reset the transaction PIN. |
+| `POST` | `/mobile/users/transaction-pin/reset` | Reset the transaction PIN using the OTP. |
+| `POST` | `/mobile/users/transaction-pin/verify` | Verify the transaction PIN for a sensitive operation. |
 | `POST` | `/mobile/users/forget-password` | Start the password-reset flow. |
 | `POST` | `/mobile/users/verify-forget-password` | Verify the reset OTP and temporary token. |
 | `POST` | `/mobile/users/reset-password` | Set the new password. |
@@ -63,7 +69,8 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 ## Test Data
 
 - Country code: `20` (Egypt)
-- Phone: `01011112222`
+- Phone input: `01011112222`
+- Stored phone format: E.164, for example `+201011112222`
 - OTP in local/testing: `1234`
 - Password: `P@ssw0rd123`
 - Required security header: `X-API-Token`
@@ -71,7 +78,4 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 
 ## Known Gaps
 
-1. Transaction PIN is not implemented.
-2. Only a Super Admin should change account status; the current route allows any authenticated admin.
-3. Suspended users are blocked at login, but existing tokens are not revoked.
-4. Phase 1 does not yet have automated feature tests; `test-cases.md` is the specification to implement them from.
+1. Transfer execution and its PIN enforcement test (PIN-10) are tracked under Phase 5.

@@ -56,6 +56,8 @@ class UsersController extends AuthController
 
         $validatedData = $request->validated();
         $phone = $validatedData['full_phone'] ?? $validatedData['phone'];
+        $validatedData['phone'] = $phone;
+        unset($validatedData['full_phone']);
         $countryId = $validatedData['country_id'];
 
         // Check if user exists
@@ -86,18 +88,17 @@ class UsersController extends AuthController
         $request->validateResolved();
         $credentials = $request->only($this->loginType, 'password');
 
-        // Use full_phone from request or combine
-        if ($request->has('country_code') && $request->has('phone')) {
-            $fullPhone = app(CountryService::class)->getFullPhone(
-                $request->phone,
-                $request->country_code
-            );
-            $credentials['phone'] = $fullPhone;
+        if ($request->filled('full_phone')) {
+            $credentials['phone'] = $request->input('full_phone');
         }
 
         // Check if user exists and is verified
         /** @var User|null $user */
         $user = ($this->model)::where('phone', $credentials['phone'])->first();
+        if ($user && ! $user->is_active) {
+            return $this->failure(__('users::messages.account_suspended'), 403);
+        }
+
         if ($user && ! $user->phone_verified_at) {
             return $this->failure(__('users::messages.verify_account_first'), 403);
         }
@@ -138,7 +139,7 @@ class UsersController extends AuthController
         $newPhone = null;
 
         if (array_key_exists('phone', $validated)) {
-            $newPhone = $validated['phone'];
+            $newPhone = $validated['full_phone'] ?? $validated['phone'];
             if ($newPhone !== $user->phone) {
                 $hasPhoneChange = true;
             } else {
@@ -146,6 +147,7 @@ class UsersController extends AuthController
                 unset($validated['phone']);
                 unset($validated['full_phone']);
                 unset($validated['country_code']);
+                unset($validated['country_id']);
             }
         }
 
@@ -153,12 +155,11 @@ class UsersController extends AuthController
             // Send OTP to the NEW phone number
             $code = app(OtpService::class)->generate($user, 'phone_change', $newPhone);
 
-            // Temporarily remove phone stuff from update data - it will be updated after verification
+            // Keep the current phone and country until the new number is verified.
             unset($validated['phone']);
             unset($validated['full_phone']);
             unset($validated['country_code']);
-            // But we might want to store country_id now or wait? Usually we wait or just update it
-            // Let's not save country_id yet if phone is pending, but here we just pass whatever is left
+            unset($validated['country_id']);
 
             $this->repository->save($validated, $user->id);
 
@@ -211,6 +212,7 @@ class UsersController extends AuthController
         $phone = request($this->loginType);
         if (request()->has('country_code') && $phone) {
             $phone = app(CountryService::class)->getFullPhone($phone, request('country_code'));
+            request()->merge(['full_phone' => $phone]);
         }
 
         if (! $phone) {
@@ -238,13 +240,15 @@ class UsersController extends AuthController
     {
         $request = app($this->forgetPasswordRequest);
         $request->validateResolved();
-        $phone = $request->phone;
+        $phone = $request->input('full_phone') ?? $request->phone;
 
         /** @var User $user */
         $user = ($this->model)::where('phone', $phone)->firstOrFail();
 
         // Use the authFactory to generate the token and send the SMS/OTP
-        $token = $this->authFactory->forgotPassword(request: $request->validated(), type: $this->forgetPasswordType);
+        $data = $request->validated();
+        $data['phone'] = $phone;
+        $token = $this->authFactory->forgotPassword(request: $data, type: $this->forgetPasswordType);
 
         // Get the latest OTP for this user to return it in dev
         $otp = $user->otps()->where('type', 'forgot_password')->latest()->first()?->code;
@@ -293,6 +297,8 @@ class UsersController extends AuthController
 
             $data = app(OtpService::class)->verifyByCache($phone, $otp, 'registration');
 
+            $data['phone'] = $data['full_phone'] ?? $data['phone'];
+            unset($data['full_phone']);
             $data['phone_verified_at'] = now();
             $user = $this->repository->save($data);
 
@@ -337,7 +343,13 @@ class UsersController extends AuthController
 
         if ($type === 'phone_change') {
             $otpRecord = $user->otps()->where('type', 'phone_change')->where('is_verified', true)->latest()->first();
-            $user->update(['phone' => $otpRecord->identifier]);
+            $newPhone = $otpRecord->identifier;
+            $country = app(CountryService::class)->getCountryByFullPhone($newPhone);
+
+            $user->update([
+                'phone' => $newPhone,
+                'country_id' => $country?->id ?? $user->country_id,
+            ]);
             $message = __('users::messages.phone_updated');
         } else {
             $user->update(['phone_verified_at' => now()]);

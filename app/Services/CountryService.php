@@ -68,7 +68,42 @@ class CountryService
     public function getFullPhone(string $phone, string $phoneCode): string
     {
         $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
-        return $phoneCode . $cleanPhone;
+        $cleanCode = preg_replace('/[^0-9]/', '', $phoneCode);
+
+        if (str_starts_with($cleanPhone, '0')) {
+            $cleanPhone = substr($cleanPhone, 1);
+        }
+
+        return '+'.$cleanCode.$cleanPhone;
+    }
+
+    /**
+     * Get country by a full international phone number.
+     */
+    public function getCountryByFullPhone(string $fullPhone): ?object
+    {
+        $fullPhone = preg_replace('/[^0-9]/', '', $fullPhone);
+
+        if ($fullPhone === '') {
+            return null;
+        }
+
+        return Settings::countries()
+            ->where('is_active', true)
+            ->get()
+            ->sortByDesc(fn ($country) => strlen((string) data_get($country->data, 'phone_code', '')))
+            ->first(function ($country) use ($fullPhone): bool {
+                $phoneCode = (string) data_get($country->data, 'phone_code', '');
+                $phoneLength = (int) data_get($country->data, 'phone_length', 9);
+
+                if ($phoneCode === '' || ! str_starts_with($fullPhone, $phoneCode)) {
+                    return false;
+                }
+
+                $nationalLength = strlen(substr($fullPhone, strlen($phoneCode)));
+
+                return in_array($nationalLength, [$phoneLength, max(0, $phoneLength - 1)], true);
+            });
     }
 
     /**

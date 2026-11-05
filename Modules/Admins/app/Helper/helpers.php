@@ -4,6 +4,7 @@ use App\Enums\ActiveStatus;
 use App\Services\Authentication\AuthFactory;
 use App\Services\Security\Models\ApiClient;
 use App\Services\Security\Services\SignatureService;
+use Illuminate\Support\Facades\DB;
 use Modules\Admins\Models\Admins;
 use Modules\Users\Models\User;
 
@@ -30,6 +31,12 @@ if (! function_exists('fakeLogin')) {
             $admin->password = Hash::make($password);
             $admin->save();
         }
+        $roleIds = DB::table('roles')->whereNull('deleted_at')->pluck('id');
+
+        foreach ($roleIds as $roleId) {
+            $admin->roles()->firstOrCreate(['role_id' => $roleId]);
+        }
+
         $auth = AuthFactory::make('sanctum', 'admins');
         $credentials = [
             'email' => $email,
@@ -59,7 +66,7 @@ if (! function_exists('fakeUserLogin')) {
             $user = User::create([
                 'name' => 'Demo User',
                 'email' => $email,
-                'phone' => '01211172299',
+                'phone' => '+201211172299',
                 'password' => bcrypt($password),
                 'is_active' => 1,
             ]);
@@ -70,6 +77,7 @@ if (! function_exists('fakeUserLogin')) {
                 $user->restore();
             }
 
+            $user->phone = '+201211172299';
             $user->password = bcrypt($password);
             $user->is_active = true;
             $user->save();

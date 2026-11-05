@@ -149,23 +149,42 @@
                             <span class="eyebrow">API surface</span>
                             <h2>{{ $sectionName }}</h2>
                         </div>
-                        <p>{{ collect($modules)->flatten(1)->count() }} endpoints</p>
+                        <p>{{ collect($modules)->sum(fn ($module) => $module['total']) }} endpoints</p>
                     </div>
 
-                    @foreach($modules as $moduleName => $items)
+                    @foreach($modules as $moduleName => $module)
                         <div class="module-block">
                             <div class="module-heading">
                                 <h3 id="module-{{ \Illuminate\Support\Str::slug($sectionName.' '.$moduleName) }}">
                                     {{ $moduleName }}
                                 </h3>
-                                <span class="count-badge">{{ count($items) }}</span>
+                                <span class="count-badge">{{ $module['total'] }}</span>
                             </div>
 
-                            <div class="endpoint-list">
-                                @foreach($items as $item)
-                                    <x-docs.endpoint :item="$item" />
-                                @endforeach
-                            </div>
+                            @foreach($module['groups'] as $group)
+                                @if($group['name'])
+                                    <div class="endpoint-group">
+                                        <div class="group-heading">
+                                            <h4 id="group-{{ \Illuminate\Support\Str::slug($sectionName.' '.$moduleName.' '.$group['name']) }}">
+                                                {{ $group['name'] }}
+                                            </h4>
+                                            <span class="count-badge">{{ count($group['items']) }}</span>
+                                        </div>
+
+                                        <div class="endpoint-list">
+                                            @foreach($group['items'] as $item)
+                                                <x-docs.endpoint :item="$item" :group="$group['name']" />
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="endpoint-list">
+                                        @foreach($group['items'] as $item)
+                                            <x-docs.endpoint :item="$item" :group="$group['name']" />
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
                     @endforeach
                 </section>
