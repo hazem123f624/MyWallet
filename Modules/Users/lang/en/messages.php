@@ -17,6 +17,7 @@ return [
     'phone_updated'                  => 'Phone number updated successfully.',
     'account_activated'              => 'Account activated successfully.',
     'invalid_otp'                    => 'Invalid request or expired OTP.',
+    'invalid_country_code'         => 'Invalid country code selected.',
     'phone_required'                 => 'Phone number is required.',
     'transaction_pin_not_set'        => 'Transaction PIN has not been set.',
     'transaction_pin_already_set'    => 'Transaction PIN is already set. Use the change option.',
