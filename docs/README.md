@@ -10,7 +10,8 @@ This folder holds the product and engineering documentation for the MyWallet bac
 | [`artisan-commands.md`](artisan-commands.md) | The complete generated list of all Artisan commands available in this installation. |
 | [`documentation-data-builders.md`](documentation-data-builders.md) | The standard for seeding realistic data before generating API documentation. |
 | [`github-commit-structure.md`](github-commit-structure.md) | Commit message and pull-request conventions. |
-| [`phase-1/`](phase-1/README.md) | Phase 1 implementation tasks, test-case specification, and execution report. |
+| [`phase-1/`](phase-1/README.md) | Phase 1 implementation tasks, test-case specification, execution report, and admin frontend tasks. |
+| [`phase-2/`](phase-2/README.md) | Phase 2 bank account linking tasks, endpoints, and test-case specification. |
 | [`phase-5/`](phase-5/test-cases.md) | Phase 5 money transfer test cases, including transfer PIN confirmation. |
 
 ## Quick Links

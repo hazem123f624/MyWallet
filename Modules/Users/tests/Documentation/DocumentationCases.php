@@ -73,6 +73,7 @@ class DocumentationCases
 
         $index = [
             $testCasesObject->handle(type: 'GET', name: $descriptions['index']['name'], route: config('api.prefixes.dashboard').'/'.$model, params: [], auth: $fakeLogin, desc: $descriptions['index']['description'], shortDesc: $descriptions['index']['short_description']),
+            $testCasesObject->handle(type: 'GET', name: 'Get User Statistics', route: config('api.prefixes.dashboard').'/'.$model.'/statistics', params: [], auth: $fakeLogin, desc: 'Returns aggregate user counts for the dashboard: total, active, suspended, and deleted accounts.', shortDesc: 'Get user account statistics.'),
         ];
 
         $show = [

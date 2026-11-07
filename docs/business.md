@@ -46,11 +46,15 @@ Product user stories and acceptance criteria for every phase are in [`user-stori
 **Business requirements and rules:**
 
 - Display the list of supported banks.
+- Show only banks that are currently available and permit the required integration.
 - Select a bank and link the user's own bank account.
-- Verify ownership of the bank account before it becomes usable.
-- Display all linked accounts.
-- Exactly one linked account is the primary account.
+- The same bank account cannot be linked twice by the same user.
+- Verify ownership of the bank account before it becomes usable; the user proves ownership with a one-time code sent to their registered phone.
+- Display all linked accounts, clearly showing which are verified and which is primary.
+- Exactly one linked account is the primary account while the user has linked accounts.
+- Only a verified account can be chosen as the primary account.
 - Allow the user to unlink a bank account.
+- Unlinking the primary account promotes another linked account when one remains, so the funding source stays unambiguous.
 - Bank linking depends on the availability of a bank or Banking Aggregator that permits the required integration.
 
 **Result:** The user can link their bank account as the source of funds.

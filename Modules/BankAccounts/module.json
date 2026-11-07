@@ -1,0 +1,11 @@
+{
+    "name": "BankAccounts",
+    "alias": "bankaccounts",
+    "description": "Supported banks and linked user bank accounts.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\BankAccounts\\Providers\\BankAccountsServiceProvider"
+    ],
+    "files": []
+}

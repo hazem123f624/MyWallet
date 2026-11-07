@@ -83,6 +83,13 @@ return Application::configure(basePath: dirname(__DIR__))
         });
         $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) use ($helper) {
             $errors = $e->errors();
+
+            if (! $request->expectsJson()) {
+                return back()
+                    ->withInput($request->except(['password', 'password_confirmation']))
+                    ->withErrors($errors);
+            }
+
             $firstMessage = reset($errors);
             $firstMessageText = is_array($firstMessage) ? ($firstMessage[0] ?? '') : $firstMessage;
 

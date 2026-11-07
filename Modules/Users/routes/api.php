@@ -46,6 +46,7 @@ Route::middleware(['security'])->prefix(config('api.version').'/'.config('api.pr
 */
 Route::middleware(['security', 'auth:sanctum', 'abilities:admins'])->prefix(config('api.version').'/'.config('api.prefixes.dashboard').'/users')->group(function (): void {
     Route::get('trash', [ManageUsersController::class, 'trash']);
+    Route::get('statistics', [ManageUsersController::class, 'statistics']);
     Route::patch('{user}/restore', [ManageUsersController::class, 'restore'])->withTrashed();
     Route::delete('{user}/force-delete', [ManageUsersController::class, 'remove'])->withTrashed();
     Route::patch('{user}/toggle-active', [ManageUsersController::class, 'switchActive']);

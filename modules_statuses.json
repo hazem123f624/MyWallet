@@ -1,5 +1,6 @@
 {
     "Admins": true,
+    "BankAccounts": true,
     "Settings": true,
     "Users": true
 }

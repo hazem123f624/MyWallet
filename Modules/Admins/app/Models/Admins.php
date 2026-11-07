@@ -132,6 +132,16 @@ class Admins extends Authenticatable
     {
         $superRoleId = (int) data_get(config('admins.base_roles.super_role'), 'id', 2);
 
+        if ($this->relationLoaded('roles')) {
+            return $this->roles->contains(function (AdminRoles $adminRole) use ($superRoleId): bool {
+                if ((int) $adminRole->role_id !== $superRoleId) {
+                    return false;
+                }
+
+                return ! $adminRole->relationLoaded('role') || (bool) $adminRole->role?->is_active;
+            });
+        }
+
         return $this->roles()
             ->where('role_id', $superRoleId)
             ->whereHas('role', fn ($query) => $query->where('is_active', true))

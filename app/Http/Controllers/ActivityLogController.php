@@ -48,8 +48,14 @@ class ActivityLogController extends Controller
     {
         $service = app(ActivityLogService::class);
 
+        $filters = ['subject_id' => $subjectId];
+
+        if (request()->filled('subject_type')) {
+            $filters['subject_type'] = request('subject_type');
+        }
+
         $logs = $service->getLogs(
-            filters: ['subject_id' => $subjectId],
+            filters: $filters,
             perPage: (int) (request()->row_in_page ?? 15)
         );
 

@@ -30,7 +30,43 @@ class UsersRepository implements UsersInterface
 
     public function data($request, $id = '*', $fieldName = '', $collectionType = 'model')
     {
+        if (! empty($request['search'])) {
+            $search = trim((string) $request['search']);
+            $values = [$search];
+            $digits = preg_replace('/[^0-9]/', '', $search);
+
+            if ($digits !== '' && strlen($digits) >= 4) {
+                $values[] = $digits;
+
+                if (str_starts_with($digits, '0')) {
+                    $values[] = substr($digits, 1);
+                }
+            }
+
+            $request['whereAnyLike'][] = [
+                'columns' => ['name', 'email', 'phone'],
+                'values' => array_values(array_unique($values)),
+            ];
+            unset($request['search']);
+        }
+
+        $sortable = ['name', 'email', 'phone', 'is_active', 'created_at'];
+        $sortBy = in_array($request['sort_by'] ?? null, $sortable, true) ? $request['sort_by'] : 'created_at';
+        $sortDir = strtolower((string) ($request['sort_dir'] ?? 'desc')) === 'asc' ? 'asc' : 'desc';
+        $request['orderBy'] = [$sortBy => $sortDir];
+        unset($request['sort_by'], $request['sort_dir']);
+
         return $this->serviceHelper->handelForGetData(request: $request, id: $id, fieldName: $fieldName, collectionType: $collectionType);
+    }
+
+    public function statistics(): array
+    {
+        return [
+            'total' => $this->model->newQuery()->count(),
+            'active' => $this->model->newQuery()->where('is_active', true)->count(),
+            'suspended' => $this->model->newQuery()->where('is_active', false)->count(),
+            'trashed' => $this->model->onlyTrashed()->count(),
+        ];
     }
 
     public function save($request, $id = null)

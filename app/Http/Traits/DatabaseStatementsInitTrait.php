@@ -29,6 +29,25 @@ trait DatabaseStatementsInitTrait
                 }
             }
         }
+        if ($this->has($request, 'whereAnyLike')) {
+            foreach ($request['whereAnyLike'] as $group) {
+                $columns = $group['columns'] ?? [];
+                $values = $group['values'] ?? [$group['value'] ?? null];
+                $values = array_values(array_filter($values, static fn ($value) => $value !== null && $value !== ''));
+
+                if ($columns === [] || $values === []) {
+                    continue;
+                }
+
+                $query = $query->where(function ($query) use ($columns, $values): void {
+                    foreach ($values as $value) {
+                        foreach ($columns as $column) {
+                            $query->orWhere($column, 'like', "%{$value}%");
+                        }
+                    }
+                });
+            }
+        }
         if ($this->has($request, 'whereNull')) {
             foreach ($request['whereNull'] as $col) {
                 $query = $query->whereNull($col);

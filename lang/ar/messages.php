@@ -13,4 +13,5 @@ return [
     'method_not_allowed' => 'الطريقة غير مسموحة',
     'page_expired' => 'انتهت صلاحية الصفحة',
     'server_error' => 'خطأ في الخادم',
+    'dashboard_analytics_retrieved' => 'تم استرجاع تحليلات لوحة التحكم بنجاح.',
 ];

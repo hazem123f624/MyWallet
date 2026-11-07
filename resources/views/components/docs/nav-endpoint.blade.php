@@ -1,7 +1,9 @@
-@props(['item', 'group' => null])
+@props(['item', 'group' => null, 'module' => null, 'section' => null])
 
 @php
     $searchText = strtolower(trim(implode(' ', array_filter([
+        $section,
+        $module,
         $group,
         $item->name,
         $item->method,

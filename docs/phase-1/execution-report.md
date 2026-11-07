@@ -9,7 +9,7 @@
 | Command | Result |
 |---|---|
 | `php artisan migrate:fresh --seed` | Passed |
-| `php artisan test` | 70 passed, 295 assertions |
+| `php artisan test` | 80 passed, 331 assertions |
 | `php artisan app:export-api-json` | Passed; 68 documented endpoints |
 | `/docs` smoke check | Passed; transaction PIN endpoints present |
 

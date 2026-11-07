@@ -32,7 +32,7 @@ class RolesController extends Controller
      */
     public function index()
     {
-        $request = $this->handelRequests(requests: request()->all());
+        $request = $this->roleListRequest(request()->all());
         $data = $this->repository->data(request: $request);
         $data['data'] = RolesResource::collection($data['data']);
 
@@ -130,13 +130,30 @@ class RolesController extends Controller
     {
         $allRequested = request()->all();
         $allRequested['only_trashed'] = true;
-        $request = $this->handelRequests(requests: $allRequested);
+        $request = $this->roleListRequest($allRequested);
         $result = $this->repository->data(request: $request);
         $ids = collect($result['data'])->pluck('id')->filter();
         $roles = Roles::onlyTrashed()->whereIn('id', $ids)->get();
         $result['data'] = RolesResource::collection($roles);
 
         return $this->success(__('admins::messages.role_trash_retrieved'), data: $result);
+    }
+
+    private function roleListRequest(array $data): array
+    {
+        $sortBy = $data['sort_by'] ?? null;
+        $sortDir = $data['sort_dir'] ?? null;
+        unset($data['sort_by'], $data['sort_dir']);
+
+        $request = $this->handelRequests(requests: $data);
+
+        if ($sortBy !== null) {
+            $sortField = in_array($sortBy, ['created_at', 'is_active', 'id'], true) ? $sortBy : 'created_at';
+            $sortDirection = strtolower((string) $sortDir) === 'asc' ? 'asc' : 'desc';
+            $request['orderBy'] = [$sortField => $sortDirection];
+        }
+
+        return $request;
     }
 
     public function restore(Roles $role)

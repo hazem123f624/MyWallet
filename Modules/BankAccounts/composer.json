@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/bankaccounts",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\BankAccounts\\": "app/",
+            "Modules\\BankAccounts\\Database\\Factories\\": "database/factories/",
+            "Modules\\BankAccounts\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\BankAccounts\\Tests\\": "tests/"
+        }
+    }
+}

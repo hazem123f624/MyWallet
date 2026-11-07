@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\Dashboard\DashboardAnalyticsController;
 use Illuminate\Support\Facades\Route;
 use Modules\Admins\Http\Controllers\AdminsController;
 use Modules\Admins\Http\Controllers\ModelsController;
@@ -8,6 +9,8 @@ use Modules\Admins\Http\Controllers\RolesController;
 
 Route::middleware(['security'])->prefix(config('api.version'))->group(function (): void {
     Route::middleware(['auth:sanctum', 'abilities:admins'])->prefix(config('api.prefixes.dashboard'))->group(function (): void {
+
+        Route::get('analytics/overview', [DashboardAnalyticsController::class, 'overview']);
 
         // ── Admins ──────────────────────────────────────────
         Route::get('admins/trash', [AdminsController::class, 'trash']);

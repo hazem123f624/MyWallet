@@ -24,7 +24,7 @@ class ManageUsersController extends Controller
      */
     public function index()
     {
-        $request = $this->handelRequests(requests: request()->all());
+        $request = $this->userListRequest();
         $data = $this->repository->data(request: $request);
         $data['data'] = UserResource::collection($data['data']);
 
@@ -34,6 +34,11 @@ class ManageUsersController extends Controller
     public function show(User $user)
     {
         return $this->success('User details retrieved successfully.', data: new UserResource($user));
+    }
+
+    public function statistics()
+    {
+        return $this->success('User statistics retrieved successfully.', data: $this->repository->statistics());
     }
 
     public function switchActive(User $user)
@@ -62,7 +67,7 @@ class ManageUsersController extends Controller
     {
         $allRequested = request()->all();
         $allRequested['only_trashed'] = true;
-        $request = $this->handelRequests(requests: $allRequested);
+        $request = $this->userListRequest($allRequested);
         $data = $this->repository->data(request: $request);
         $data['data'] = UserResource::collection($data['data']);
 
@@ -81,5 +86,26 @@ class ManageUsersController extends Controller
         $this->repository->forceDelete($user);
 
         return $this->success('User force deleted permanently.', data: []);
+    }
+
+    private function userListRequest(?array $data = null): array
+    {
+        $data ??= request()->all();
+        $sortBy = $data['sort_by'] ?? null;
+        $sortDir = $data['sort_dir'] ?? null;
+
+        unset($data['sort_by'], $data['sort_dir']);
+
+        $request = $this->handelRequests(requests: $data);
+
+        if ($sortBy !== null) {
+            $request['sort_by'] = $sortBy;
+        }
+
+        if ($sortDir !== null) {
+            $request['sort_dir'] = $sortDir;
+        }
+
+        return $request;
     }
 }

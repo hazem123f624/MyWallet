@@ -21,7 +21,8 @@ class UpdateAdminsRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'min:2', 'max:100', 'regex:'.RegexPatterns::NAME_WITH_REQUIRED_LETTER],
             'email' => ['sometimes', 'email:strict,dns', 'regex:'.RegexPatterns::EMAIL_NOT_NUMERIC_PREFIX, Rule::unique('admins', 'email')->ignore($admin)],
-            'phone'   => ['sometimes', 'regex:'.RegexPatterns::PHONE_DIGITS_WITH_PLUS, 'min:9', 'max:20', 'unique:admins,phone'],
+            'phone'   => ['sometimes', 'regex:'.RegexPatterns::PHONE_DIGITS_WITH_PLUS, 'min:9', 'max:20', Rule::unique('admins', 'phone')->ignore($admin)],
+            'job_title' => ['sometimes', 'string', 'min:2', 'max:100'],
             'password' => ['nullable', new StrongPassword],
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'nullable|boolean',
