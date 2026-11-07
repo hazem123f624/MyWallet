@@ -193,3 +193,67 @@ export const renderStatusDoughnut = (canvasId, labels, values) => {
 
     return true;
 };
+
+export const renderDistributionDoughnut = (canvasId, labels, values, colors = []) => {
+    const canvas = document.getElementById(canvasId);
+
+    if (!canvas || typeof window.Chart === 'undefined') {
+        return false;
+    }
+
+    destroy(canvas);
+    const paletteColors = palette();
+    const total = values.reduce((sum, value) => sum + Number(value || 0), 0);
+
+    canvas.__dashChart = new window.Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [{
+                data: values,
+                backgroundColor: colors.length ? colors : [paletteColors.primary, paletteColors.success, paletteColors.warning, paletteColors.danger],
+                borderColor: paletteColors.surface,
+                borderWidth: 2,
+                borderRadius: 10,
+                spacing: 2,
+                hoverOffset: 5,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            animation: { duration: 650, easing: 'easeOutQuart' },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: paletteColors.textSoft,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        boxWidth: 8,
+                        padding: 12,
+                        font: { size: 10 },
+                    },
+                },
+                tooltip: {
+                    backgroundColor: paletteColors.surface,
+                    titleColor: paletteColors.text,
+                    bodyColor: paletteColors.text,
+                    borderColor: paletteColors.border,
+                    borderWidth: 1,
+                    callbacks: {
+                        label: (context) => {
+                            const value = Number(context.parsed || 0);
+                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+
+                            return ` ${context.label}: ${value.toLocaleString()} (${percentage}%)`;
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    return true;
+};

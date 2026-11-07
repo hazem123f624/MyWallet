@@ -17,6 +17,7 @@ return [
     'phone_updated'                  => 'تم تحديث رقم الهاتف بنجاح.',
     'account_activated'              => 'تم تفعيل الحساب بنجاح.',
     'invalid_otp'                    => 'طلب غير صالح أو رمز منتهي الصلاحية.',
+    'invalid_country_code'         => 'رمز الدولة المحدد غير صالح.',
     'phone_required'                 => 'رقم الهاتف مطلوب.',
     'transaction_pin_not_set'        => 'لم يتم تعيين رمز المعاملات بعد.',
     'transaction_pin_already_set'    => 'تم تعيين رمز المعاملات بالفعل. استخدم خيار التغيير.',

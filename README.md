@@ -20,6 +20,7 @@ ships the **core infrastructure** only — business wallet modules are added on 
 
 - `Modules/Admins` — back-office admin accounts, roles, and settings.
 - `Modules/BankAccounts` — supported banks and linked user bank accounts.
+- `Modules/Wallets` — Parent Wallet creation, funding source, and balances.
 - `Modules/Users` — mobile user accounts.
 - `Modules/Settings` — platform settings and locations.
 
@@ -113,6 +114,9 @@ Project documentation lives in [`docs/`](docs/README.md):
 - [`docs/github-commit-structure.md`](docs/github-commit-structure.md) — commit and pull-request conventions.
 - [`docs/phase-1/`](docs/phase-1/README.md) — Phase 1 tasks and test cases.
 - [`docs/phase-2/`](docs/phase-2/README.md) — Phase 2 bank account linking tasks and test cases.
+- [`docs/phase-3/`](docs/phase-3/README.md) — Phase 3 Parent Wallet tasks and test cases.
+- [`docs/phase-4/`](docs/phase-4/README.md) — Phase 4 Sub Wallet tasks and test cases.
+- [`docs/user-dashboard/`](docs/user-dashboard/README.md) — User-facing web dashboard.
 
 ---
 

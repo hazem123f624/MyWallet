@@ -69,6 +69,11 @@ Product user stories and acceptance criteria for every phase are in [`user-stori
 
 - Create the Parent Wallet automatically for every user.
 - Link the Parent Wallet to the user's bank account.
+- The Parent Wallet is created as soon as the user's account is verified.
+- A user can have exactly one Parent Wallet.
+- Only a verified primary bank account can act as the Parent Wallet's funding source.
+- A Parent Wallet is Unlinked until a funding source is attached, Active while a verified primary account funds it, and Suspended when access is restricted.
+- Changing or removing the primary bank account keeps the Parent Wallet's funding source consistent.
 - Display the total allocated balance.
 - Display the available balance.
 - Display the balance reserved for pending operations.
@@ -94,6 +99,12 @@ Product user stories and acceptance criteria for every phase are in [`user-stori
 - Redistribute funds between Sub Wallets.
 - Display each Sub Wallet's balance.
 - Prevent spending more than the available balance of a Sub Wallet.
+- A newly created Sub Wallet starts without funds until money is allocated to it.
+- Allocation reduces the Parent Wallet's available balance and increases the Sub Wallet's available balance by the same amount.
+- Redistribution changes only the source and destination Sub Wallet balances; the Parent Wallet balance is unchanged.
+- Deleting a Sub Wallet returns its available balance to the Parent Wallet.
+- A Sub Wallet with reserved funds cannot be deleted until those funds are resolved.
+- Moving money between the Parent Wallet and a Sub Wallet, or between Sub Wallets, is recorded as a private internal operation.
 
 **Example:**
 

@@ -1,0 +1,11 @@
+{
+    "name": "Wallets",
+    "alias": "wallets",
+    "description": "Parent Wallet management and funding source synchronization.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Wallets\\Providers\\WalletsServiceProvider"
+    ],
+    "files": []
+}

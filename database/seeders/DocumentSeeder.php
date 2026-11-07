@@ -64,6 +64,14 @@ class DocumentSeeder extends Seeder
         $this->flushRateLimit();
         $this->command?->info('Running test case on BankAccounts Module: mobile-bank-accounts');
         Artisan::call('app:init-test BankAccounts mobile-bank-accounts');
+
+        $this->flushRateLimit();
+        $this->command?->info('Running test case on Wallets Module: mobile-parent-wallet');
+        Artisan::call('app:init-test Wallets mobile-parent-wallet');
+
+        $this->flushRateLimit();
+        $this->command?->info('Running test case on Wallets Module: mobile-sub-wallets');
+        Artisan::call('app:init-test Wallets mobile-sub-wallets');
     }
 
     /**

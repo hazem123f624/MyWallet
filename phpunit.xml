@@ -13,6 +13,7 @@
             <directory>Modules/Users/tests/Feature</directory>
             <directory>Modules/BankAccounts/tests/Feature</directory>
             <directory>Modules/Admins/tests/Feature</directory>
+            <directory>Modules/Wallets/tests/Feature</directory>
         </testsuite>
     </testsuites>
     <source>

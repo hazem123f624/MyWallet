@@ -1,6 +1,6 @@
 {
     "info": {
-        "_postman_id": "6f7a2847-1973-4bc6-8831-cf018aee028a",
+        "_postman_id": "79f9007b-f595-4d43-ba31-2e7ba7aa63a2",
         "name": "MyWallet API",
         "description": "Generated from the MyWallet API documentation.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -1589,6 +1589,896 @@
                                         }
                                     ],
                                     "body": "{\n    \"data\": [],\n    \"message\": \"Bank account unlinked successfully.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Parent Wallet",
+                    "item": [
+                        {
+                            "name": "Get Parent Wallet",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/parent-wallet",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "parent-wallet"
+                                    ]
+                                },
+                                "description": "View the Parent Wallet.\n\nReturns the authenticated user's Parent Wallet, including its status, currency, total allocated balance, available balance, reserved balance, Sub Wallet summary, recent internal operations, and current funding source. A missing wallet is created automatically for legacy users."
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/parent-wallet",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "parent-wallet"
+                                            ]
+                                        },
+                                        "description": "View the Parent Wallet.\n\nReturns the authenticated user's Parent Wallet, including its status, currency, total allocated balance, available balance, reserved balance, Sub Wallet summary, recent internal operations, and current funding source. A missing wallet is created automatically for legacy users."
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": {\n        \"id\": 3,\n        \"status\": \"active\",\n        \"currency\": \"EGP\",\n        \"is_active\": true,\n        \"linked_at\": \"2026-11-07T16:09:40+00:00\",\n        \"created_at\": \"2026-11-07T16:09:13+00:00\",\n        \"updated_at\": \"2026-11-07T16:39:55+00:00\",\n        \"funding_source\": {\n            \"id\": 11,\n            \"bank\": {\n                \"id\": 1,\n                \"code\": \"NBE\",\n                \"name\": \"National Bank of Egypt\"\n            },\n            \"status\": \"verified\",\n            \"is_primary\": true,\n            \"verified_at\": \"2026-10-28T16:39:55+00:00\",\n            \"account_number\": \"****1234\"\n        },\n        \"currency_symbol\": \"E£\",\n        \"reserved_balance\": \"0.00\",\n        \"available_balance\": \"4500.00\",\n        \"recent_operations\": [\n            {\n                \"id\": 4,\n                \"type\": \"allocated\",\n                \"amount\": \"500.00\",\n                \"currency\": \"EGP\",\n                \"created_at\": \"2026-11-07T16:39:55+00:00\",\n                \"description\": \"Allocated to Temporary\",\n                \"to_sub_wallet\": {\n                    \"id\": 4,\n                    \"name\": \"Temporary\"\n                },\n                \"from_sub_wallet\": null\n            },\n            {\n                \"id\": 3,\n                \"type\": \"allocated\",\n                \"amount\": \"5000.00\",\n                \"currency\": \"EGP\",\n                \"created_at\": \"2026-11-07T16:39:55+00:00\",\n                \"description\": \"Allocated to Food\",\n                \"to_sub_wallet\": {\n                    \"id\": 3,\n                    \"name\": \"Food\"\n                },\n                \"from_sub_wallet\": null\n            },\n            {\n                \"id\": 2,\n                \"type\": \"allocated\",\n                \"amount\": \"7000.00\",\n                \"currency\": \"EGP\",\n                \"created_at\": \"2026-11-07T16:39:55+00:00\",\n                \"description\": \"Allocated to Rent\",\n                \"to_sub_wallet\": {\n                    \"id\": 2,\n                    \"name\": \"Rent\"\n                },\n                \"from_sub_wallet\": null\n            },\n            {\n                \"id\": 1,\n                \"type\": \"allocated\",\n                \"amount\": \"3000.00\",\n                \"currency\": \"EGP\",\n                \"created_at\": \"2026-11-07T16:39:55+00:00\",\n                \"description\": \"Allocated to Electricity\",\n                \"to_sub_wallet\": {\n                    \"id\": 1,\n                    \"name\": \"Electricity\"\n                },\n                \"from_sub_wallet\": null\n            }\n        ],\n        \"sub_wallets_count\": 4,\n        \"total_allocated_balance\": \"20000.00\",\n        \"allocated_to_sub_wallets\": \"15500.00\"\n    },\n    \"message\": \"Parent Wallet retrieved successfully.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Link Parent Wallet Funding Source",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/parent-wallet/funding-source",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "parent-wallet",
+                                        "funding-source"
+                                    ]
+                                },
+                                "description": "Link the wallet funding source.\n\nLinks the Parent Wallet to the user's verified primary bank account. Only a verified primary account owned by the authenticated user can fund the wallet.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `bank_account_id` | required, integer, exists bank_accounts,id |",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"bank_account_id\": 11\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "PUT",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/parent-wallet/funding-source",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "parent-wallet",
+                                                "funding-source"
+                                            ]
+                                        },
+                                        "description": "Link the wallet funding source.\n\nLinks the Parent Wallet to the user's verified primary bank account. Only a verified primary account owned by the authenticated user can fund the wallet.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `bank_account_id` | required, integer, exists bank_accounts,id |",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"bank_account_id\": 11\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": {\n        \"id\": 3,\n        \"status\": \"active\",\n        \"currency\": \"EGP\",\n        \"is_active\": true,\n        \"linked_at\": \"2026-11-07T16:09:40+00:00\",\n        \"created_at\": \"2026-11-07T16:09:13+00:00\",\n        \"updated_at\": \"2026-11-07T16:39:55+00:00\",\n        \"funding_source\": {\n            \"id\": 11,\n            \"bank\": {\n                \"id\": 1,\n                \"code\": \"NBE\",\n                \"name\": \"National Bank of Egypt\"\n            },\n            \"status\": \"verified\",\n            \"is_primary\": true,\n            \"verified_at\": \"2026-10-28T16:39:55+00:00\",\n            \"account_number\": \"****1234\"\n        },\n        \"currency_symbol\": \"E£\",\n        \"reserved_balance\": \"0.00\",\n        \"available_balance\": \"4500.00\",\n        \"recent_operations\": [\n            {\n                \"id\": 4,\n                \"type\": \"allocated\",\n                \"amount\": \"500.00\",\n                \"currency\": \"EGP\",\n                \"created_at\": \"2026-11-07T16:39:55+00:00\",\n                \"description\": \"Allocated to Temporary\",\n                \"to_sub_wallet\": {\n                    \"id\": 4,\n                    \"name\": \"Temporary\"\n                },\n                \"from_sub_wallet\": null\n            },\n            {\n                \"id\": 3,\n                \"type\": \"allocated\",\n                \"amount\": \"5000.00\",\n                \"currency\": \"EGP\",\n                \"created_at\": \"2026-11-07T16:39:55+00:00\",\n                \"description\": \"Allocated to Food\",\n                \"to_sub_wallet\": {\n                    \"id\": 3,\n                    \"name\": \"Food\"\n                },\n                \"from_sub_wallet\": null\n            },\n            {\n                \"id\": 2,\n                \"type\": \"allocated\",\n                \"amount\": \"7000.00\",\n                \"currency\": \"EGP\",\n                \"created_at\": \"2026-11-07T16:39:55+00:00\",\n                \"description\": \"Allocated to Rent\",\n                \"to_sub_wallet\": {\n                    \"id\": 2,\n                    \"name\": \"Rent\"\n                },\n                \"from_sub_wallet\": null\n            },\n            {\n                \"id\": 1,\n                \"type\": \"allocated\",\n                \"amount\": \"3000.00\",\n                \"currency\": \"EGP\",\n                \"created_at\": \"2026-11-07T16:39:55+00:00\",\n                \"description\": \"Allocated to Electricity\",\n                \"to_sub_wallet\": {\n                    \"id\": 1,\n                    \"name\": \"Electricity\"\n                },\n                \"from_sub_wallet\": null\n            }\n        ],\n        \"sub_wallets_count\": 4,\n        \"total_allocated_balance\": \"20000.00\",\n        \"allocated_to_sub_wallets\": \"15500.00\"\n    },\n    \"message\": \"Parent Wallet funding source linked successfully.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Sub Wallets",
+                    "item": [
+                        {
+                            "name": "List Sub Wallets",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "sub-wallets"
+                                    ]
+                                },
+                                "description": "List my Sub Wallets.\n\nReturns every active Sub Wallet owned by the authenticated user with its colors, icon, available balance, and reserved balance."
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "sub-wallets"
+                                            ]
+                                        },
+                                        "description": "List my Sub Wallets.\n\nReturns every active Sub Wallet owned by the authenticated user with its colors, icon, available balance, and reserved balance."
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": [\n        {\n            \"id\": 5,\n            \"icon\": \"bolt\",\n            \"name\": \"Electricity\",\n            \"color\": \"#d97706\",\n            \"currency\": \"EGP\",\n            \"created_at\": \"2026-11-07T16:39:57+00:00\",\n            \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n            \"total_balance\": \"3000.00\",\n            \"currency_symbol\": \"E£\",\n            \"reserved_balance\": \"0.00\",\n            \"available_balance\": \"3000.00\"\n        },\n        {\n            \"id\": 6,\n            \"icon\": \"home\",\n            \"name\": \"Rent\",\n            \"color\": \"#2563eb\",\n            \"currency\": \"EGP\",\n            \"created_at\": \"2026-11-07T16:39:57+00:00\",\n            \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n            \"total_balance\": \"7000.00\",\n            \"currency_symbol\": \"E£\",\n            \"reserved_balance\": \"0.00\",\n            \"available_balance\": \"7000.00\"\n        },\n        {\n            \"id\": 7,\n            \"icon\": \"utensils\",\n            \"name\": \"Food\",\n            \"color\": \"#059669\",\n            \"currency\": \"EGP\",\n            \"created_at\": \"2026-11-07T16:39:57+00:00\",\n            \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n            \"total_balance\": \"5000.00\",\n            \"currency_symbol\": \"E£\",\n            \"reserved_balance\": \"0.00\",\n            \"available_balance\": \"5000.00\"\n        },\n        {\n            \"id\": 8,\n            \"icon\": \"wallet\",\n            \"name\": \"Temporary\",\n            \"color\": \"#475569\",\n            \"currency\": \"EGP\",\n            \"created_at\": \"2026-11-07T16:39:57+00:00\",\n            \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n            \"total_balance\": \"500.00\",\n            \"currency_symbol\": \"E£\",\n            \"reserved_balance\": \"0.00\",\n            \"available_balance\": \"500.00\"\n        }\n    ],\n    \"message\": \"Sub Wallets retrieved successfully.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Create Sub Wallet",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "sub-wallets"
+                                    ]
+                                },
+                                "description": "Create a Sub Wallet.\n\nCreates a Sub Wallet under the user's Parent Wallet. The wallet starts with zero balances. A user can have at most 12 active Sub Wallets.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `name` | required, string, min 1, max 100 |\n| `color` | required, string, allowed: #7c3aed, #2563eb, #059669, #d97706, #dc2626, #0891b2, #db2777, #475569 |\n| `icon` | required, string, allowed: bolt, home, utensils, shopping-bag, car, heart, plane, gift, book, briefcase, piggy-bank, wallet |",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"icon\": \"piggy-bank\",\n    \"name\": \"Savings\",\n    \"color\": \"#0891b2\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "sub-wallets"
+                                            ]
+                                        },
+                                        "description": "Create a Sub Wallet.\n\nCreates a Sub Wallet under the user's Parent Wallet. The wallet starts with zero balances. A user can have at most 12 active Sub Wallets.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `name` | required, string, min 1, max 100 |\n| `color` | required, string, allowed: #7c3aed, #2563eb, #059669, #d97706, #dc2626, #0891b2, #db2777, #475569 |\n| `icon` | required, string, allowed: bolt, home, utensils, shopping-bag, car, heart, plane, gift, book, briefcase, piggy-bank, wallet |",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"icon\": \"piggy-bank\",\n    \"name\": \"Savings\",\n    \"color\": \"#0891b2\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": {\n        \"id\": 9,\n        \"icon\": \"piggy-bank\",\n        \"name\": \"Savings\",\n        \"color\": \"#0891b2\",\n        \"currency\": \"EGP\",\n        \"created_at\": \"2026-11-07T16:39:57+00:00\",\n        \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n        \"total_balance\": \"0.00\",\n        \"currency_symbol\": \"E£\",\n        \"reserved_balance\": \"0.00\",\n        \"available_balance\": \"0.00\"\n    },\n    \"message\": \"Sub Wallet created successfully.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Get Sub Wallet",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/5",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "sub-wallets",
+                                        "5"
+                                    ]
+                                },
+                                "description": "View a Sub Wallet.\n\nReturns one Sub Wallet owned by the authenticated user, including its current available and reserved balances."
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/5",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "sub-wallets",
+                                                "5"
+                                            ]
+                                        },
+                                        "description": "View a Sub Wallet.\n\nReturns one Sub Wallet owned by the authenticated user, including its current available and reserved balances."
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": {\n        \"id\": 5,\n        \"icon\": \"bolt\",\n        \"name\": \"Electricity\",\n        \"color\": \"#d97706\",\n        \"currency\": \"EGP\",\n        \"created_at\": \"2026-11-07T16:39:57+00:00\",\n        \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n        \"total_balance\": \"3000.00\",\n        \"currency_symbol\": \"E£\",\n        \"reserved_balance\": \"0.00\",\n        \"available_balance\": \"3000.00\"\n    },\n    \"message\": \"Sub Wallet retrieved successfully.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update Sub Wallet",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/5",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "sub-wallets",
+                                        "5"
+                                    ]
+                                },
+                                "description": "Rename or restyle a Sub Wallet.\n\nRenames a Sub Wallet or changes its color and icon. Balances are never changed by this endpoint.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `name` | optional, required, string, min 1, max 100 |\n| `color` | optional, required, string, allowed: #7c3aed, #2563eb, #059669, #d97706, #dc2626, #0891b2, #db2777, #475569 |\n| `icon` | optional, required, string, allowed: bolt, home, utensils, shopping-bag, car, heart, plane, gift, book, briefcase, piggy-bank, wallet |",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"icon\": \"bolt\",\n    \"name\": \"Utilities\",\n    \"color\": \"#d97706\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "PATCH",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/5",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "sub-wallets",
+                                                "5"
+                                            ]
+                                        },
+                                        "description": "Rename or restyle a Sub Wallet.\n\nRenames a Sub Wallet or changes its color and icon. Balances are never changed by this endpoint.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `name` | optional, required, string, min 1, max 100 |\n| `color` | optional, required, string, allowed: #7c3aed, #2563eb, #059669, #d97706, #dc2626, #0891b2, #db2777, #475569 |\n| `icon` | optional, required, string, allowed: bolt, home, utensils, shopping-bag, car, heart, plane, gift, book, briefcase, piggy-bank, wallet |",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"icon\": \"bolt\",\n    \"name\": \"Utilities\",\n    \"color\": \"#d97706\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": {\n        \"id\": 5,\n        \"icon\": \"bolt\",\n        \"name\": \"Utilities\",\n        \"color\": \"#d97706\",\n        \"currency\": \"EGP\",\n        \"created_at\": \"2026-11-07T16:39:57+00:00\",\n        \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n        \"total_balance\": \"3000.00\",\n        \"currency_symbol\": \"E£\",\n        \"reserved_balance\": \"0.00\",\n        \"available_balance\": \"3000.00\"\n    },\n    \"message\": \"Sub Wallet updated successfully.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete Sub Wallet",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/8",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "sub-wallets",
+                                        "8"
+                                    ]
+                                },
+                                "description": "Delete a Sub Wallet.\n\nDeletes a Sub Wallet and returns its available balance to the Parent Wallet. A Sub Wallet with reserved funds cannot be deleted."
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "DELETE",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/8",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "sub-wallets",
+                                                "8"
+                                            ]
+                                        },
+                                        "description": "Delete a Sub Wallet.\n\nDeletes a Sub Wallet and returns its available balance to the Parent Wallet. A Sub Wallet with reserved funds cannot be deleted."
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": [],\n    \"message\": \"Sub Wallet deleted and its available funds returned to the Parent Wallet.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Allocate Funds to Sub Wallet",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/5/allocate",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "sub-wallets",
+                                        "5",
+                                        "allocate"
+                                    ]
+                                },
+                                "description": "Allocate funds to a Sub Wallet.\n\nMoves funds from the Parent Wallet available balance into a Sub Wallet and records an internal wallet operation.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `amount` | required, number, decimal, min 0.01, max 999999999999.99 |",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"amount\": 1000\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/5/allocate",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "sub-wallets",
+                                                "5",
+                                                "allocate"
+                                            ]
+                                        },
+                                        "description": "Allocate funds to a Sub Wallet.\n\nMoves funds from the Parent Wallet available balance into a Sub Wallet and records an internal wallet operation.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `amount` | required, number, decimal, min 0.01, max 999999999999.99 |",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"amount\": 1000\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": {\n        \"id\": 5,\n        \"icon\": \"bolt\",\n        \"name\": \"Utilities\",\n        \"color\": \"#d97706\",\n        \"currency\": \"EGP\",\n        \"created_at\": \"2026-11-07T16:39:57+00:00\",\n        \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n        \"total_balance\": \"4000.00\",\n        \"currency_symbol\": \"E£\",\n        \"reserved_balance\": \"0.00\",\n        \"available_balance\": \"4000.00\"\n    },\n    \"message\": \"Funds allocated to the Sub Wallet successfully.\",\n    \"success\": true\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Redistribute Sub Wallet Funds",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "X-API-Token",
+                                        "value": "{{api_key}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/6/redistribute",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "{{api_prefix}}",
+                                        "mobile",
+                                        "sub-wallets",
+                                        "6",
+                                        "redistribute"
+                                    ]
+                                },
+                                "description": "Redistribute between Sub Wallets.\n\nMoves available funds between two Sub Wallets owned by the authenticated user and records an internal wallet operation. The Parent Wallet balance is unchanged.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `destination_sub_wallet_id` | required, integer, exists sub_wallets,id |\n| `amount` | required, number, decimal, min 0.01, max 999999999999.99 |",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"amount\": 500,\n    \"destination_sub_wallet_id\": 7\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Success",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "X-API-Token",
+                                                "value": "{{api_key}}"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Authorization",
+                                                "value": "Bearer {{token}}"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/{{api_prefix}}/mobile/sub-wallets/6/redistribute",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "{{api_prefix}}",
+                                                "mobile",
+                                                "sub-wallets",
+                                                "6",
+                                                "redistribute"
+                                            ]
+                                        },
+                                        "description": "Redistribute between Sub Wallets.\n\nMoves available funds between two Sub Wallets owned by the authenticated user and records an internal wallet operation. The Parent Wallet balance is unchanged.\n\n**Validation**\n\n| Field | Rules |\n| --- | --- |\n| `destination_sub_wallet_id` | required, integer, exists sub_wallets,id |\n| `amount` | required, number, decimal, min 0.01, max 999999999999.99 |",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"amount\": 500,\n    \"destination_sub_wallet_id\": 7\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n    \"data\": {\n        \"source\": {\n            \"id\": 6,\n            \"icon\": \"home\",\n            \"name\": \"Rent\",\n            \"color\": \"#2563eb\",\n            \"currency\": \"EGP\",\n            \"created_at\": \"2026-11-07T16:39:57+00:00\",\n            \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n            \"total_balance\": \"6500.00\",\n            \"currency_symbol\": \"E£\",\n            \"reserved_balance\": \"0.00\",\n            \"available_balance\": \"6500.00\"\n        },\n        \"destination\": {\n            \"id\": 7,\n            \"icon\": \"utensils\",\n            \"name\": \"Food\",\n            \"color\": \"#059669\",\n            \"currency\": \"EGP\",\n            \"created_at\": \"2026-11-07T16:39:57+00:00\",\n            \"updated_at\": \"2026-11-07T16:39:57+00:00\",\n            \"total_balance\": \"5500.00\",\n            \"currency_symbol\": \"E£\",\n            \"reserved_balance\": \"0.00\",\n            \"available_balance\": \"5500.00\"\n        }\n    },\n    \"message\": \"Funds redistributed successfully.\",\n    \"success\": true\n}"
                                 }
                             ]
                         }
