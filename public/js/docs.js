@@ -69,13 +69,57 @@
         menuButton.setAttribute("aria-expanded", "false");
     };
 
-    menuButton?.addEventListener("click", openSidebar);
+    const isMobileLayout = () => window.matchMedia("(max-width: 900px)").matches;
+    const sidebarCollapsedKey = "mywallet-docs-sidebar-collapsed";
+
+    const applySidebarCollapsed = (collapsed, persist = false) => {
+        document.body.classList.toggle("sidebar-collapsed", collapsed);
+
+        if (menuButton) {
+            menuButton.setAttribute("aria-expanded", String(!collapsed));
+            menuButton.setAttribute("aria-label", collapsed ? "Open navigation" : "Close navigation");
+        }
+
+        if (persist) {
+            try {
+                window.localStorage.setItem(sidebarCollapsedKey, collapsed ? "1" : "0");
+            } catch (error) {
+                console.warn("Unable to save the sidebar state", error);
+            }
+        }
+    };
+
+    if (!isMobileLayout()) {
+        let collapsed = false;
+
+        try {
+            collapsed = window.localStorage.getItem(sidebarCollapsedKey) === "1";
+        } catch (error) {
+            collapsed = false;
+        }
+
+        applySidebarCollapsed(collapsed);
+    }
+
+    menuButton?.addEventListener("click", () => {
+        if (isMobileLayout()) {
+            openSidebar();
+            return;
+        }
+
+        applySidebarCollapsed(!document.body.classList.contains("sidebar-collapsed"), true);
+    });
+
     closeButton?.addEventListener("click", closeSidebar);
     backdrop?.addEventListener("click", closeSidebar);
 
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-            closeSidebar();
+            if (isMobileLayout()) {
+                closeSidebar();
+            } else if (!document.body.classList.contains("sidebar-collapsed")) {
+                applySidebarCollapsed(true, true);
+            }
         }
     });
 
@@ -206,6 +250,7 @@
 
     const filterEndpoints = () => {
         const term = searchInput ? searchInput.value.trim().toLowerCase() : "";
+        const terms = term.split(/\s+/).filter(Boolean);
         const filterActive = term !== "" || activeMethod !== "all";
         const cards = Array.from(document.querySelectorAll(".endpoint-card"));
         const navLinks = Array.from(document.querySelectorAll(".nav-endpoint"));
@@ -213,7 +258,7 @@
             const method = (element.dataset.method || "").toLowerCase();
             const haystack = element.dataset.search || "";
             const matchesMethod = activeMethod === "all" || method === activeMethod;
-            const matchesSearch = term === "" || haystack.includes(term);
+            const matchesSearch = terms.length === 0 || terms.every((word) => haystack.includes(word));
 
             return matchesMethod && matchesSearch;
         };
@@ -296,7 +341,7 @@
 
     searchInput?.addEventListener("input", filterEndpoints);
 
-    // Highlight the navigation item for the section currently in view.
+    // Highlight the sidebar link for the endpoint currently in view.
     const navLinks = Array.from(document.querySelectorAll(".nav-link[href^='#']"));
     const targets = navLinks
         .map((link) => {
@@ -305,32 +350,123 @@
 
             return element ? { link, element } : null;
         })
-        .filter(Boolean);
+        .filter(Boolean)
+        .sort((a, b) => {
+            const position = a.element.compareDocumentPosition(b.element);
 
+            return position & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+        });
+
+    let activeLink = null;
     let ticking = false;
+
+    const sidebarNav = document.querySelector(".sidebar-nav");
+
+    const openAncestors = (link) => {
+        let details = link.closest("details");
+
+        while (details) {
+            details.open = true;
+            details = details.parentElement?.closest("details") || null;
+        }
+    };
+
+    const scrollSidebarToLink = (link) => {
+        if (!sidebarNav) {
+            return;
+        }
+
+        const navRect = sidebarNav.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        const padding = 18;
+
+        if (linkRect.top >= navRect.top + padding && linkRect.bottom <= navRect.bottom - padding) {
+            return;
+        }
+
+        const target = sidebarNav.scrollTop
+            + (linkRect.top - navRect.top)
+            - (navRect.height / 2)
+            + (linkRect.height / 2);
+
+        sidebarNav.scrollTo({
+            top: Math.max(0, target),
+            behavior: "smooth",
+        });
+    };
+
+    const setActiveLink = (link) => {
+        if (activeLink === link) {
+            return;
+        }
+
+        activeLink = link;
+
+        navLinks.forEach((item) => {
+            const selected = item === link;
+
+            item.classList.toggle("active", selected);
+
+            if (selected) {
+                item.setAttribute("aria-current", "location");
+            } else {
+                item.removeAttribute("aria-current");
+            }
+        });
+
+        if (link) {
+            openAncestors(link);
+
+            window.requestAnimationFrame(() => {
+                scrollSidebarToLink(link);
+            });
+        }
+    };
 
     const updateActiveLink = () => {
         if (!content || targets.length === 0) {
             return;
         }
 
-        const contentTop = content.getBoundingClientRect().top;
+        const threshold = content.getBoundingClientRect().top + 150;
         let current = null;
 
-        targets.forEach((target) => {
-            if (target.link.hidden || target.element.hidden) {
+        targets.forEach(({ link, element }) => {
+            if (link.hidden || element.hidden) {
                 return;
             }
 
-            const rect = target.element.getBoundingClientRect();
-
-            if (rect.top - contentTop <= 140) {
-                current = target.link;
+            if (element.getBoundingClientRect().top <= threshold) {
+                current = link;
             }
         });
 
-        navLinks.forEach((link) => link.classList.toggle("active", link === current));
+        setActiveLink(current);
     };
+
+    const highlightFromHash = () => {
+        const hash = window.location.hash.slice(1);
+
+        if (!hash) {
+            return false;
+        }
+
+        const link = navLinks.find((item) => item.getAttribute("href") === `#${hash}`);
+
+        if (!link) {
+            return false;
+        }
+
+        setActiveLink(link);
+
+        return true;
+    };
+
+    navLinks.forEach((link) => {
+        link.addEventListener("click", () => setActiveLink(link));
+    });
+
+    window.addEventListener("hashchange", highlightFromHash);
 
     const onScroll = () => {
         if (ticking) {
@@ -354,7 +490,10 @@
 
     content?.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
-    updateActiveLink();
+
+    if (!highlightFromHash()) {
+        updateActiveLink();
+    }
 
     // Copy buttons for request and response examples.
     document.addEventListener("click", (event) => {

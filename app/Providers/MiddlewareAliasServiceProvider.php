@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
+use Modules\Users\Http\Middleware\EnsureUserIsActive;
 
 class MiddlewareAliasServiceProvider extends ServiceProvider
 {
@@ -17,5 +17,6 @@ class MiddlewareAliasServiceProvider extends ServiceProvider
         // Register aliases directly with the router
         $this->app['router']->aliasMiddleware('abilities', CheckAbilities::class);
         $this->app['router']->aliasMiddleware('ability', CheckForAnyAbility::class);
+        $this->app['router']->aliasMiddleware('user.active', EnsureUserIsActive::class);
     }
 }

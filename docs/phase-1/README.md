@@ -13,6 +13,7 @@ This folder tracks the implementation and verification work for Phase 1 of the M
 | [`tasks.md`](tasks.md) | Implementation checklist with current status and remaining gaps. |
 | [`test-cases.md`](test-cases.md) | QA and automation test-case specification for Phase 1. |
 | [`execution-report.md`](execution-report.md) | Latest local execution results, coverage, and defects. |
+| [`frontend/tasks.md`](frontend/tasks.md) | Admin-only Phase 1 frontend dashboard structure, tasks, and verification. |
 
 ## Current Status
 
@@ -26,6 +27,7 @@ This folder tracks the implementation and verification work for Phase 1 of the M
 | Transaction PIN | Implemented | Hashed PIN with first-time setup, change, OTP reset, verification, and lockout after repeated failures. |
 | Super Admin-only status control | Implemented | User status changes require the Super Admin role. |
 | Suspended-account enforcement | Implemented | Login is blocked, tokens are revoked on suspension, and active status is checked on every protected request. |
+| Admin frontend dashboard | Implemented | Admin-only session login, overview, admin/user management, roles and permissions, permission models, activity logs, profile, password recovery, and reusable Blade/JS components. |
 
 ## Phase 1 Endpoints
 

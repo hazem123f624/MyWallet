@@ -36,10 +36,20 @@ class AdminsController extends AuthController
     {
         $requestData = request()->all();
         $role = $requestData['role'] ?? null;
-        unset($requestData['role']);
+        $sortBy = $requestData['sort_by'] ?? null;
+        $sortDir = $requestData['sort_dir'] ?? null;
+        unset($requestData['role'], $requestData['sort_by'], $requestData['sort_dir']);
 
         $request = $this->handelRequests(requests: $requestData);
         $request['role'] = $role;
+
+        if ($sortBy !== null) {
+            $request['sort_by'] = $sortBy;
+        }
+
+        if ($sortDir !== null) {
+            $request['sort_dir'] = $sortDir;
+        }
 
         $data = $this->repository->data(request: $request);
         $data['data'] = AdminResource::collection($data['data']);

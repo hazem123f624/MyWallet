@@ -13,4 +13,5 @@ return [
     'method_not_allowed' => 'Method not allowed',
     'page_expired' => 'Page Expired',
     'server_error' => 'Server Error',
+    'dashboard_analytics_retrieved' => 'Dashboard analytics retrieved successfully.',
 ];

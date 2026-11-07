@@ -16,7 +16,7 @@
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <a href="#introduction" class="brand">
-            <span class="brand-mark">M</span>
+            <span class="brand-mark"><img src="{{ asset('images/wallet-icon.svg') }}" alt=""></span>
             <span>
                 <strong>{{ config('app.name') }}</strong>
                 <small>API documentation</small>
@@ -100,14 +100,14 @@
 
                                         <div class="nav-links nav-sub-links">
                                             @foreach($group['items'] as $item)
-                                                <x-docs.nav-endpoint :item="$item" :group="$group['name']" />
+                                                <x-docs.nav-endpoint :item="$item" :group="$group['name']" :module="$moduleName" :section="$sectionName" />
                                             @endforeach
                                         </div>
                                     </details>
                                 @else
                                     <div class="nav-links nav-sub-links">
                                         @foreach($group['items'] as $item)
-                                            <x-docs.nav-endpoint :item="$item" :group="$group['name']" />
+                                            <x-docs.nav-endpoint :item="$item" :group="$group['name']" :module="$moduleName" :section="$sectionName" />
                                         @endforeach
                                     </div>
                                 @endif

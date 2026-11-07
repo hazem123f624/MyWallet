@@ -60,6 +60,10 @@ class DocumentSeeder extends Seeder
                 }
             }
         }
+
+        $this->flushRateLimit();
+        $this->command?->info('Running test case on BankAccounts Module: mobile-bank-accounts');
+        Artisan::call('app:init-test BankAccounts mobile-bank-accounts');
     }
 
     /**

@@ -6,6 +6,8 @@ interface UsersInterface
 {
     public function data($request, $id = '*', $fieldName = '', $collectionType = 'model');
 
+    public function statistics(): array;
+
     public function save($request, $id = null);
 
     public function switchActive($data);

@@ -31,6 +31,14 @@ class ModelsRepository implements ModelsInterface
     {
         $request['with'] = ['translate', 'permissions.translate'];
 
+        if (! empty($request['search'])) {
+            $search = $request['search'];
+            $request['whereHasClosure']['translate'] = function ($query) use ($search): void {
+                $query->where('title', 'like', "%{$search}%");
+            };
+            unset($request['search']);
+        }
+
         return $this->serviceHelper->handelForGetData(request: $request, id: $id, fieldName: $fieldName, collectionType: $collectionType);
     }
 

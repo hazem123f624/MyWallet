@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Reference | {{ config('app.name') }}</title>
 
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/wallet-icon.svg') }}">
+
     <script>
         (function () {
             var savedTheme = null;
@@ -147,7 +149,7 @@
                     <div class="section-heading">
                         <div>
                             <span class="eyebrow">API surface</span>
-                            <h2>{{ $sectionName }}</h2>
+                            <h2 class="consumer-title">{{ $sectionName }}</h2>
                         </div>
                         <p>{{ collect($modules)->sum(fn ($module) => $module['total']) }} endpoints</p>
                     </div>
@@ -173,14 +175,14 @@
 
                                         <div class="endpoint-list">
                                             @foreach($group['items'] as $item)
-                                                <x-docs.endpoint :item="$item" :group="$group['name']" />
+                                                <x-docs.endpoint :item="$item" :group="$group['name']" :module="$moduleName" :section="$sectionName" />
                                             @endforeach
                                         </div>
                                     </div>
                                 @else
                                     <div class="endpoint-list">
                                         @foreach($group['items'] as $item)
-                                            <x-docs.endpoint :item="$item" :group="$group['name']" />
+                                            <x-docs.endpoint :item="$item" :group="$group['name']" :module="$moduleName" :section="$sectionName" />
                                         @endforeach
                                     </div>
                                 @endif

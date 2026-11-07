@@ -1,30 +1,19 @@
 # Changes Log
 
-## Session 2026-11-04 — @Hazemwalid290
+## Session 2026-11-07 — @Hazemwalid290
 
-- Blocked suspended users at login with a dedicated `users::messages.account_suspended` response.
-- Added `EnsureUserIsActive` middleware so suspended accounts cannot use existing tokens on protected user routes.
-- Revoked all user tokens inside a transaction when an administrator suspends an account.
-- Normalised login, registration, forgot-password, reset-password, and profile updates to use the full international phone number consistently.
-- Deferred phone and country changes until the new number is verified, then resolved the new country from the full phone.
-- Fixed avatar replacement so the previous physical file is removed from storage.
-- Added feature tests for registration/OTP, login/lockout/session, profile/avatar/phone change/deletion, password reset, and account suspension.
-- Switched the PHPUnit database configuration to a dedicated MySQL `mywallet_test` database because the local PHP build does not include the SQLite PDO driver.
-- Added a hashed transaction PIN with first-time setup, change, OTP-based reset, verification, and lockout after repeated failures.
-- Added transaction PIN feature tests and exposed the endpoints in the API documentation cases and Postman export.
-- Fixed OTP resend for stored full phone numbers and included the transaction PIN documentation cases in fresh database seeding.
-- Restricted account-status changes to administrators holding the Super Admin role.
-- Added administrator user-management and authorization tests, expanded Phase 1 coverage across all Ready cases, and recorded the execution results.
-- Re-verified fresh migration and seeding, regenerated the Postman collection, and confirmed 68 documented endpoints.
-- Added product user stories and acceptance criteria for all seven MVP phases.
-- Added an execution checklist with per-case checkboxes to the Phase 1 test-case specification.
-- Moved the transfer PIN confirmation test case from Phase 1 to the new Phase 5 test-case specification.
-- Added the remaining cooldown time to OTP resend responses.
-- Prevented locked OTPs from being resent immediately, closing the repeated-attempt bypass.
-- Ensured the base admin account is `admin@base.com` with every role and every permission, and made admin seeding repeatable.
-- Fixed the admin password documentation case to use a disposable fixture instead of changing the base admin password, and added missing admin response translations.
-- Standardised user phone storage to E.164 format; fresh seeding writes the new format directly, so no phone backfill migration is needed.
-- Defaulted the profile `delete_avatar` flag to `0` when the client omits it.
-- Grouped large API documentation modules into expandable feature folders, ordered the documentation navigation predictably, gave parent folders and feature folders distinct colors, made every sidebar folder collapsible, and added a draggable resizable sidebar.
-- Standardised the OTP cooldown message and added assertions for the exact response.
-- Verified the full test suite passes: 70 tests, 295 assertions.
+- Completed dashboard coverage for the administrator management APIs: active and recycle-bin views, delete/restore/permanent delete, role filtering, detailed record loading, and role removal.
+- Added a Roles & Permissions area with role creation and editing, status control, permission assignment, member assignment and removal, recycle-bin recovery, and permission display.
+- Added a Permission Models area that lists the modules and permissions available to roles.
+- Added an Activity Logs area with filters, subject-specific history, CSV export and authenticated download, plus activity shortcuts from user and administrator details.
+- Completed user details loading from the dedicated details API.
+- Added an administrator password-recovery flow to the login page.
+- Added a shared dashboard foundation: icon system, skeletons, accessible modals, upgraded toasts, inline form errors, password visibility, skip link, focus states, and reduced-motion support.
+- Added the new dashboard shell: sidebar icons, breadcrumbs, user menu, notification drawer, global search palette, keyboard shortcuts, and dark mode.
+- Added aggregate dashboard analytics and charts for user growth, account status, and activity volume.
+- Added an improved overview with recent activity, quick actions, refresh state, and chart panels.
+- Redesigned the Account Status card with a proportional rounded donut, centered user total, readable active/suspended statistics, percentage tooltips, loading state, and a proper no-data state.
+- Refined the dashboard visuals: smooth gradient user-growth chart with legible axes, dark glass metric cards, glowing active sidebar state with section dividers, zebra tables, glowing status badges, and right-aligned dates.
+- Added profile avatar upload/removal, administrator avatar upload, user and administrator page-size controls, user status filtering, role permission search/select-all, and activity-log quick ranges/diff view/copy.
+- Added automated coverage for dashboard analytics and the full dashboard flow; the full suite now passes with 109 tests and 498 assertions.
+- Settings and location management pages remain pending.

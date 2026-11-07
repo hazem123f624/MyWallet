@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Modules\Admins\Database\Seeders\AdminsDatabaseSeeder;
+use Modules\BankAccounts\Database\Seeders\BankAccountsDatabaseSeeder;
 use Modules\Settings\Database\Seeders\SettingsDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminsDatabaseSeeder::class,
             SettingsDatabaseSeeder::class,
+            BankAccountsDatabaseSeeder::class,
             DocumentSeeder::class,
         ]);
     }

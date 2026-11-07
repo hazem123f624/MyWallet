@@ -54,6 +54,65 @@ class AdminUserManagementTest extends UsersApiTestCase
         $this->assertTrue($user->fresh()->is_active);
     }
 
+    public function test_super_admin_can_fetch_user_statistics(): void
+    {
+        $admin = $this->createSuperAdmin();
+        $adminToken = $this->tokenForAdmin($admin);
+        $this->createUser([
+            'name' => 'Active User',
+            'email' => 'active@example.com',
+            'phone' => '+201011116666',
+        ]);
+        $this->createUser([
+            'name' => 'Suspended User',
+            'email' => 'suspended@example.com',
+            'phone' => '+201011117777',
+            'is_active' => false,
+        ]);
+        $deleted = $this->createUser([
+            'name' => 'Deleted User',
+            'email' => 'deleted@example.com',
+            'phone' => '+201011118888',
+        ]);
+        $deleted->delete();
+
+        $this->withHeaders($this->bearer($adminToken))
+            ->getJson('/api/v1/dashboard/users/statistics')
+            ->assertOk()
+            ->assertJsonPath('data.total', 2)
+            ->assertJsonPath('data.active', 1)
+            ->assertJsonPath('data.suspended', 1)
+            ->assertJsonPath('data.trashed', 1);
+    }
+
+    public function test_super_admin_can_search_and_sort_users(): void
+    {
+        $admin = $this->createSuperAdmin();
+        $adminToken = $this->tokenForAdmin($admin);
+        $alice = $this->createUser([
+            'name' => 'Alice Search',
+            'email' => 'alice@example.com',
+            'phone' => '+201011114444',
+        ]);
+        $this->createUser([
+            'name' => 'Bob Search',
+            'email' => 'bob@example.com',
+            'phone' => '+201011115555',
+        ]);
+
+        $this->withHeaders($this->bearer($adminToken))
+            ->getJson('/api/v1/dashboard/users?search=alice&sort_by=name&sort_dir=asc')
+            ->assertOk()
+            ->assertJsonPath('pagination.total', 1)
+            ->assertJsonPath('data.0.id', $alice->id);
+
+        $this->withHeaders($this->bearer($adminToken))
+            ->getJson('/api/v1/dashboard/users?search=01011114444')
+            ->assertOk()
+            ->assertJsonPath('pagination.total', 1)
+            ->assertJsonPath('data.0.id', $alice->id);
+    }
+
     public function test_super_admin_can_soft_delete_restore_and_force_delete_a_user(): void
     {
         $admin = $this->createSuperAdmin();
