@@ -34,6 +34,21 @@ class UserPageController extends Controller
         ]);
     }
 
+    public function transfers(Request $request): View
+    {
+        return view('user.transfers.index', $this->sharedData($request, 'Send Money'));
+    }
+
+    public function transactions(Request $request): View
+    {
+        return view('user.transactions.index', $this->sharedData($request, 'Transaction History'));
+    }
+
+    public function beneficiaries(Request $request): View
+    {
+        return view('user.beneficiaries.index', $this->sharedData($request, 'Beneficiaries'));
+    }
+
     public function security(Request $request): View
     {
         return view('user.security.index', $this->sharedData($request, 'Security'));

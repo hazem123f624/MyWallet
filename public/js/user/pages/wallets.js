@@ -1,5 +1,5 @@
 import { apiDelete, apiGet, apiPatch, apiPost } from '../../dashboard/core/api.js?v=5';
-import { escapeHtml, qs, qsa } from '../../dashboard/core/dom.js?v=5';
+import { escapeHtml, formatDateTime, qs, qsa } from '../../dashboard/core/dom.js?v=5';
 import { closeModal, confirmAction, openModal } from '../../dashboard/core/modal.js?v=5';
 import { toast } from '../../dashboard/core/toast.js?v=5';
 
@@ -7,6 +7,11 @@ const state = {
     wallet: null,
     subWallets: [],
     maxSubWallets: 12,
+    operations: [],
+    operationsPage: 1,
+    operationsLastPage: 1,
+    operationsPerPage: 10,
+    operationsType: '',
 };
 
 const iconMarkup = (name) => {
@@ -106,6 +111,74 @@ const renderSubWallets = () => {
     }
 };
 
+const operationTypeLabel = (type) => ({
+    allocated: 'Allocated',
+    redistributed: 'Redistributed',
+    sub_wallet_returned: 'Returned',
+}[type] || type || 'Activity');
+
+const operationMovement = (operation) => {
+    const from = operation.from_sub_wallet?.name || 'Parent Wallet';
+    const to = operation.to_sub_wallet?.name || 'Parent Wallet';
+
+    return `${from} → ${to}`;
+};
+
+const renderOperations = () => {
+    const body = qs('#walletOperationsBody');
+    const empty = qs('#walletOperationsEmpty');
+
+    empty.hidden = state.operations.length > 0;
+
+    body.innerHTML = state.operations.map((operation) => `
+        <tr>
+            <td>
+                <span class="dash-table-name">${escapeHtml(operationTypeLabel(operation.type))}</span>
+                <span class="dash-table-subtext">${escapeHtml(operation.description || '')}</span>
+            </td>
+            <td>${escapeHtml(operationMovement(operation))}</td>
+            <td>${escapeHtml(money(operation.amount))}</td>
+            <td><span class="dash-badge dash-badge-neutral">Private</span></td>
+            <td class="dash-col-date">${escapeHtml(formatDateTime(operation.created_at))}</td>
+        </tr>
+    `).join('');
+};
+
+const updateOperationsPagination = (pagination = {}) => {
+    const currentPage = Number(pagination.current_page ?? 1);
+    const lastPage = Math.max(1, Number(pagination.last_page ?? 1));
+    const total = Number(pagination.total ?? 0);
+
+    state.operationsPage = currentPage;
+    state.operationsLastPage = lastPage;
+    qs('#walletOperationsPageInfo').textContent = `Page ${currentPage} of ${lastPage} · ${total} operation${total === 1 ? '' : 's'}`;
+    qs('#walletOperationsPrevPage').disabled = currentPage <= 1;
+    qs('#walletOperationsNextPage').disabled = currentPage >= lastPage;
+};
+
+const loadOperations = async () => {
+    const loading = qs('#walletOperationsLoading');
+    loading.hidden = false;
+
+    try {
+        const response = await apiGet('/mobile/parent-wallet/operations', {
+            page: state.operationsPage,
+            per_page: state.operationsPerPage,
+            type: state.operationsType,
+        });
+
+        state.operations = Array.isArray(response.data) ? response.data : [];
+        renderOperations();
+        updateOperationsPagination(response.pagination);
+    } catch (error) {
+        state.operations = [];
+        renderOperations();
+        toast(error.message || 'Unable to load private wallet activity.', 'error');
+    } finally {
+        loading.hidden = true;
+    }
+};
+
 const load = async () => {
     try {
         const [walletResponse, subWalletsResponse] = await Promise.all([
@@ -121,6 +194,8 @@ const load = async () => {
     } catch (error) {
         toast(error.message || 'Unable to load your wallets.', 'error');
     }
+
+    await loadOperations();
 };
 
 const openSubWalletForm = (wallet = null) => {
@@ -275,6 +350,26 @@ export const initWalletsPage = () => {
     qs('#subWalletForm')?.addEventListener('submit', submitSubWallet);
     qs('#allocateForm')?.addEventListener('submit', submitAllocate);
     qs('#redistributeForm')?.addEventListener('submit', submitRedistribute);
+
+    qs('#walletOperationType')?.addEventListener('change', () => {
+        state.operationsType = qs('#walletOperationType').value;
+        state.operationsPage = 1;
+        loadOperations();
+    });
+
+    qs('#walletOperationsPrevPage')?.addEventListener('click', () => {
+        if (state.operationsPage > 1) {
+            state.operationsPage -= 1;
+            loadOperations();
+        }
+    });
+
+    qs('#walletOperationsNextPage')?.addEventListener('click', () => {
+        if (state.operationsPage < state.operationsLastPage) {
+            state.operationsPage += 1;
+            loadOperations();
+        }
+    });
 
     qs('#subWalletGrid')?.addEventListener('click', (event) => {
         const button = event.target.closest('[data-action]');

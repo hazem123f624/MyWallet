@@ -70,6 +70,59 @@
         />
     </section>
 
+    <section class="dash-panel" style="margin-top: 18px;">
+        <div class="dash-panel-heading">
+            <div>
+                <h2>Private wallet activity</h2>
+                <p>Internal moves between your own wallets. These are never shown as external transfers.</p>
+            </div>
+
+            <label class="dash-select-wrap">
+                <span class="sr-only">Filter activity type</span>
+                <select id="walletOperationType" class="dash-select">
+                    <option value="">All activity</option>
+                    <option value="allocated">Allocated</option>
+                    <option value="redistributed">Redistributed</option>
+                    <option value="sub_wallet_returned">Returned</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="dash-table-wrap">
+            <table class="dash-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Movement</th>
+                        <th>Amount</th>
+                        <th>Visibility</th>
+                        <th class="dash-col-date">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="walletOperationsBody"></tbody>
+            </table>
+
+            <div class="dash-table-loading" id="walletOperationsLoading" hidden>
+                <span class="dash-spinner"></span>
+                <span>Loading private activity...</span>
+            </div>
+
+            <x-dashboard.empty-state
+                id="walletOperationsEmpty"
+                title="No private activity yet"
+                message="Allocations and internal moves will appear here."
+            />
+        </div>
+
+        <footer class="dash-table-footer">
+            <span id="walletOperationsPageInfo">Page 1 of 1</span>
+            <div class="dash-pagination">
+                <button class="dash-button dash-button-ghost" type="button" id="walletOperationsPrevPage" disabled>Previous</button>
+                <button class="dash-button dash-button-ghost" type="button" id="walletOperationsNextPage" disabled>Next</button>
+            </div>
+        </footer>
+    </section>
+
     <x-dashboard.modal id="subWalletFormModal" title="Create Sub Wallet">
         <form id="subWalletForm" class="dash-form">
             <input type="hidden" id="subWalletId">
@@ -110,7 +163,7 @@
 
             <x-slot:footer>
                 <button class="dash-button dash-button-ghost" type="button" data-close-modal>Cancel</button>
-                <button class="dash-button dash-button-primary" type="submit" id="subWalletSubmit">Save Sub Wallet</button>
+                <button class="dash-button dash-button-primary" type="submit" form="subWalletForm" id="subWalletSubmit">Save Sub Wallet</button>
             </x-slot:footer>
         </form>
     </x-dashboard.modal>
@@ -129,7 +182,7 @@
 
             <x-slot:footer>
                 <button class="dash-button dash-button-ghost" type="button" data-close-modal>Cancel</button>
-                <button class="dash-button dash-button-primary" type="submit" id="allocateSubmit">Allocate</button>
+                <button class="dash-button dash-button-primary" type="submit" form="allocateForm" id="allocateSubmit">Allocate</button>
             </x-slot:footer>
         </form>
     </x-dashboard.modal>
@@ -153,7 +206,7 @@
 
             <x-slot:footer>
                 <button class="dash-button dash-button-ghost" type="button" data-close-modal>Cancel</button>
-                <button class="dash-button dash-button-primary" type="submit" id="redistributeSubmit">Move funds</button>
+                <button class="dash-button dash-button-primary" type="submit" form="redistributeForm" id="redistributeSubmit">Move funds</button>
             </x-slot:footer>
         </form>
     </x-dashboard.modal>

@@ -19,6 +19,8 @@ return [
     'sub_wallet_has_reserved_funds' => 'تحتوي هذه المحفظة الفرعية على مبالغ محجوزة ولا يمكن حذفها الآن.',
     'amount_must_be_positive' => 'يجب أن يكون المبلغ أكبر من صفر.',
     'insufficient_parent_balance' => 'لا يوجد رصيد متاح كافٍ في المحفظة الرئيسية.',
+    'insufficient_reserved_balance' => 'الرصيد المحجوز غير كافٍ لهذه العملية.',
     'insufficient_sub_wallet_balance' => 'لا يوجد رصيد متاح كافٍ في المحفظة الفرعية.',
     'same_sub_wallet' => 'اختر محفظة فرعية وجهة مختلفة.',
+    'operations_retrieved' => 'تم استرجاع عمليات المحفظة الخاصة بنجاح.',
 ];

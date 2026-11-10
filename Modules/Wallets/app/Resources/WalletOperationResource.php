@@ -21,6 +21,7 @@ class WalletOperationResource extends JsonResource
             'amount' => $this->amount,
             'currency' => $this->currency,
             'description' => $this->description,
+            'is_private' => true,
             'from_sub_wallet' => $this->fromSubWallet ? [
                 'id' => $this->fromSubWallet->id,
                 'name' => $this->fromSubWallet->name,

@@ -136,9 +136,14 @@ Personal           5,000 EGP
 - Respect the configured transfer limits.
 - Confirm the operation using the transaction PIN.
 - Create the transfer request only after validation succeeds.
+- Reserve the transfer amount from the Sub Wallet before sending it to the Banking Provider.
 - Execute the transfer through the Banking Provider.
 - Update the transaction status as the provider responds.
-- If the balance is insufficient, reject the transfer before a request is sent.
+- On success, settle the reservation and permanently deduct the amount.
+- On failure, release the reservation and return the amount to the Sub Wallet's available balance.
+- While the provider result is pending, keep the amount reserved and query the status later.
+- Prevent duplicate submissions with a client reference; a repeated request returns the existing transfer.
+- If the balance, limits, or transaction PIN validation fails, reject the transfer before any provider request is sent.
 
 **Example:** The user wants to transfer 2,000 EGP from the Electricity Sub Wallet.
 
@@ -221,6 +226,14 @@ Execute Transfer
 - Return the amount to the original wallet.
 - Record the transaction as Reversed.
 
+### Lifecycle Implementation Rules
+
+- `Reversed` means the provider reversed a previously successful transfer. `Refunded` means an explicit refund was returned to the wallet. Both are terminal and both credit the original Sub Wallet exactly once.
+- Every state change is recorded in the transfer event history with the previous status, new status, provider reference, and a human-readable message.
+- Pending and processing transfers can be queried later. User-initiated refresh is limited to those states and rate limited; administrators can sync provider status but cannot issue manual refunds.
+- Provider callbacks are authenticated with an HMAC-SHA256 signature over the raw request body using `X-Provider-Signature`. Replayed or duplicate callbacks are idempotent.
+- A reconciliation command queries due pending and processing transfers every five minutes. Provider errors leave the transfer pending or processing, record a status-check event, and schedule a retry with backoff.
+
 **Result:** No money is lost due to failed transfers or duplicate requests.
 
 ---
@@ -253,6 +266,15 @@ External transfer:
 Electricity -> Beneficiary
 Appears in Transaction History.
 ```
+
+### History Implementation Rules
+
+- External transfer history is read from the `transfers` table only and is always scoped to the authenticated user.
+- Users can search by reference, filter by status, and filter by an inclusive date range. Results are paginated newest first.
+- Transfer details reuse the lifecycle view and include events, reversal, and refund information.
+- Internal wallet movements are read from `wallet_operations` and are exposed only through the private wallet activity view.
+- Private wallet activity is paginated, can be filtered by operation type and date, and is marked `is_private` in API responses.
+- Internal operations never appear in external transfer history, and external transfers never appear in private wallet activity.
 
 **Result:** A clear transaction history that does not present internal operations as bank transfers.
 

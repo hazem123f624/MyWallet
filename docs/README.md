@@ -15,7 +15,9 @@ This folder holds the product and engineering documentation for the MyWallet bac
 | [`phase-3/`](phase-3/README.md) | Phase 3 Parent Wallet tasks, endpoints, and test-case specification. |
 | [`phase-4/`](phase-4/README.md) | Phase 4 Sub Wallet tasks, endpoints, and test-case specification. |
 | [`user-dashboard/`](user-dashboard/README.md) | User-facing web dashboard routes, features, and limitations. |
-| [`phase-5/`](phase-5/test-cases.md) | Phase 5 money transfer test cases, including transfer PIN confirmation. |
+| [`phase-5/`](phase-5/README.md) | Phase 5 transfer tasks, endpoints, and test-case specification. |
+| [`phase-6/`](phase-6/README.md) | Phase 6 lifecycle, callbacks, reconciliation, and reversal/refund tasks and test cases. |
+| [`phase-7/`](phase-7/README.md) | Phase 7 external transfer history, search/filter behavior, and private wallet activity. |
 
 ## Quick Links
 

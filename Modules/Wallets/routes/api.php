@@ -7,6 +7,7 @@ use Modules\Wallets\Http\Controllers\Mobile\SubWalletController;
 Route::middleware(['security'])->prefix(config('api.version').'/'.config('api.prefixes.mobile'))->group(function (): void {
     Route::middleware(['auth:sanctum', 'abilities:users', 'user.active'])->group(function (): void {
         Route::get('parent-wallet', [ParentWalletController::class, 'show']);
+        Route::get('parent-wallet/operations', [ParentWalletController::class, 'operations']);
         Route::put('parent-wallet/funding-source', [ParentWalletController::class, 'updateFundingSource']);
 
         Route::get('sub-wallets', [SubWalletController::class, 'index']);

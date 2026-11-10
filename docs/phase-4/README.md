@@ -50,4 +50,4 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 
 1. Manual Parent Wallet deposits are not implemented, so live balances start at zero until funding flows exist.
 2. Reserved Sub Wallet funds are supported by the schema but are only used by Phase 5 transfers.
-3. Full internal operation history remains Phase 7 work; Phase 4 exposes the latest operations on the Parent Wallet response.
+3. Full internal operation history is implemented in Phase 7; the Parent Wallet response continues to expose the latest operations, while the Wallets page provides the paginated private activity view.

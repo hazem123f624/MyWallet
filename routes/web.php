@@ -32,6 +32,8 @@ Route::prefix('dashboard')->name('dashboard.')->group(function (): void {
         Route::get('/', [DashboardPageController::class, 'overview'])->name('overview');
         Route::get('users', [DashboardPageController::class, 'users'])->name('users');
         Route::get('activity-logs', [DashboardPageController::class, 'activityLogs'])->name('activity-logs');
+        Route::get('transfers', [DashboardPageController::class, 'transfers'])->name('transfers');
+        Route::get('beneficiaries', [DashboardPageController::class, 'beneficiaries'])->name('beneficiaries');
         Route::get('profile', [DashboardPageController::class, 'profile'])->name('profile');
         Route::get('admins', [DashboardPageController::class, 'admins'])
             ->middleware(EnsureDashboardSuperAdmin::class)
@@ -57,6 +59,9 @@ Route::prefix('user')->name('user.')->group(function (): void {
         Route::get('wallets', [UserPageController::class, 'wallets'])->name('wallets');
         Route::get('bank-accounts', [UserPageController::class, 'bankAccounts'])->name('bank-accounts');
         Route::get('profile', [UserPageController::class, 'profile'])->name('profile');
+        Route::get('transfers', [UserPageController::class, 'transfers'])->name('transfers');
+        Route::get('transactions', [UserPageController::class, 'transactions'])->name('transactions');
+        Route::get('beneficiaries', [UserPageController::class, 'beneficiaries'])->name('beneficiaries');
         Route::get('security', [UserPageController::class, 'security'])->name('security');
     });
 });

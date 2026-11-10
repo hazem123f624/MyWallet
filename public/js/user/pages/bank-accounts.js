@@ -66,9 +66,17 @@ const load = async () => {
         state.banks = Array.isArray(banksResponse.data) ? banksResponse.data : [];
         state.accounts = Array.isArray(accountsResponse.data) ? accountsResponse.data : [];
 
-        qs('#linkBankId').innerHTML = state.banks.map((bank) => `
-            <option value="${bank.id}">${escapeHtml(bank.name)}</option>
-        `).join('');
+        qs('#linkBankId').innerHTML = state.banks.length > 0
+            ? state.banks.map((bank) => `
+                <option value="${bank.id}">${escapeHtml(bank.name)}</option>
+            `).join('')
+            : '<option value="">No supported banks available</option>';
+
+        const submit = qs('#linkBankSubmit');
+
+        if (submit) {
+            submit.disabled = state.banks.length === 0;
+        }
 
         renderAccounts();
     } catch (error) {
@@ -77,6 +85,12 @@ const load = async () => {
 };
 
 const openLink = () => {
+    if (state.banks.length === 0) {
+        toast('No supported banks are available right now.', 'warning');
+
+        return;
+    }
+
     qs('#linkBankForm').reset();
     qs('#linkBankError').hidden = true;
     openModal('linkBankModal');
@@ -102,12 +116,21 @@ const submitLink = async (event) => {
     event.preventDefault();
     const errorBox = qs('#linkBankError');
     const button = qs('#linkBankSubmit');
+    const bankId = Number(qs('#linkBankId').value);
     errorBox.hidden = true;
+
+    if (!bankId) {
+        errorBox.textContent = 'Select a supported bank before linking an account.';
+        errorBox.hidden = false;
+
+        return;
+    }
+
     button.disabled = true;
 
     try {
         const response = await apiPost('/mobile/bank-accounts', {
-            bank_id: Number(qs('#linkBankId').value),
+            bank_id: bankId,
             account_holder_name: qs('#linkHolderName').value.trim(),
             account_number: qs('#linkAccountNumber').value.trim(),
             iban: qs('#linkIban').value.trim() || null,

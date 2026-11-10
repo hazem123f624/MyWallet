@@ -41,6 +41,16 @@ class DashboardPageController extends Controller
         return view('dashboard.activity-logs.index', $this->sharedData($request, 'Activity Logs'));
     }
 
+    public function transfers(Request $request): View
+    {
+        return view('dashboard.transfers.index', $this->sharedData($request, 'Transfers'));
+    }
+
+    public function beneficiaries(Request $request): View
+    {
+        return view('dashboard.beneficiaries.index', $this->sharedData($request, 'Beneficiaries'));
+    }
+
     public function profile(Request $request): View
     {
         return view('dashboard.profile.index', $this->sharedData($request, 'Profile'));

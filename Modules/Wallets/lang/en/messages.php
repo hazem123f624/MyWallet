@@ -19,6 +19,8 @@ return [
     'sub_wallet_has_reserved_funds' => 'This Sub Wallet has reserved funds and cannot be deleted yet.',
     'amount_must_be_positive' => 'The amount must be greater than zero.',
     'insufficient_parent_balance' => 'The Parent Wallet does not have enough available balance.',
+    'insufficient_reserved_balance' => 'The reserved balance is insufficient for this operation.',
     'insufficient_sub_wallet_balance' => 'The Sub Wallet does not have enough available balance.',
     'same_sub_wallet' => 'Choose a different destination Sub Wallet.',
+    'operations_retrieved' => 'Private wallet operations retrieved successfully.',
 ];

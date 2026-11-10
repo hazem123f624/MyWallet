@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\HttpResponsesTrait;
 use Illuminate\Auth\AuthenticationException;
 use Modules\Wallets\Http\Requests\UpdateFundingSourceRequest;
+use Modules\Wallets\Http\Requests\WalletOperationsRequest;
 use Modules\Wallets\Interfaces\SubWalletInterface;
 use Modules\Wallets\Interfaces\WalletOperationInterface;
 use Modules\Wallets\Models\ParentWallet;
 use Modules\Wallets\Resources\ParentWalletResource;
+use Modules\Wallets\Resources\WalletOperationResource;
 use Modules\Wallets\Services\ParentWalletService;
 
 class ParentWalletController extends Controller
@@ -41,6 +43,25 @@ class ParentWalletController extends Controller
         return $this->success(
             __('wallets::messages.funding_source_linked'),
             data: $this->resource($wallet, $this->service->fundingSourceFor($wallet))
+        );
+    }
+
+    public function operations(WalletOperationsRequest $request)
+    {
+        [$userId] = $this->actor();
+        $data = $this->operations->paginateForUser($userId, $request->validated());
+
+        return $this->success(
+            __('wallets::messages.operations_retrieved'),
+            data: WalletOperationResource::collection($data->items()),
+            appends: [
+                'pagination' => [
+                    'per_page' => $data->perPage(),
+                    'current_page' => $data->currentPage(),
+                    'total' => $data->total(),
+                    'last_page' => $data->lastPage(),
+                ],
+            ]
         );
     }
 

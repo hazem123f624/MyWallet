@@ -13,6 +13,14 @@ export class ApiError extends Error {
     }
 }
 
+const redirectToLogin = () => {
+    const loginPath = window.location.pathname.startsWith('/user/')
+        ? '/user/login'
+        : '/dashboard/login';
+
+    window.location.replace(`${loginPath}?expired=1`);
+};
+
 const request = async (path, options = {}) => {
     const {
         method = 'GET',
@@ -54,7 +62,7 @@ const request = async (path, options = {}) => {
 
     if (!response.ok) {
         if (response.status === 401) {
-            window.location.replace('/dashboard/login?expired=1');
+            redirectToLogin();
         }
 
         throw new ApiError(message, response.status, payload);
@@ -92,7 +100,7 @@ export const apiDownload = async (path, fallbackName = 'download.csv') => {
 
     if (!response.ok) {
         if (response.status === 401) {
-            window.location.replace('/dashboard/login?expired=1');
+            redirectToLogin();
         }
 
         const payload = await response.json().catch(() => null);
@@ -142,7 +150,7 @@ export const apiUpload = async (path, formData, method = 'POST') => {
 
     if (!response.ok) {
         if (response.status === 401) {
-            window.location.replace('/dashboard/login?expired=1');
+            redirectToLogin();
         }
 
         throw new ApiError(message, response.status, payload);

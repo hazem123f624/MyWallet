@@ -1244,6 +1244,48 @@ svg {
     color: var(--dash-muted);
 }
 
+.user-timeline {
+    display: grid;
+    gap: 14px;
+}
+
+.user-timeline-item {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+}
+
+.user-timeline-item > span:last-child {
+    display: grid;
+    gap: 2px;
+}
+
+.user-timeline-item strong {
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.user-timeline-item small {
+    color: var(--dash-muted);
+    font-size: 11px;
+}
+
+.user-timeline-item p {
+    margin: 0;
+    color: var(--dash-text-soft);
+    font-size: 12px;
+}
+
+.user-timeline-dot {
+    width: 9px;
+    height: 9px;
+    margin-top: 4px;
+    border-radius: 999px;
+    background: var(--dash-primary);
+    box-shadow: 0 0 0 3px var(--dash-primary-soft);
+}
+
 .dash-chip-list {
     display: flex;
     flex-wrap: wrap;

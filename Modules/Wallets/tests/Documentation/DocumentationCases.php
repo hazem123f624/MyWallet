@@ -28,6 +28,18 @@ class DocumentationCases
                 shortDesc: 'View the Parent Wallet.'
             ),
             $testCasesObject->handle(
+                type: 'GET',
+                name: 'List Private Wallet Operations',
+                route: 'mobile/parent-wallet/operations',
+                params: [
+                    'type' => 'allocated',
+                    'per_page' => 10,
+                ],
+                auth: $token,
+                desc: 'Returns a paginated history of internal wallet operations for the authenticated user. Every entry is marked private and never appears in the external transfer history.',
+                shortDesc: 'List private wallet activity.'
+            ),
+            $testCasesObject->handle(
                 type: 'PUT',
                 name: 'Link Parent Wallet Funding Source',
                 route: 'mobile/parent-wallet/funding-source',

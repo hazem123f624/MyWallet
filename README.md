@@ -20,7 +20,9 @@ ships the **core infrastructure** only — business wallet modules are added on 
 
 - `Modules/Admins` — back-office admin accounts, roles, and settings.
 - `Modules/BankAccounts` — supported banks and linked user bank accounts.
+- `Modules/Beneficiaries` — saved external transfer beneficiaries.
 - `Modules/Wallets` — Parent Wallet creation, funding source, and balances.
+- `Modules/Transfers` — money transfers, limits, PIN confirmation, and provider execution.
 - `Modules/Users` — mobile user accounts.
 - `Modules/Settings` — platform settings and locations.
 
@@ -116,6 +118,7 @@ Project documentation lives in [`docs/`](docs/README.md):
 - [`docs/phase-2/`](docs/phase-2/README.md) — Phase 2 bank account linking tasks and test cases.
 - [`docs/phase-3/`](docs/phase-3/README.md) — Phase 3 Parent Wallet tasks and test cases.
 - [`docs/phase-4/`](docs/phase-4/README.md) — Phase 4 Sub Wallet tasks and test cases.
+- [`docs/phase-5/`](docs/phase-5/README.md) — Phase 5 money transfer tasks and test cases.
 - [`docs/user-dashboard/`](docs/user-dashboard/README.md) — User-facing web dashboard.
 
 ---

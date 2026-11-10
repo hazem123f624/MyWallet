@@ -72,6 +72,17 @@ class DocumentSeeder extends Seeder
         $this->flushRateLimit();
         $this->command?->info('Running test case on Wallets Module: mobile-sub-wallets');
         Artisan::call('app:init-test Wallets mobile-sub-wallets');
+
+        foreach ([
+            ['Beneficiaries', 'mobile-beneficiaries'],
+            ['Beneficiaries', 'dashboard-beneficiaries'],
+            ['Transfers', 'mobile-transfers'],
+            ['Transfers', 'dashboard-transfers'],
+        ] as [$module, $type]) {
+            $this->flushRateLimit();
+            $this->command?->info('Running test case on '.$module.' Module: '.$type);
+            Artisan::call('app:init-test '.$module.' '.$type);
+        }
     }
 
     /**

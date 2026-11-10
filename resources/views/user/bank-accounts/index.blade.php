@@ -30,24 +30,25 @@
 
             <div class="dash-field">
                 <label for="linkHolderName">Account holder name</label>
-                <input id="linkHolderName" type="text" required>
+                <input id="linkHolderName" type="text" maxlength="255" required>
             </div>
 
             <div class="dash-field">
                 <label for="linkAccountNumber">Account number</label>
-                <input id="linkAccountNumber" type="text" inputmode="numeric" required>
+                <input id="linkAccountNumber" type="text" inputmode="numeric" minlength="8" maxlength="34" pattern="[0-9\s\-]{8,34}" required>
+                <span class="dash-muted-text">8–34 digits. Spaces and dashes are ignored.</span>
             </div>
 
             <div class="dash-field">
                 <label for="linkIban">IBAN <span class="dash-muted-text">(optional)</span></label>
-                <input id="linkIban" type="text" placeholder="EG380019000500000000263180002">
+                <input id="linkIban" type="text" maxlength="34" placeholder="EG380019000500000000263180002">
             </div>
 
             <p class="dash-form-error" id="linkBankError" hidden></p>
 
             <x-slot:footer>
                 <button class="dash-button dash-button-ghost" type="button" data-close-modal>Cancel</button>
-                <button class="dash-button dash-button-primary" type="submit" id="linkBankSubmit">Link account</button>
+                <button class="dash-button dash-button-primary" type="submit" form="linkBankForm" id="linkBankSubmit">Link account</button>
             </x-slot:footer>
         </form>
     </x-dashboard.modal>
@@ -67,7 +68,7 @@
 
             <x-slot:footer>
                 <button class="dash-button dash-button-ghost" type="button" id="resendBankOtp">Resend code</button>
-                <button class="dash-button dash-button-primary" type="submit" id="verifyBankSubmit">Verify</button>
+                <button class="dash-button dash-button-primary" type="submit" form="verifyBankForm" id="verifyBankSubmit">Verify</button>
             </x-slot:footer>
         </form>
     </x-dashboard.modal>

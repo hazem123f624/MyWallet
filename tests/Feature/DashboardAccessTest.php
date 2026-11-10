@@ -115,6 +115,14 @@ class DashboardAccessTest extends TestCase
         $this->get('/dashboard/activity-logs')
             ->assertOk()
             ->assertSee('data-page="activity-logs"', false);
+
+        $this->get('/dashboard/transfers')
+            ->assertOk()
+            ->assertSee('data-page="transfers"', false);
+
+        $this->get('/dashboard/beneficiaries')
+            ->assertOk()
+            ->assertSee('data-page="beneficiaries"', false);
     }
 
     public function test_super_admin_can_open_administration_pages(): void

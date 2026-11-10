@@ -7,10 +7,12 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Wallets\Console\Commands\BackfillParentWallets;
 use Modules\Wallets\Interfaces\ParentWalletInterface;
 use Modules\Wallets\Interfaces\SubWalletInterface;
+use Modules\Wallets\Interfaces\TransferWalletInterface;
 use Modules\Wallets\Interfaces\WalletOperationInterface;
 use Modules\Wallets\Repositories\ParentWalletRepository;
 use Modules\Wallets\Repositories\SubWalletRepository;
 use Modules\Wallets\Repositories\WalletOperationRepository;
+use Modules\Wallets\Services\TransferWalletService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -39,6 +41,7 @@ class WalletsServiceProvider extends ServiceProvider
         $this->app->bind(ParentWalletInterface::class, ParentWalletRepository::class);
         $this->app->bind(SubWalletInterface::class, SubWalletRepository::class);
         $this->app->bind(WalletOperationInterface::class, WalletOperationRepository::class);
+        $this->app->bind(TransferWalletInterface::class, TransferWalletService::class);
     }
 
     protected function registerCommands(): void

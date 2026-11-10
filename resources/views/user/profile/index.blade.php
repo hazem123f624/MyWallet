@@ -129,7 +129,7 @@
 
             <x-slot:footer>
                 <button class="dash-button dash-button-ghost" type="button" data-close-modal>Cancel</button>
-                <button class="dash-button dash-button-primary" type="submit" id="verifyPhoneSubmit">Verify phone</button>
+                <button class="dash-button dash-button-primary" type="submit" form="verifyPhoneForm" id="verifyPhoneSubmit">Verify phone</button>
             </x-slot:footer>
         </form>
     </x-dashboard.modal>

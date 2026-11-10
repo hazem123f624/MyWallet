@@ -25,4 +25,13 @@
 - Added user dashboard registration with OTP verification.
 - Fixed user dashboard asset paths so login controls, password visibility, dark mode, and page actions work correctly.
 - Added visual color swatches and icon previews to Sub Wallet creation/editing and wallet cards.
-- Added user dashboard access tests; the full suite now passes with 153 tests and 691 assertions.
+- Added user dashboard access tests.
+- Added Phase 5 beneficiaries and money transfers with reservation, provider execution, limits, transaction-PIN confirmation, idempotency, user send-money and beneficiary pages, and admin transfer/beneficiary monitoring.
+- Added Phase 5 tests and documentation; the full suite now passes with 170 tests and 786 assertions.
+- Added Phase 6 transfer lifecycle management: auditable transfer events, provider status queries, signed idempotent callbacks, five-minute reconciliation with backoff, reversal/refund credits, user status refresh, admin status sync, and lifecycle detail in both dashboards.
+- Added Phase 6 feature tests and documentation for callbacks, reconciliation, reversals, refunds, and idempotency; the full suite now passes with 189 tests and 914 assertions.
+- Added Phase 7 transaction history: paginated external transfer history with reference, status, and date filters; a dedicated user Transactions page; transfer detail reuse; paginated private wallet activity on the Wallets page; and explicit internal/external privacy separation.
+- Added Phase 7 tests and documentation for history pagination, filters, validation, cross-user isolation, and private wallet operations.
+- Fixed modal footer submit buttons across the user dashboard by associating them with their forms, restoring bank-account linking, bank verification, beneficiary, Sub Wallet, allocation, redistribution, and phone-verification submissions.
+- Fixed user-side API session expiry redirects to return to the user login instead of the administrator login.
+- Added a regression test for modal form wiring; the full suite now passes with 202 tests and 987 assertions.

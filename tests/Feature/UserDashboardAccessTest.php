@@ -109,8 +109,36 @@ class UserDashboardAccessTest extends TestCase
         $this->get('/user')->assertOk()->assertSee('data-page="overview"', false);
         $this->get('/user/wallets')->assertOk()->assertSee('data-page="wallets"', false);
         $this->get('/user/bank-accounts')->assertOk()->assertSee('data-page="bank-accounts"', false);
+        $this->get('/user/transfers')->assertOk()->assertSee('data-page="transfers"', false);
+        $this->get('/user/transactions')->assertOk()->assertSee('data-page="transactions"', false);
+        $this->get('/user/beneficiaries')->assertOk()->assertSee('data-page="beneficiaries"', false);
         $this->get('/user/profile')->assertOk()->assertSee('data-page="profile"', false);
         $this->get('/user/security')->assertOk()->assertSee('data-page="security"', false);
+    }
+
+    public function test_modal_submit_buttons_are_wired_to_their_forms(): void
+    {
+        $user = $this->createUser();
+        $this->actingAs($user, 'users');
+
+        $this->get('/user/bank-accounts')
+            ->assertOk()
+            ->assertSee('form="linkBankForm"', false)
+            ->assertSee('form="verifyBankForm"', false);
+
+        $this->get('/user/wallets')
+            ->assertOk()
+            ->assertSee('form="subWalletForm"', false)
+            ->assertSee('form="allocateForm"', false)
+            ->assertSee('form="redistributeForm"', false);
+
+        $this->get('/user/beneficiaries')
+            ->assertOk()
+            ->assertSee('form="beneficiaryForm"', false);
+
+        $this->get('/user/profile')
+            ->assertOk()
+            ->assertSee('form="verifyPhoneForm"', false);
     }
 
     public function test_suspended_user_session_is_rejected(): void

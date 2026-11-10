@@ -3,6 +3,7 @@
 namespace Modules\Users\Repositories;
 
 use App\Services\ForRepository\RepositoryService;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Modules\Users\Interfaces\UsersInterface;
@@ -78,7 +79,7 @@ class UsersRepository implements UsersInterface
 
             $existing = $id ? $this->model->find($id) : null;
 
-            if (! empty($request['avatar']) && $request['avatar'] instanceof \Illuminate\Http\UploadedFile) {
+            if (! empty($request['avatar']) && $request['avatar'] instanceof UploadedFile) {
                 if ($existing?->avatar) {
                     Storage::disk('public')->delete($existing->avatar);
                 }

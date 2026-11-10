@@ -71,7 +71,7 @@ const renderOperations = (operations, symbol) => {
         <div class="dash-overview-activity-item">
             <span class="dash-notification-icon">${escapeHtml(String(operation.type || 'op').charAt(0).toUpperCase())}</span>
             <span class="dash-notification-copy">
-                <strong>${escapeHtml(operation.description || operation.type)}</strong>
+                <strong>${escapeHtml(operation.description || operation.type)} <span class="dash-badge dash-badge-neutral">Private</span></strong>
                 <small>
                     <span>${escapeHtml(money(operation.amount, symbol))}</span>
                     <time>${escapeHtml(formatDateTime(operation.created_at))}</time>

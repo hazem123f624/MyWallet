@@ -107,6 +107,21 @@ const boot = async () => {
         module.initWalletsPage();
     }
 
+    if (page === 'transfers') {
+        const module = await import(`./pages/transfers.js?v=${version}`);
+        module.initTransfersPage();
+    }
+
+    if (page === 'transactions') {
+        const module = await import(`./pages/transactions.js?v=${version}`);
+        module.initTransactionsPage();
+    }
+
+    if (page === 'beneficiaries') {
+        const module = await import(`./pages/beneficiaries.js?v=${version}`);
+        module.initBeneficiariesPage();
+    }
+
     if (page === 'bank-accounts') {
         const module = await import(`./pages/bank-accounts.js?v=${version}`);
         module.initBankAccountsPage();

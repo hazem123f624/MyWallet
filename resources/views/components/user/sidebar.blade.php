@@ -35,6 +35,21 @@
             <span>Wallets</span>
         </a>
 
+        <a href="{{ route('user.transfers') }}" class="dash-nav-link {{ request()->routeIs('user.transfers') ? 'active' : '' }}">
+            <x-dashboard.icon name="send" class="dash-nav-icon" />
+            <span>Send Money</span>
+        </a>
+
+        <a href="{{ route('user.transactions') }}" class="dash-nav-link {{ request()->routeIs('user.transactions') ? 'active' : '' }}">
+            <x-dashboard.icon name="activity" class="dash-nav-icon" />
+            <span>Transactions</span>
+        </a>
+
+        <a href="{{ route('user.beneficiaries') }}" class="dash-nav-link {{ request()->routeIs('user.beneficiaries') ? 'active' : '' }}">
+            <x-dashboard.icon name="users" class="dash-nav-icon" />
+            <span>Beneficiaries</span>
+        </a>
+
         <a href="{{ route('user.bank-accounts') }}" class="dash-nav-link {{ request()->routeIs('user.bank-accounts') ? 'active' : '' }}">
             <x-dashboard.icon name="bank" class="dash-nav-icon" />
             <span>Bank Accounts</span>
