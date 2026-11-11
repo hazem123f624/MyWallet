@@ -2,6 +2,11 @@
 
 This folder holds the product and engineering documentation for the MyWallet backend.
 
+> **Current status — 2026-11-10:** all seven MVP phases are implemented. The automated suite
+> passes with 202 tests / 987 assertions, and the exported Postman collection contains
+> 104 requests. Live Egyptian bank/aggregator integration, manual deposits, and the admin
+> wallet-suspension control remain documented gaps rather than missing MVP tasks.
+
 | File | What it covers |
 |---|---|
 | [`business.md`](business.md) | The complete MyWallet business design: platform overview, MVP phases, business rules, transaction lifecycle, scope, and glossary. |

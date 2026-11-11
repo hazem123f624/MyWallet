@@ -15,9 +15,11 @@ These commands are specific to this project.
 |---|---|
 | `php artisan app:init-module {name}` | Creates a complete module scaffold: module folder, main and translation migrations, model, interface, repository, create/update requests, API resource, DTO, controller, policy, and documentation test case. It prompts before creating each optional file. `name` is the module name in PascalCase, for example `Wallet`. |
 | `php artisan app:init-sub-module {name} {module}` | Adds a sub-resource scaffold inside an existing module. It creates the migration, model, interface, repository, requests, resource, DTO, controller, and policy for the sub-resource. `module` is the existing module name. |
-| `php artisan app:init-test {name} {type}` | Runs the module's documentation cases and stores the real API response in the documentation database. `name` is the module name, `type` is the case group such as `index`, `show`, `recycle-bin`, `authentication`, `mobile-auth`, or `mobile-profile`. |
+| `php artisan app:init-test {name} {type}` | Runs the module's documentation cases and stores the real API response in the documentation database. `name` is the module name; `type` is a group key such as `index`, `show`, `recycle-bin`, `authentication`, `mobile-auth`, `mobile-profile`, `mobile-transfers`, `dashboard-transfers`, `mobile-parent-wallet`, or `mobile-sub-wallets`. |
 | `php artisan app:export-api-json` | Exports every documented endpoint to a Postman collection JSON file. By default it writes `api.json` at the project root. |
 | `php artisan app:export-api-json --path=docs/api.json` | Exports the collection to a custom path instead of `api.json`. |
+| `php artisan transfers:reconcile` | Queries the Banking Provider for due pending/processing transfers and applies the latest status. Scheduled every five minutes by `routes/console.php`; use `--limit=50` to change the batch size. |
+| `php artisan wallets:backfill` | Creates missing Parent Wallets for existing users after upgrades or legacy imports. |
 | `php artisan make:dto {name} {module}` | Creates a DTO class inside `Modules/{module}/app/DTOs`. The generated class is named `{name}DTO`. |
 | `php artisan make:test-case {module}` | Creates `Modules/{module}/tests/Documentation/DocumentationCases.php` from the documentation stub if it does not already exist. |
 | `php artisan security:api-key create "Client Name"` | Creates a new API client and prints its API key and secret. Use `--days=90` for an expiry or `--no-expiry` for a key that never expires. |

@@ -3,8 +3,13 @@
 Laravel backend for **MyWallet**, a personal money-management app: one linked bank account,
 one Parent Wallet, and up to 12 Sub Wallets used to divide and transfer money.
 
-The project is a modular Laravel application built on a reusable starter kit. It currently
-ships the **core infrastructure** only — business wallet modules are added on top.
+The project is a modular Laravel application built on a reusable starter kit. All seven
+MVP phases are implemented: account management, bank-account linking, Parent and Sub Wallets,
+money transfers, lifecycle/refund handling, and transaction history.
+
+> **Current status — 2026-11-10:** Phases 1–7 are complete. The test suite contains
+> 202 tests / 987 assertions, and `api.json` contains 104 requests. External transfers use
+> the sandbox Banking Provider until a licensed Egyptian bank or aggregator is connected.
 
 ---
 
@@ -21,9 +26,9 @@ ships the **core infrastructure** only — business wallet modules are added on 
 - `Modules/Admins` — back-office admin accounts, roles, and settings.
 - `Modules/BankAccounts` — supported banks and linked user bank accounts.
 - `Modules/Beneficiaries` — saved external transfer beneficiaries.
-- `Modules/Wallets` — Parent Wallet creation, funding source, and balances.
-- `Modules/Transfers` — money transfers, limits, PIN confirmation, and provider execution.
-- `Modules/Users` — mobile user accounts.
+- `Modules/Wallets` — Parent/Sub Wallet management, balances, internal ledger, and private activity.
+- `Modules/Transfers` — transfers, limits, PIN confirmation, lifecycle events, callbacks, reconciliation, reversals/refunds, and history.
+- `Modules/Users` — mobile user accounts, profiles, OTP, passwords, and transaction PINs.
 - `Modules/Settings` — platform settings and locations.
 
 ---
@@ -99,8 +104,10 @@ Set the `api_prefix` collection variable to change the version segment across ev
 ```bash
 php artisan migrate --seed
 php artisan serve
+php artisan schedule:work   # local: runs transfers:reconcile every five minutes
 ```
 
+In production, configure the system cron to run `php artisan schedule:run` every minute.
 The API documentation is available at `/docs`.
 
 ---
@@ -110,6 +117,7 @@ The API documentation is available at `/docs`.
 Project documentation lives in [`docs/`](docs/README.md):
 
 - [`docs/business.md`](docs/business.md) — the complete business design, rules, and workflows.
+- [`docs/user-stories.md`](docs/user-stories.md) — product user stories and acceptance criteria.
 - [`docs/commands.md`](docs/commands.md) — every project, development, module, and security command.
 - [`docs/artisan-commands.md`](docs/artisan-commands.md) — the complete generated list of all Artisan commands.
 - [`docs/documentation-data-builders.md`](docs/documentation-data-builders.md) — documentation data standard.
@@ -119,6 +127,8 @@ Project documentation lives in [`docs/`](docs/README.md):
 - [`docs/phase-3/`](docs/phase-3/README.md) — Phase 3 Parent Wallet tasks and test cases.
 - [`docs/phase-4/`](docs/phase-4/README.md) — Phase 4 Sub Wallet tasks and test cases.
 - [`docs/phase-5/`](docs/phase-5/README.md) — Phase 5 money transfer tasks and test cases.
+- [`docs/phase-6/`](docs/phase-6/README.md) — Phase 6 lifecycle, callbacks, reconciliation, and reversals/refunds.
+- [`docs/phase-7/`](docs/phase-7/README.md) — Phase 7 transaction history and private wallet activity.
 - [`docs/user-dashboard/`](docs/user-dashboard/README.md) — User-facing web dashboard.
 
 ---
@@ -141,8 +151,12 @@ Project documentation lives in [`docs/`](docs/README.md):
 │   └── Http/Traits/       # Shared API response and file traits
 ├── Modules/               # Feature-based modules
 │   ├── Admins/
+│   ├── BankAccounts/
+│   ├── Beneficiaries/
+│   ├── Settings/
+│   ├── Transfers/
 │   ├── Users/
-│   └── Settings/
+│   └── Wallets/
 ├── docs/                  # Business context and project standards
 └── config/                # Security, auth, OTP, documentation settings
 ```

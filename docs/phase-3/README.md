@@ -23,6 +23,7 @@ This folder tracks the implementation and verification work for Phase 3 of the M
 | Balances | Implemented | Total allocated, available, and reserved balances are exposed; Phase 3 keeps them read-only. |
 | Bank account synchronization | Implemented | Verification, primary-account changes, and unlinking update the wallet automatically. |
 | Ownership enforcement | Implemented | Users can only view and update their own Parent Wallet. |
+| Private activity history | Implemented in Phase 7 | Paginated internal operations are exposed through `GET /mobile/parent-wallet/operations` and the Wallets page. |
 
 ## Phase 3 Endpoints
 
@@ -32,6 +33,7 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 |---|---|---|
 | `GET` | `/mobile/parent-wallet` | View the authenticated user's Parent Wallet. |
 | `PUT` | `/mobile/parent-wallet/funding-source` | Link the wallet to the verified primary bank account. |
+| `GET` | `/mobile/parent-wallet/operations` | Paginated private internal wallet activity. Added in Phase 7. |
 
 ## Test Data
 

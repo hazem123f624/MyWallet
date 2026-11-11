@@ -25,7 +25,7 @@ This folder tracks the implementation and verification work for Phase 6 of the M
 | Refund | Implemented | An explicit refund credits the Sub Wallet once and marks the transfer Refunded. |
 | Reconciliation | Implemented | `transfers:reconcile` runs every five minutes with per-transfer backoff. |
 | Idempotency | Implemented | Terminal states and the unique reversal record prevent duplicate credits. |
-| User dashboard | Implemented | Transfer detail modal, lifecycle timeline, reversal/refund summary, and status refresh. |
+| User dashboard | Implemented | Transfer detail modal (shared with the Phase 7 Transactions page), lifecycle timeline, reversal/refund summary, and status refresh. |
 | Admin dashboard | Implemented | Lifecycle timeline, reversal/refund summary, status sync, and reversed/refunded statistics. |
 
 ## Endpoints

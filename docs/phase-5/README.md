@@ -23,7 +23,7 @@ This folder tracks the implementation and verification work for Phase 5 of the M
 | Provider execution | Implemented | Sandbox provider by default; live integration remains later. |
 | Success/failure handling | Implemented | Successful transfers settle reservations; failed transfers release them. |
 | Idempotency | Implemented | Optional `client_reference` prevents duplicate submissions. |
-| User dashboard | Implemented | Send Money, Beneficiaries, limits, recent transfers. |
+| User dashboard | Implemented | Send Money, Beneficiaries, limits, recent transfers, and a link to the Phase 7 history page. |
 | Admin dashboard | Implemented | Read-only transfer and beneficiary monitoring. |
 
 ## Phase 5 Endpoints
@@ -54,6 +54,9 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 | `GET` | `/dashboard/beneficiaries` | List saved beneficiaries. |
 | `GET` | `/dashboard/beneficiaries/{beneficiary}` | Beneficiary details. |
 
+Phase 6 adds status refresh, admin sync, provider callbacks, and lifecycle details. Phase 7 adds
+`GET /mobile/transfers/history` and the private wallet activity endpoint.
+
 ## Test Data
 
 - Transaction PIN used in local examples: `2468`
@@ -64,5 +67,5 @@ Base path: `{{base_url}}/api/{{api_prefix}}`
 ## Known Gaps
 
 1. Live Banking Provider integration is not connected; the sandbox provider executes local transfers successfully.
-2. Full lifecycle reconciliation, reversal, and refund processing are Phase 6.
+2. Full lifecycle reconciliation, reversal, and refund processing are implemented in Phase 6.
 3. Full searchable transfer history is implemented in Phase 7; Phase 5 continues to expose the recent-transfer preview and limits used by the Send Money page.

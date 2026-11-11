@@ -4,13 +4,17 @@
 **Environment:** Local Laravel application, PHP 8.2, MySQL `mywallet` and `mywallet_test`  
 **Specification:** [`test-cases.md`](test-cases.md)
 
+> **Historical Phase 1 snapshot.** Current project status (2026-11-10): all Phases 1–7
+> are complete, the full suite passes with 202 tests / 987 assertions, and `api.json`
+> contains 104 requests. See [`../../changes.md`](../../changes.md) for the latest changes.
+
 ## Commands Executed
 
 | Command | Result |
 |---|---|
 | `php artisan migrate:fresh --seed` | Passed |
 | `php artisan test` | 80 passed, 331 assertions |
-| `php artisan app:export-api-json` | Passed; 68 documented endpoints |
+| `php artisan app:export-api-json` | Passed at the time; 68 documented endpoints (104 in the current collection) |
 | `/docs` smoke check | Passed; transaction PIN endpoints present |
 
 ## Result Summary

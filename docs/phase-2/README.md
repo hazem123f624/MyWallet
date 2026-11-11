@@ -23,6 +23,7 @@ This folder tracks the implementation and verification work for Phase 2 of the M
 | Linked account list | Implemented | Each account shows its bank, masked account number, verification state, and primary designation. |
 | Primary account | Implemented | The first linked account is primary; only a verified account can be selected as primary. |
 | Unlink account | Implemented | Unlinking the primary account promotes another linked account when one remains. |
+| User dashboard | Implemented | Link, verify, resend OTP, set primary, and unlink actions are connected to the API and browser-verified. |
 
 ## Phase 2 Endpoints
 

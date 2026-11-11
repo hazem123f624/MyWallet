@@ -24,6 +24,7 @@ This folder tracks the implementation and verification work for Phase 4 of the M
 | Deletion | Implemented | Returns available funds to the Parent Wallet and blocks deletion when funds are reserved. |
 | Internal operations | Implemented | Allocation, redistribution, and delete-return movements are recorded. |
 | Balances | Implemented | Available and reserved balances are exposed per Sub Wallet. |
+| User dashboard | Implemented | Wallets page supports create/rename/restyle/delete, allocation, redistribution, and paginated private activity. |
 
 ## Phase 4 Endpoints
 
