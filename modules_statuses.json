@@ -1,6 +1,9 @@
 {
     "Admins": true,
     "BankAccounts": true,
+    "Beneficiaries": true,
     "Settings": true,
-    "Users": true
+    "Transfers": true,
+    "Users": true,
+    "Wallets": true
 }

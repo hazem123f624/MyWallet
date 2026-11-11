@@ -1,0 +1,11 @@
+{
+    "name": "Transfers",
+    "alias": "transfers",
+    "description": "Money transfers and banking provider execution.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Transfers\\Providers\\TransfersServiceProvider"
+    ],
+    "files": []
+}

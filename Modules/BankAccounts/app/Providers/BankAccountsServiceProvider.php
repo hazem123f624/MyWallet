@@ -5,7 +5,9 @@ namespace Modules\BankAccounts\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Modules\BankAccounts\Interfaces\BankAccountInterface;
+use Modules\BankAccounts\Interfaces\BankAccountLookupInterface;
 use Modules\BankAccounts\Interfaces\BankInterface;
+use Modules\BankAccounts\Repositories\BankAccountLookupRepository;
 use Modules\BankAccounts\Repositories\BankAccountRepository;
 use Modules\BankAccounts\Repositories\BankRepository;
 use Nwidart\Modules\Traits\PathNamespace;
@@ -34,6 +36,7 @@ class BankAccountsServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->bind(BankInterface::class, BankRepository::class);
         $this->app->bind(BankAccountInterface::class, BankAccountRepository::class);
+        $this->app->bind(BankAccountLookupInterface::class, BankAccountLookupRepository::class);
     }
 
     public function registerTranslations(): void

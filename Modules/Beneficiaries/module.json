@@ -1,0 +1,11 @@
+{
+    "name": "Beneficiaries",
+    "alias": "beneficiaries",
+    "description": "External transfer beneficiaries.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Beneficiaries\\Providers\\BeneficiariesServiceProvider"
+    ],
+    "files": []
+}

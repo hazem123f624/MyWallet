@@ -9,6 +9,7 @@ use App\Services\CountryService;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Modules\Users\Events\UserAccountVerified;
 use Modules\Users\Http\Requests\ChangePasswordRequest;
 use Modules\Users\Http\Requests\DeleteAccountRequest;
 use Modules\Users\Http\Requests\UpdateProfileRequest;
@@ -164,6 +165,7 @@ class UsersController extends AuthController
             $this->repository->save($validated, $user->id);
 
             $userData = (new UserResource($user->fresh()))->resolve();
+
             return $this->success(__('users::messages.profile_updated_phone_pending'), data: array_merge($userData, [
                 'otp_code' => config('app.env') !== 'production' ? $code : null,
                 'needs_phone_verification' => true,
@@ -302,6 +304,11 @@ class UsersController extends AuthController
             $data['phone_verified_at'] = now();
             $user = $this->repository->save($data);
 
+            event(new UserAccountVerified(
+                userId: $user->id,
+                countryId: $user->country_id ? (int) $user->country_id : null
+            ));
+
             $token = $user->createToken('auth-token')->plainTextToken;
 
             $userResource = new UserResource($user);
@@ -353,6 +360,12 @@ class UsersController extends AuthController
             $message = __('users::messages.phone_updated');
         } else {
             $user->update(['phone_verified_at' => now()]);
+
+            event(new UserAccountVerified(
+                userId: $user->id,
+                countryId: $user->country_id ? (int) $user->country_id : null
+            ));
+
             $message = __('users::messages.account_activated');
         }
 

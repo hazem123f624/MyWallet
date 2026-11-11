@@ -13,6 +13,9 @@
             <directory>Modules/Users/tests/Feature</directory>
             <directory>Modules/BankAccounts/tests/Feature</directory>
             <directory>Modules/Admins/tests/Feature</directory>
+            <directory>Modules/Wallets/tests/Feature</directory>
+            <directory>Modules/Beneficiaries/tests/Feature</directory>
+            <directory>Modules/Transfers/tests/Feature</directory>
         </testsuite>
     </testsuites>
     <source>

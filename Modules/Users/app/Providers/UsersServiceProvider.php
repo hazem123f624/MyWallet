@@ -4,8 +4,12 @@ namespace Modules\Users\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Users\Interfaces\TransactionPinVerifierInterface;
+use Modules\Users\Interfaces\UserLookupInterface;
 use Modules\Users\Interfaces\UsersInterface;
+use Modules\Users\Repositories\UserLookupRepository;
 use Modules\Users\Repositories\UsersRepository;
+use Modules\Users\Services\TransactionPinVerifier;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -42,6 +46,8 @@ class UsersServiceProvider extends ServiceProvider
             UsersInterface::class,
             UsersRepository::class
         );
+        $this->app->bind(UserLookupInterface::class, UserLookupRepository::class);
+        $this->app->bind(TransactionPinVerifierInterface::class, TransactionPinVerifier::class);
     }
 
     /**

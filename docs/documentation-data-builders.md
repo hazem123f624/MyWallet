@@ -30,13 +30,19 @@ Every builder MUST be:
 - `demoUserId($email)` — a seeded demo mobile-app user id.
 - `mediaPath($bucket, $file)` — deterministic, realistic media path → stable response URL.
 
-## Reference implementation
+## Reference implementations
 
-When the first wallet module is added, its builder becomes the reference implementation.
-It should seed a fully-populated scenario — for example a verified user with a linked bank
-account, a Parent Wallet, several colored Sub Wallets with real balances, and a mix of
-pending, successful, failed, and reversed transfers — plus one intentionally-null case to
-demonstrate a genuine optional scenario.
+The wallet modules are implemented and their builders are the current references:
+
+- `BankAccountsDataBuilder` — demo user, supported banks, verified primary, pending, and
+  throwaway accounts.
+- `WalletsDataBuilder` — active Parent Wallet and colored Sub Wallets with real allocations.
+- `BeneficiariesDataBuilder` — realistic saved beneficiaries.
+- `TransfersDataBuilder` — a linked user, Sub Wallet, beneficiary, and transfer scenario
+  used by the transfer and transaction-history documentation.
+
+Builders should seed fully-populated scenarios and one intentionally-null case only when a
+genuine optional business scenario is being demonstrated.
 
 ## Validation exposure (every endpoint)
 

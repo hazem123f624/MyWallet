@@ -48,12 +48,10 @@ class UpdateProfileRequest extends FormRequest
                     if (! $this->isValidCountryCode($value)) {
                         $fail('Invalid country code selected.');
                     }
-                },],
-
+                }, ],
 
             'country_id'   => 'sometimes|exists:settings,id',
             'phone'        => ['sometimes', 'nullable', 'regex:'.RegexPatterns::PHONE_DIGITS, 'max:11',
-
 
                 function ($attribute, $value, $fail): void {
                     if (is_null($value) || $value === '') {
@@ -67,8 +65,7 @@ class UpdateProfileRequest extends FormRequest
                             $fail($e->getMessage());
                         }
                     }
-                },],
-
+                }, ],
 
             'full_phone'   => ['sometimes', 'nullable', 'string', 'unique:users,phone,'.$userId],
             'avatar'        => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',

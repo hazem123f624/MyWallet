@@ -231,7 +231,9 @@ telescope:prune                  Prune stale entries from the Telescope database
 telescope:publish                Publish all of the Telescope resources
 telescope:resume                 Unpause all Telescope watchers
 telescope:show                   Show a Telescope entry with full batch context
+transfers:reconcile              Query the banking provider for due pending and processing transfers
 vendor:publish                   Publish any publishable assets from vendor packages
 view:cache                       Compile all of the application's Blade templates
 view:clear                       Clear all compiled view files
+wallets:backfill                 Create missing Parent Wallets for existing users
 ```

@@ -1,6 +1,14 @@
 # Changes Log
 
-## Session 2026-11-07 — @Hazemwalid290
+## Current Status — 2026-11-10
+
+- All seven MVP phases are implemented and documented.
+- Full automated suite: **202 tests / 987 assertions**.
+- Exported API collection: **`api.json`, 104 requests**.
+- Live Egyptian bank/aggregator integration remains external work; the sandbox Banking Provider is used for local execution.
+- Transfer reconciliation is scheduled every five minutes by `transfers:reconcile`; production must run Laravel's scheduler.
+
+## Session 2026-11-07 → 2026-11-10 — @Hazemwalid290
 
 - Completed dashboard coverage for the administrator management APIs: active and recycle-bin views, delete/restore/permanent delete, role filtering, detailed record loading, and role removal.
 - Added a Roles & Permissions area with role creation and editing, status control, permission assignment, member assignment and removal, recycle-bin recovery, and permission display.
@@ -15,5 +23,23 @@
 - Redesigned the Account Status card with a proportional rounded donut, centered user total, readable active/suspended statistics, percentage tooltips, loading state, and a proper no-data state.
 - Refined the dashboard visuals: smooth gradient user-growth chart with legible axes, dark glass metric cards, glowing active sidebar state with section dividers, zebra tables, glowing status badges, and right-aligned dates.
 - Added profile avatar upload/removal, administrator avatar upload, user and administrator page-size controls, user status filtering, role permission search/select-all, and activity-log quick ranges/diff view/copy.
-- Added automated coverage for dashboard analytics and the full dashboard flow; the full suite now passes with 109 tests and 498 assertions.
+- Added automated coverage for dashboard analytics and the full dashboard flow.
 - Settings and location management pages remain pending.
+- Added Phase 3 Parent Wallet management: one wallet per user, automatic creation after verification, legacy backfill, verified-primary funding source linking, status and balance views, and automatic synchronization when bank accounts are verified, changed, or unlinked.
+- Added Phase 3 feature tests and documentation.
+- Added Phase 4 Sub Wallet management: create/list/view/rename/restyle/delete, 12-wallet limit, funds allocation from the Parent Wallet, redistribution, reserved-fund deletion guard, internal operation ledger, and Parent Wallet Sub Wallet summary.
+- Added Phase 4 feature tests and documentation.
+- Added the `/user` web dashboard with session login, password recovery, wallet overview, Parent/Sub Wallet management, bank-account linking and verification, profile/avatar/phone updates, account deletion, password change, transaction PIN controls, and dark-mode responsive styling.
+- Added user dashboard registration with OTP verification.
+- Fixed user dashboard asset paths so login controls, password visibility, dark mode, and page actions work correctly.
+- Added visual color swatches and icon previews to Sub Wallet creation/editing and wallet cards.
+- Added user dashboard access tests.
+- Added Phase 5 beneficiaries and money transfers with reservation, provider execution, limits, transaction-PIN confirmation, idempotency, user send-money and beneficiary pages, and admin transfer/beneficiary monitoring.
+- Added Phase 5 tests and documentation; the full suite now passes with 170 tests and 786 assertions.
+- Added Phase 6 transfer lifecycle management: auditable transfer events, provider status queries, signed idempotent callbacks, five-minute reconciliation with backoff, reversal/refund credits, user status refresh, admin status sync, and lifecycle detail in both dashboards.
+- Added Phase 6 feature tests and documentation for callbacks, reconciliation, reversals, refunds, and idempotency; the full suite now passes with 189 tests and 914 assertions.
+- Added Phase 7 transaction history: paginated external transfer history with reference, status, and date filters; a dedicated user Transactions page; transfer detail reuse; paginated private wallet activity on the Wallets page; and explicit internal/external privacy separation.
+- Added Phase 7 tests and documentation for history pagination, filters, validation, cross-user isolation, and private wallet operations.
+- Fixed modal footer submit buttons across the user dashboard by associating them with their forms, restoring bank-account linking, bank verification, beneficiary, Sub Wallet, allocation, redistribution, and phone-verification submissions.
+- Fixed user-side API session expiry redirects to return to the user login instead of the administrator login.
+- Added a regression test for modal form wiring; the full suite now passes with 202 tests and 987 assertions.

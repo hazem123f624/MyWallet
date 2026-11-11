@@ -9,6 +9,9 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Modules\BankAccounts\Enums\BankAccountStatus;
+use Modules\BankAccounts\Events\BankAccountPrimaryChanged;
+use Modules\BankAccounts\Events\BankAccountUnlinked;
+use Modules\BankAccounts\Events\BankAccountVerified;
 use Modules\BankAccounts\Interfaces\BankAccountInterface;
 use Modules\BankAccounts\Models\Bank;
 use Modules\BankAccounts\Models\BankAccount;
@@ -100,7 +103,7 @@ class BankAccountService
 
     public function verify(int $userId, string $phone, int $accountId, string $otp): BankAccount
     {
-        return DB::transaction(function () use ($userId, $phone, $accountId, $otp): BankAccount {
+        $account = DB::transaction(function () use ($userId, $phone, $accountId, $otp): BankAccount {
             $account = $this->findOwnedOrFail($userId, $accountId, true);
 
             if ($account->status === BankAccountStatus::Verified) {
@@ -123,11 +126,15 @@ class BankAccountService
 
             return $account->refresh()->load('bank');
         });
+
+        event(new BankAccountVerified($userId, $account->id));
+
+        return $account;
     }
 
     public function setPrimary(int $userId, int $accountId): BankAccount
     {
-        return DB::transaction(function () use ($userId, $accountId): BankAccount {
+        $account = DB::transaction(function () use ($userId, $accountId): BankAccount {
             $account = $this->findOwnedOrFail($userId, $accountId, true);
 
             if ($account->status !== BankAccountStatus::Verified) {
@@ -145,6 +152,10 @@ class BankAccountService
 
             return $account->load('bank');
         });
+
+        event(new BankAccountPrimaryChanged($userId, $account->id));
+
+        return $account;
     }
 
     public function unlink(int $userId, int $accountId): void
@@ -165,6 +176,8 @@ class BankAccountService
                 $this->repository->update($next, ['is_primary' => true]);
             }
         });
+
+        event(new BankAccountUnlinked($userId, $accountId));
     }
 
     private function findOwnedOrFail(int $userId, int $accountId, bool $lock = false): BankAccount

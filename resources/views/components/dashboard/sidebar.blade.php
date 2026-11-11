@@ -62,6 +62,18 @@
             <span>User Management</span>
         </a>
 
+        <p class="dash-nav-label">Operations</p>
+
+        <a href="{{ route('dashboard.transfers') }}" class="dash-nav-link {{ request()->routeIs('dashboard.transfers') ? 'active' : '' }}">
+            <x-dashboard.icon name="send" class="dash-nav-icon" />
+            <span>Transfers</span>
+        </a>
+
+        <a href="{{ route('dashboard.beneficiaries') }}" class="dash-nav-link {{ request()->routeIs('dashboard.beneficiaries') ? 'active' : '' }}">
+            <x-dashboard.icon name="users" class="dash-nav-icon" />
+            <span>Beneficiaries</span>
+        </a>
+
         <p class="dash-nav-label">Monitoring</p>
 
         <a

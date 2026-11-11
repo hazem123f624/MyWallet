@@ -411,6 +411,16 @@ const boot = async () => {
         module.initActivityLogsPage();
     }
 
+    if (page === 'transfers') {
+        const module = await import('./pages/transfers.js?v=1');
+        module.initTransfersPage();
+    }
+
+    if (page === 'beneficiaries') {
+        const module = await import('./pages/beneficiaries.js?v=1');
+        module.initBeneficiariesPage();
+    }
+
     if (page === 'profile') {
         const module = await import('./pages/profile.js?v=4');
         module.initProfilePage();

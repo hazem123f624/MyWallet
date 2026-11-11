@@ -113,7 +113,7 @@ Admin-only dashboard used by the Super Admin to oversee the platform, manage adm
 - [x] Display registration date.
 - [x] Implement pagination.
 - [x] Implement user search.
-- [ ] Implement status filtering.
+- [x] Implement status filtering.
 - [ ] Implement date filtering.
 - [x] Implement sorting.
 - [x] Add recycle-bin view.
@@ -122,11 +122,11 @@ Admin-only dashboard used by the Super Admin to oversee the platform, manage adm
 
 - [~] Display user details in a modal rather than a separate page.
 - [x] Display personal information.
-- [ ] Display phone verification status; not currently exposed by the user resource.
+- [ ] Display phone verification status; the User model stores it, but the admin UserResource does not expose it yet.
 - [x] Display account status.
 - [x] Display registration date.
-- [ ] Display linked bank accounts; Phase 2 backend support is not implemented.
-- [ ] Display Parent Wallet information; Phase 3 backend support is not implemented.
+- [ ] Display linked bank accounts in admin user details; Phase 2 backend support now exists, but the admin detail modal does not show it.
+- [ ] Display Parent Wallet information in admin user details; Phase 3 backend support now exists, but the admin detail modal does not show it.
 
 ### User Account Status Management
 
@@ -235,8 +235,8 @@ Admin-only dashboard used by the Super Admin to oversee the platform, manage adm
 - [ ] Settings and location management.
 - [ ] Bulk user/admin actions.
 - [ ] Full filtered CSV exports.
-- [ ] User date filtering and extended wallet/bank details.
-- [ ] Finance modules: bank accounts, wallets, transactions, beneficiaries, reports.
+- [ ] User date filtering and extended wallet/bank details in admin user details.
+- [ ] Admin finance views for bank accounts, wallets, and reports. Transfers and beneficiaries are implemented.
 - [ ] Persistent notifications, sessions, and two-factor authentication.
 - [ ] API proxy so the browser never receives the shared API key.
 
@@ -282,8 +282,8 @@ Do not add bill payments, electricity and gas services, mobile recharge, savings
 
 ## Remaining Gaps
 
-- User status and date filtering.
-- Phone verification and wallet/bank details in user details.
+- User date filtering.
+- Phone verification, wallet, and bank details in admin user details.
 - Separating Admin/User details into dedicated pages if required.
 - Skeleton loading for all listings.
 - Complete manual browser QA of every form and API integration.

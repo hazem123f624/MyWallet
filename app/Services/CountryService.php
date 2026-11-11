@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use Modules\Settings\Models\Settings;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
+use Modules\Settings\Models\Settings;
 
 class CountryService
 {
@@ -14,7 +14,7 @@ class CountryService
     public function getCountryByPhoneCode(string $phoneCode): ?object
     {
         $cacheKey = "country:phone_code:{$phoneCode}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($phoneCode) {
             return Settings::countries()
                 ->where('data->phone_code', $phoneCode)
@@ -29,7 +29,7 @@ class CountryService
     public function getCountryById(int $countryId): ?object
     {
         $cacheKey = "country:id:{$countryId}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($countryId) {
             return Settings::countries()
                 ->where('id', $countryId)
@@ -44,8 +44,8 @@ class CountryService
     public function validatePhoneLength(string $phone, string $phoneCode): void
     {
         $country = $this->getCountryByPhoneCode($phoneCode);
-        
-        if (!$country) {
+
+        if (! $country) {
             throw ValidationException::withMessages([
                 'country_code' => ['Invalid country code selected.'],
             ]);
@@ -112,6 +112,7 @@ class CountryService
     public function getCountryIdByPhoneCode(string $phoneCode): ?int
     {
         $country = $this->getCountryByPhoneCode($phoneCode);
+
         return $country?->id;
     }
 
@@ -131,10 +132,11 @@ class CountryService
         return Cache::remember('countries:all:active', 3600, function () {
             return Settings::countries()
                 ->where('is_active', true)
-                ->orderBy('sort_order', 'asc')
+                ->orderBy('name_en')
                 ->get()
                 ->map(function ($country) {
                     $data = $country->data ?? [];
+
                     return [
                         'id' => $country->id,
                         'name_ar' => $country->name_ar,

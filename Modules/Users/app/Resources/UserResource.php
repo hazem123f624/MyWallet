@@ -9,6 +9,7 @@ use Modules\Users\Models\User;
 
 /**
  * @mixin User
+ *
  * @property int|null $country_id
  */
 class UserResource extends JsonResource

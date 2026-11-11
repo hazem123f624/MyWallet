@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'wallet_retrieved' => 'Parent Wallet retrieved successfully.',
+    'funding_source_linked' => 'Parent Wallet funding source linked successfully.',
+    'wallet_not_found' => 'Parent Wallet could not be found.',
+    'bank_account_not_found' => 'The selected bank account could not be found.',
+    'bank_account_not_verified' => 'The bank account must be verified before it can fund the Parent Wallet.',
+    'bank_account_not_primary' => 'Only the primary bank account can fund the Parent Wallet.',
+    'sub_wallets_retrieved' => 'Sub Wallets retrieved successfully.',
+    'sub_wallet_retrieved' => 'Sub Wallet retrieved successfully.',
+    'sub_wallet_created' => 'Sub Wallet created successfully.',
+    'sub_wallet_updated' => 'Sub Wallet updated successfully.',
+    'sub_wallet_deleted' => 'Sub Wallet deleted and its available funds returned to the Parent Wallet.',
+    'sub_wallet_allocated' => 'Funds allocated to the Sub Wallet successfully.',
+    'sub_wallet_redistributed' => 'Funds redistributed successfully.',
+    'sub_wallet_limit_reached' => 'You can have at most :max Sub Wallets.',
+    'sub_wallet_not_found' => 'The Sub Wallet could not be found.',
+    'sub_wallet_has_reserved_funds' => 'This Sub Wallet has reserved funds and cannot be deleted yet.',
+    'amount_must_be_positive' => 'The amount must be greater than zero.',
+    'insufficient_parent_balance' => 'The Parent Wallet does not have enough available balance.',
+    'insufficient_reserved_balance' => 'The reserved balance is insufficient for this operation.',
+    'insufficient_sub_wallet_balance' => 'The Sub Wallet does not have enough available balance.',
+    'same_sub_wallet' => 'Choose a different destination Sub Wallet.',
+    'operations_retrieved' => 'Private wallet operations retrieved successfully.',
+];
